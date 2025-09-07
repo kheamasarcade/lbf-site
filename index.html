@@ -6,16 +6,9 @@
 <title>Kheama's Arcade • Lurk Bait Fishing</title>
 <link rel="preconnect" href="https://dl.dropboxusercontent.com">
 <style>
-:root{
-  --bg:#0b0f17;--panel:#111827;--panel2:#0f172a;--text:#e5e7eb;--muted:#9ca3af;
-  --accent1:#f472b6;--accent2:#60a5fa;--line:#0f1a2f;--chip:#1b2436
-}
+:root{--bg:#0b0f17;--panel:#111827;--panel2:#0f172a;--text:#e5e7eb;--muted:#9ca3af;--accent1:#f472b6;--accent2:#60a5fa;--line:#0f1a2f;--chip:#1b2436}
 *{box-sizing:border-box}
-body{margin:0;background:
-  radial-gradient(1200px 600px at 10% -10%,rgba(96,165,250,.16),transparent 60%),
-  radial-gradient(900px 500px at 110% 10%,rgba(244,114,182,.16),transparent 60%),
-  var(--bg);
-  color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter}
+body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,rgba(96,165,250,.16),transparent 60%),radial-gradient(900px 500px at 110% 10%,rgba(244,114,182,.16),transparent 60%),var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter}
 .topbar{max-width:1200px;margin:20px auto 0;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
 .brand{font-weight:800;font-size:28px;letter-spacing:.4px}
 .pink{color:var(--accent1)} .blue{color:var(--accent2)}
@@ -24,8 +17,7 @@ body{margin:0;background:
 .navlink.active{color:#fff;background:#0f1a2f;border-color:#1d2a46}
 .wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px}
 .cards{display:grid;grid-template-columns:1fr;gap:16px}
-.card{background:linear-gradient(180deg,rgba(17,24,39,.9),rgba(15,23,42,.9));border:1px solid #111827;border-radius:16px;padding:16px;
-      box-shadow:0 10px 30px rgba(0,0,0,.25);backdrop-filter:blur(2px)}
+.card{background:linear-gradient(180deg,rgba(17,24,39,.9),rgba(15,23,42,.9));border:1px solid #111827;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);backdrop-filter:blur(2px)}
 .section-title{display:flex;gap:10px;align-items:baseline;margin-bottom:8px}
 .section-title h2{margin:0;font-size:20px}
 .kicker{color:var(--muted);font-size:12px}
@@ -45,7 +37,6 @@ body{margin:0;background:
 .table .num{text-align:right}
 .empty{padding:18px;color:#9ca3af}
 .sync{margin-top:10px;color:#9ca3af;font-size:12px}
-
 .player-detail{display:block;margin-top:8px}
 .pillbox{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
 .pill{background:var(--chip);border:1px solid #2b3a5c;border-radius:999px;padding:6px 10px}
@@ -55,23 +46,216 @@ body{margin:0;background:
 .backlink{margin-top:12px}
 .footer{max-width:1200px;margin:8px auto 24px;padding:0 16px;color:#9ca3af;font-size:12px;text-align:center}
 @media (max-width:900px){.detail-grid{grid-template-columns:1fr}}
+.status{margin:6px 0 0;color:#9ca3af;font-size:12px}
 .err{color:#fca5a5;font-size:12px;margin-top:8px}
 </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand"><span class="pink">Kheama's</span> <span class="blue">Arcade</span> · Lurk Bait Fishing</div>
-    <nav class="nav">
-      <a href="#leaderboard" class="navlink active">Leaderboard</a>
-      <a href="#recent" class="navlink">Recent</a>
-      <a href="#dex" class="navlink">Dex</a>
-      <a href="#players" class="navlink">Players</a>
-    </nav>
-  </header>
+<header class="topbar">
+  <div class="brand"><span class="pink">Kheama's</span> <span class="blue">Arcade</span> · Lurk Bait Fishing</div>
+  <nav class="nav">
+    <a href="#leaderboard" class="navlink active">Leaderboard</a>
+    <a href="#recent" class="navlink">Recent</a>
+    <a href="#dex" class="navlink">Dex</a>
+    <a href="#players" class="navlink">Players</a>
+  </nav>
+</header>
 
-  <main class="wrap">
-    <section class="cards">
-      <div class="card">
-        <div class="section-title">
-          <h2 id="view-title">Leaderboard</h2>
-          <div class="kicker" id="
+<main class="wrap">
+  <section class="cards">
+    <div class="card">
+      <div class="section-title">
+        <h2 id="view-title">Leaderboard</h2>
+        <div class="kicker" id="view-sub">Totals</div>
+      </div>
+
+      <div class="controls">
+        <div class="tabs" id="span-tabs">
+          <button class="tab active" data-span="season">Season</button>
+          <button class="tab" data-span="all">All-Time</button>
+        </div>
+        <div class="filters">
+          <input id="q" class="input" placeholder="Search players / items…">
+          <select id="rarity" class="input">
+            <option value="">Any rarity</option><option>Common</option><option>Uncommon</option>
+            <option>Rare</option><option>Epic</option><option>Legendary</option><option>Mythic</option>
+          </select>
+          <input id="dateFrom" type="date" class="input">
+          <input id="dateTo" type="date" class="input">
+          <input id="minGold" class="input" type="number" min="0" step="1" placeholder="Min gold">
+          <input id="minStars" class="input" type="number" min="0" step="1" placeholder="Min ★">
+          <button id="clearFilters" class="button ghost">Clear</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="table" class="table">
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div id="empty" class="empty" style="display:none">No results.</div>
+        <div id="err" class="err" style="display:none"></div>
+        <div id="status" class="status" style="display:none"></div>
+      </div>
+
+      <div id="player-detail" class="player-detail" style="display:none"></div>
+      <div class="sync">Last Data Sync Timestamp: <span id="sync-time">loading…</span></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</footer>
+
+<script>
+/* ---- Your raw Dropbox links ---- */
+const URLS = {
+  dex: "https://dl.dropboxusercontent.com/scl/fi/nmqf6rewo4pweftrfrjfb/dex.json?rlkey=h9z371ywynt7sqffywvbks2zn&e=1",
+  leaderboard: "https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
+  meta: "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
+  players: "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
+  recent: "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
+  seasonBests: "https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl"
+};
+
+/* ---- State / helpers ---- */
+let ROUTE="leaderboard"; let SORT={key:null,dir:1}; let CACHE={};
+const $=s=>document.querySelector(s); const $$=s=>Array.from(document.querySelectorAll(s));
+const fmtGold=n=>`${Math.round(n||0).toLocaleString()}g`;
+const epoch=v=>typeof v==="number"?v:(v?Date.parse(v)/1000:null);
+const inRange=(ts,a,b)=>(!a||ts>=a)&&(!b||ts<=b);
+const has=(s,q)=>!q||(s||"").toLowerCase().includes(q.toLowerCase());
+function showErr(m){const e=$("#err");e.textContent=m;e.style.display="block";}
+function showStatus(m){const e=$("#status");e.textContent=m;e.style.display="block";}
+function clearMsgs(){ $("#err").style.display="none"; $("#status").style.display="none"; }
+
+async function get(u){ if(CACHE[u]) return CACHE[u]; const r=await fetch(u,{cache:"no-store"}); if(!r.ok) throw new Error(u+" -> "+r.status); const j=await r.json(); CACHE[u]=j; return j; }
+
+/* ---- Normalizers (accept multiple field names) ---- */
+function normLeaderboard(arr){
+  return (arr||[]).map(o=>{
+    const player=o.player??o.name??o.user??"unknown";
+    const gold=Number(o.gold??o.total_gold??o.season_gold??0);
+    const rank=o.rank??null;
+    return {player,gold,rank};
+  }).sort((a,b)=> (b.gold-a.gold)).map((o,i)=>({...o,rank:o.rank??(i+1)}));
+}
+function normPlayers(arr){
+  return (arr||[]).map(o=>{
+    const name=o.name??o.player??"unknown";
+    const gold=Number(o.gold??o.season_gold??0);
+    const casts=Number(o.casts??o.season_casts??0);
+    const lifetime_casts=Number(o.lifetime_casts??o.total_casts??0);
+    return {name,gold,casts,lifetime_casts};
+  });
+}
+function normDex(arr){
+  const a = Array.isArray(arr)?arr:(arr?.items||arr?.data||[]);
+  return (a||[]).map(o=>{
+    const item=o.item??o.species??o.name??"unknown";
+    const rarity=o.rarity??"";
+    const best_gold=Number(o.best_gold??o.gold??0);
+    const player=o.player??o.best_player??"";
+    return {item,rarity,best_gold,player};
+  });
+}
+function normRecent(arr){
+  return (arr||[]).map(o=>{
+    const player=o.player??o.name??"unknown";
+    const item=o.item??o.species??"";
+    const rarity=o.rarity??"";
+    const gold=Number(o.gold??0);
+    const stars=Number(o.stars??o.star??0);
+    const timestamp=Number(o.timestamp??o.ts??o.epoch??epoch(o.time)||0);
+    return {player,item,rarity,gold,stars,timestamp};
+  });
+}
+
+/* ---- UI builders ---- */
+function renderTable(cols, rows){
+  $("#player-detail").style.display="none";
+  $("#table").style.display="";
+  $("#empty").style.display = rows.length?"none":"";
+  clearMsgs();
+
+  $("#thead").innerHTML = `<tr>${cols.map(c=>`<th data-key="${c.key}" class="${c.align||""}" style="${c.width?`width:${c.width}`:""}">${c.label}${SORT.key===c.key?(SORT.dir===1?" ▲":" ▼"):""}</th>`).join("")}</tr>`;
+  $("#tbody").innerHTML = rows.map(r=>`<tr>${cols.map(c=>`<td class="${c.align||""}">${r[c.key]??""}</td>`).join("")}</tr>`).join("");
+
+  $$("#thead th").forEach(th=>{
+    th.onclick=()=>{ const key=th.dataset.key; if(SORT.key===key) SORT.dir*=-1; else {SORT.key=key; SORT.dir=(key==="rank"||key==="gold"||key==="stars")?-1:1;} routeTo(ROUTE); };
+  });
+}
+
+/* ---- Views ---- */
+async function syncLabel(){
+  try{ const meta=await get(URLS.meta); const t=meta.exported_at_iso||(meta.exported_at_epoch?new Date(meta.exported_at_epoch*1000).toLocaleString():"—"); $("#sync-time").textContent=t; }catch{ $("#sync-time").textContent="—"; }
+}
+
+async function viewLeaderboard(){
+  $("#view-title").textContent="Leaderboard"; $("#view-sub").textContent="Totals"; $(".filters").style.display="none";
+  try{
+    const raw=await get(URLS.leaderboard); const arr=normLeaderboard(Array.isArray(raw)?raw:raw?.rows||raw?.data||[]);
+    arr.forEach(x=>x.goldText=fmtGold(x.gold));
+    if(SORT.key){ arr.sort((a,b)=>{const va=a[SORT.key],vb=b[SORT.key]; if(typeof va==="number"&&typeof vb==="number") return SORT.dir*(va-vb); return SORT.dir*String(va).localeCompare(String(vb));}); }
+    renderTable([{key:"rank",label:"#",width:"50px",align:"num"},{key:"player",label:"Player"},{key:"goldText",label:"Gold",width:"140px",align:"num"}], arr);
+    showStatus(`Loaded ${arr.length} players`);
+  }catch(e){ showErr("Could not load leaderboard.json"); }
+}
+
+async function viewRecent(){
+  $("#view-title").textContent="Recent Catches"; $("#view-sub").textContent="Live"; $(".filters").style.display="";
+  try{
+    const raw=await get(URLS.recent); let arr=normRecent(Array.isArray(raw)?raw:raw?.rows||raw?.data||[]);
+    const q=$("#q").value.trim(), rar=$("#rarity").value, from=epoch($("#dateFrom").value), to=epoch($("#dateTo").value), minG=Number($("#minGold").value||0), minS=Number($("#minStars").value||0);
+    arr=arr.filter(c=>has(c.player,q)||has(c.item,q)); if(rar) arr=arr.filter(c=>(c.rarity||"").toLowerCase()===rar.toLowerCase()); arr=arr.filter(c=>c.timestamp?inRange(c.timestamp,from,to):true); arr=arr.filter(c=>(c.gold||0)>=minG); arr=arr.filter(c=>(c.stars||0)>=minS);
+    arr.forEach(c=>{ c.when=c.timestamp?new Date(c.timestamp*1000).toLocaleString():""; c.itemFull=`${c.item}${c.rarity?` (${c.rarity})`:""}`; c.goldText=fmtGold(c.gold); });
+    if(!SORT.key) arr.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0)); else arr.sort((a,b)=>{const va=a[SORT.key],vb=b[SORT.key]; if(typeof va==="number"&&typeof vb==="number") return SORT.dir*(va-vb); return SORT.dir*String(va).localeCompare(String(vb));});
+    renderTable([{key:"when",label:"Time",width:"160px"},{key:"player",label:"Player"},{key:"itemFull",label:"Catch"},{key:"stars",label:"★",width:"60px",align:"num"},{key:"goldText",label:"Gold",width:"120px",align:"num"}], arr);
+    showStatus(`Loaded ${arr.length} catches`);
+  }catch(e){ showErr("Could not load recent.json"); }
+}
+
+async function viewDex(){
+  $("#view-title").textContent="Dex"; $("#view-sub").textContent="Best by species"; $(".filters").style.display="";
+  try{
+    const raw=await get(URLS.dex); let arr=normDex(Array.isArray(raw)?raw:raw?.rows||raw?.data||raw);
+    const q=$("#q").value.trim(), rar=$("#rarity").value, minG=Number($("#minGold").value||0);
+    arr=arr.filter(d=>has(d.item,q)||has(d.player,q)); if(rar) arr=arr.filter(d=>(d.rarity||"").toLowerCase()===rar.toLowerCase()); arr=arr.filter(d=>(d.best_gold||0)>=minG);
+    arr.forEach(d=>d.bestGoldText=fmtGold(d.best_gold||0));
+    if(!SORT.key) arr.sort((a,b)=>(b.best_gold||0)-(a.best_gold||0)); else arr.sort((a,b)=>{const va=a[SORT.key],vb=b[SORT.key]; if(typeof va==="number"&&typeof vb==="number") return SORT.dir*(va-vb); return SORT.dir*String(va).localeCompare(String(vb));});
+    renderTable([{key:"item",label:"Species/Item"},{key:"rarity",label:"Rarity",width:"120px"},{key:"player",label:"Player"},{key:"bestGoldText",label:"Best Gold",width:"140px",align:"num"}], arr);
+    showStatus(`Loaded ${arr.length} dex rows`);
+  }catch(e){ showErr("Could not load dex.json"); }
+}
+
+async function viewPlayers(){
+  $("#view-title").textContent="Players"; $("#view-sub").textContent="Search players"; $(".filters").style.display="";
+  try{
+    const raw=await get(URLS.players); let arr=normPlayers(Array.isArray(raw)?raw:raw?.rows||raw?.data||[]);
+    const q=$("#q").value.trim(); arr=arr.filter(p=>has(p.name,q)); arr.forEach(p=>p.goldText=fmtGold(p.gold));
+    if(!SORT.key) arr.sort((a,b)=>b.gold-a.gold); else arr.sort((a,b)=>{const va=a[SORT.key],vb=b[SORT.key]; if(typeof va==="number"&&typeof vb==="number") return SORT.dir*(va-vb); return SORT.dir*String(va).localeCompare(String(vb));});
+    renderTable([{key:"name",label:"Player"},{key:"goldText",label:"Season Gold",width:"140px",align:"num"},{key:"casts",label:"Season Casts",width:"140px",align:"num"},{key:"lifetime_casts",label:"Lifetime Casts",width:"140px",align:"num"}], arr);
+    $("#tbody").onclick=e=>{const tr=e.target.closest("tr"); if(!tr) return; const name=tr.children[0].textContent.trim(); if(name) routeTo("player/"+encodeURIComponent(name));};
+    showStatus(`Loaded ${arr.length} players`);
+  }catch(e){ showErr("Could not load players.json"); }
+}
+
+async function viewPlayerDetail(name){
+  $("#view-title").textContent=name; $("#view-sub").textContent="Player"; $(".filters").style.display="none"; $("#table").style.display="none"; $("#empty").style.display="none"; clearMsgs();
+  try{
+    const [players,bests,recent]=await Promise.all([get(URLS.players), get(URLS.seasonBests), get(URLS.recent)]);
+    const p=(normPlayers(players)||[]).find(x=>x.name.toLowerCase()===name.toLowerCase());
+    const totals=p?`<div class="pillbox"><span class="pill">Season Gold: <b>${fmtGold(p.gold)}</b></span><span class="pill">Season Casts: <b>${p.casts||0}</b></span><span class="pill">Lifetime Casts: <b>${p.lifetime_casts||0}</b></span></div>`:`<div class="pillbox"><span class="pill">No totals available.</span></div>`;
+    const myBests=(Array.isArray(bests)?bests:[]).filter(x=>(x.player??x.name??"").toLowerCase()===name.toLowerCase()).map((x,i)=>`<tr><td>${i+1}</td><td>${x.item}${x.rarity?` (${x.rarity})`:""}</td><td class="num">${fmtGold(x.gold)}</td></tr>`).join("");
+    const myRecent=(normRecent(Array.isArray(recent)?recent:recent?.data||[])||[]).filter(x=>x.player.toLowerCase()===name.toLowerCase()).slice(0,30).map((c,i)=>`<tr><td>${i+1}</td><td>${c.timestamp?new Date(c.timestamp*1000).toLocaleString():""}</td><td>${c.item}${c.rarity?` (${c.rarity})`:""}</td><td class="num">★ ${c.stars||0}</td><td class="num">${fmtGold(c.gold)}</td></tr>`).join("");
+    $("#player-detail").innerHTML=`${totals}<div class="detail-grid"><div><h3>Season Bests</h3><table class="table mini"><thead><tr><th>#</th><th>Catch</th><th class="num">Gold</th></tr></thead><tbody>${myBests||'<tr><td colspan="3">None.</td></tr>'}</tbody></table></div><div><h3>Recent</h3><table class="table mini"><thead><tr><th>#</th><th>When</th><th>Catch</th><th class="num">★</th><th class="num">Gold</th></tr></thead><tbody>${myRecent||'<tr><td colspan="5">None.</td></tr>'}</tbody></table></div></div><div class="backlink"><a href="#players">← Back to players</a></div>`; $("#player-detail").style.display="";
+  }catch(e){ showErr("Could not build player view."); }
+}
+
+/* ---- Router & wiring ---- */
+function parseHash(){ return (location.hash||"#leaderboard").slice(1); }
+async function routeTo(hash){ location.hash=hash; ROUTE=hash; $$(".navlink").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==='#'+ROUTE.split("/")[0])); await syncLabel(); if(ROUTE==="leaderboard") return viewLeaderboard(); if(ROUTE==="recent") return viewRecent(); if(ROUTE==="dex") return viewDex(); if(ROUTE==="players") return viewPlayers(); if(ROUTE.startsWith("player/")) return viewPlayerDetail(decodeURIComponent(ROUTE.split("/")[1])); return viewLeaderboard(); }
+function wire(){ $("#span-tabs").addEventListener("click",e=>{const b=e.target.closest(".tab"); if(!b) return; $$("#span-tabs .tab").forEach(x=>x.classList.toggle("active",x===b)); routeTo(ROUTE); }); const inputs=["#q","#rarity","#dateFrom","#dateTo","#minGold","#minStars"].map(s=>$(s)); inputs.forEach(el=>el.addEventListener("input",()=>{if(["recent","dex","players"].includes(ROUTE)) routeTo(ROUTE);})); $("#clearFilters").addEventListener("click",()=>{inputs.forEach(el=>el.value=""); routeTo(ROUTE);}); }
+window.addEventListener("DOMContentLoaded",async()=>{ wire(); await routeTo(parseHash()); window.addEventListener("hashchange",()=>routeTo(parseHash())); setInterval(()=>{CACHE={}; routeTo(ROUTE);}, 90*1000); });
+</script>
+</body>
+</html>
