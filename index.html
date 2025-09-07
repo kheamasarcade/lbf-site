@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kheama's Arcade • Lurk Bait Fishing</title>
+<link rel="preconnect" href="https://dl.dropboxusercontent.com">
+<style>
+:root{
+  --bg:#0b0f17;--panel:#111827;--panel2:#0f172a;--text:#e5e7eb;--muted:#9ca3af;
+  --accent1:#f472b6;--accent2:#60a5fa;--line:#0f1a2f;--chip:#1b2436
+}
+*{box-sizing:border-box}
+body{margin:0;background:
+  radial-gradient(1200px 600px at 10% -10%,rgba(96,165,250,.16),transparent 60%),
+  radial-gradient(900px 500px at 110% 10%,rgba(244,114,182,.16),transparent 60%),
+  var(--bg);
+  color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Inter}
+.topbar{max-width:1200px;margin:20px auto 0;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:800;font-size:28px;letter-spacing:.4px}
+.pink{color:var(--accent1)} .blue{color:var(--accent2)}
+.nav{display:flex;gap:10px}
+.navlink{color:#9fb4d9;text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0b1220}
+.navlink.active{color:#fff;background:#0f1a2f;border-color:#1d2a46}
+.wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px}
+.cards{display:grid;grid-template-columns:1fr;gap:16px}
+.card{background:linear-gradient(180deg,rgba(17,24,39,.9),rgba(15,23,42,.9));border:1px solid #111827;border-radius:16px;padding:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);backdrop-filter:blur(2px)}
+.section-title{display:flex;gap:10px;align-items:baseline;margin-bottom:8px}
+.section-title h2{margin:0;font-size:20px}
+.kicker{color:var(--muted);font-size:12px}
+.tabs{display:flex;gap:8px;margin:8px 0 12px}
+.tab{padding:6px 10px;border-radius:999px;background:#0b1220;color:#93c5fd;border:1px solid #0c1426;cursor:pointer}
+.tab.active{background:#0f1a2f;color:#e5e7eb;border-color:#1d2a46}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.input{background:#0c1426;color:#e5e7eb;border:1px solid #0f1a2f;border-radius:8px;padding:6px 8px}
+.button{background:#0f1a2f;color:#e5e7eb;border:1px solid #1d2a46;border-radius:8px;padding:6px 10px;cursor:pointer}
+.button.ghost{background:#0c1426}
+.table-wrap{overflow:auto;border-radius:12px;border:1px solid #0f1a2f}
+.table{width:100%;border-collapse:separate;border-spacing:0}
+.table th,.table td{padding:10px 12px;border-bottom:1px solid #0f1a2f}
+.table thead th{position:sticky;top:0;background:#0f1629;cursor:pointer}
+.table tr:nth-child(even) td{background:#0c1426}
+.table .num{text-align:right}
+.empty{padding:18px;color:#9ca3af}
+.sync{margin-top:10px;color:#9ca3af;font-size:12px}
+
+.player-detail{display:block;margin-top:8px}
+.pillbox{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.pill{background:var(--chip);border:1px solid #2b3a5c;border-radius:999px;padding:6px 10px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-grid h3{margin:6px 0}
+.table.mini th,.table.mini td{padding:8px}
+.backlink{margin-top:12px}
+.footer{max-width:1200px;margin:8px auto 24px;padding:0 16px;color:#9ca3af;font-size:12px;text-align:center}
+@media (max-width:900px){.detail-grid{grid-template-columns:1fr}}
+.err{color:#fca5a5;font-size:12px;margin-top:8px}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="pink">Kheama's</span> <span class="blue">Arcade</span> · Lurk Bait Fishing</div>
+    <nav class="nav">
+      <a href="#leaderboard" class="navlink active">Leaderboard</a>
+      <a href="#recent" class="navlink">Recent</a>
+      <a href="#dex" class="navlink">Dex</a>
+      <a href="#players" class="navlink">Players</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="cards">
+      <div class="card">
+        <div class="section-title">
+          <h2 id="view-title">Leaderboard</h2>
+          <div class="kicker" id="
