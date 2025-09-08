@@ -7,57 +7,63 @@
 <link rel="preconnect" href="https://dl.dropboxusercontent.com">
 <style>
 :root{
-  --bg:#0b0f17;--glow1:rgba(96,165,250,.16);--glow2:rgba(244,114,182,.16);
+  --bg:#0b0f17;--glow1:rgba(96,165,250,.18);--glow2:rgba(244,114,182,.18);
   --panel:#0f1629;--panel2:#0f172a;--line:#1a2340;
-  --text:#e5e7eb;--muted:#9ca3af;--accent1:#f472b6;--accent2:#60a5fa;--chip:#172136
+  --text:#e5e7eb;--muted:#9ca3af;--accent1:#f472b6;--accent2:#60a5fa;
+  --chip:#172136;--chipline:#233154;--chiptext:#cfe1ff
 }
 *{box-sizing:border-box}
 body{
   margin:0;color:var(--text);
-  background:radial-gradient(1200px 600px at 10% -10%,var(--glow2),transparent 60%),
-             radial-gradient(900px 500px at 110% 10%,var(--glow1),transparent 60%),
-             var(--bg);
+  background:
+    radial-gradient(1200px 600px at 10% -10%,var(--glow2),transparent 60%),
+    radial-gradient(900px 500px at 110% 10%,var(--glow1),transparent 60%),
+    var(--bg);
   font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter
 }
 a{color:#9ec5ff;text-decoration:none}
 .top{
-  max-width:1200px;margin:18px auto 0;padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between
+  max-width:1280px;margin:18px auto 0;padding:0 16px;
+  display:flex;align-items:center;gap:12px
 }
-.brand{font-weight:900;font-size:28px;letter-spacing:.3px}
+.brand{font-weight:900;font-size:32px;letter-spacing:.3px;margin-right:auto}
 .pink{color:var(--accent1)} .blue{color:var(--accent2)}
+.search{min-width:280px;background:#0b1220;border:1px solid var(--line);border-radius:999px;padding:10px 14px;color:#dbe7ff}
 .nav{display:flex;gap:8px}
-.pill{border:1px solid var(--line);background:#0b1220;border-radius:999px;padding:6px 10px;color:#b9caea;cursor:pointer}
-.pill.active{background:#0f1a2f;color:#fff}
-.search{min-width:260px;background:#0b1220;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:#dbe7ff}
-.wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-.card{background:linear-gradient(180deg,rgba(15,22,41,.92),rgba(15,23,42,.92));
-      border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-.h2{display:flex;align-items:baseline;gap:10px;margin:0 0 8px 0}
+.pill{border:1px solid var(--line);background:#0b1220;border-radius:999px;padding:8px 14px;color:#b9caea;cursor:pointer}
+.pill.active{color:#fff;border-color:#2a3a66;background:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);box-shadow:0 0 20px rgba(96,165,250,.35)}
+.wrap{max-width:1280px;margin:12px auto 24px;padding:0 16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1000px){.grid2{grid-template-columns:1fr}}
+.card{
+  background:linear-gradient(180deg,rgba(15,22,41,.92),rgba(15,23,42,.92));
+  border:1px solid var(--line);border-radius:16px;padding:16px;
+  box-shadow:0 16px 36px rgba(0,0,0,.35)
+}
+.hrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hleft{display:flex;align-items:baseline;gap:10px}
+.h2{margin:0;font-size:22px}
 .kicker{color:var(--muted);font-size:12px}
-.tabrow{display:flex;gap:8px;margin:8px 0 12px}
-.tab{padding:6px 10px;border-radius:999px;background:#0b1220;color:#93c5fd;border:1px solid var(--line);cursor:pointer}
-.tab.active{background:#0f1a2f;color:#e5e7eb;border-color:#1e2a48}
-.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
-.input{background:#0b1220;border:1px solid var(--line);border-radius:8px;padding:6px 8px;color:#dbe7ff}
-.small{font-size:12px;color:#9ca3af}
-.badge{display:inline-block;background:#233154;border:1px solid #2f467a;color:#cfe1ff;border-radius:999px;padding:2px 8px;font-size:12px}
-.list{border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.row{display:grid;grid-template-columns:44px 1fr 120px;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid #0c1224}
-.row:first-child{border-top:0}
-.rank{width:28px;height:28px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff}
-.title{font-weight:600}
-.sub{color:#a8b3c9;font-size:12px}
-.gold{justify-self:end;font-weight:800}
+.tabrow{display:flex;gap:8px}
+.tab{padding:8px 12px;border-radius:999px;background:#0b1220;color:#93c5fd;border:1px solid var(--line);cursor:pointer}
+.tab.active{background:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);color:#fff;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.25)}
+/* list rows (Season Bests / flair) */
+.list{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:12px;border-top:1px solid #0c1224}
+.item:first-child{border-top:0}
+.rank{width:34px;height:34px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff;font-weight:600}
+.main{flex:1 1 auto;min-width:0}
+.title{font-weight:800;font-size:16px}
+.sub{color:#a8b3c9;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-block;background:var(--chip);border:1px solid var(--chipline);color:var(--chiptext);border-radius:999px;padding:2px 8px;font-size:12px;margin-left:8px}
+.gold{margin-left:auto;font-weight:900}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
-.table th,.table td{padding:9px 10px;border-bottom:1px solid #0e1730}
+.table th,.table td{padding:10px;border-bottom:1px solid #0e1730}
 .table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer}
 .num{text-align:right}
-.empty{padding:14px;color:#9ca3af}
-.footer{max-width:1200px;margin:6px auto 24px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
-@media (min-width:1000px){.grid{grid-template-columns:1fr 1fr}}
+.small{color:#9ca3af;font-size:12px;margin-top:8px}
+.footer{max-width:1280px;margin:6px auto 24px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
 </style>
 </head>
 <body>
@@ -65,46 +71,97 @@ a{color:#9ec5ff;text-decoration:none}
     <div class="brand"><span class="pink">Kheama's</span> <span class="blue">Arcade</span> · Lurk Bait Fishing</div>
     <input id="qGlobal" class="search" placeholder="Search players or species…">
     <div class="nav">
-      <button class="pill active" data-view="leaderboard">Leaderboard</button>
+      <button class="pill active" data-view="bests">Season Bests</button>
       <button class="pill" data-view="recent">Recent</button>
-      <button class="pill" data-view="dex">Dex</button>
-      <button class="pill" data-view="players">Players</button>
+      <button class="pill" data-view="stats">Leaderboard & Players</button>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="grid">
-      <div class="card">
-        <div class="h2"><h2 style="margin:0" id="vTitle">Leaderboard</h2><div class="kicker" id="vSub">Totals</div></div>
+  <!-- Season Bests (flair view) -->
+  <div class="wrap" id="view-bests" style="display:block">
+    <div class="card">
+      <div class="hrow">
+        <div class="hleft">
+          <h2 class="h2">Season Bests</h2>
+          <div class="kicker">Top catches by gold</div>
+        </div>
         <div class="tabrow">
           <div class="tab active" data-span="season">Season</div>
           <div class="tab" data-span="all">All-Time</div>
         </div>
+      </div>
+      <div id="listBests" class="list"></div>
+      <div class="small">Last Data Sync: <span id="syncA">loading…</span></div>
+    </div>
+  </div>
 
-        <div id="view-leaderboard" class="list" style="display:block"></div>
-        <div id="view-recent" class="table-wrap" style="display:none">
-          <table class="table">
-            <thead id="theadRecent"></thead>
-            <tbody id="tbodyRecent"></tbody>
-          </table>
-          <div id="emptyRecent" class="empty" style="display:none">No results.</div>
+  <!-- Recent (full width) -->
+  <div class="wrap" id="view-recent" style="display:none">
+    <div class="card">
+      <div class="hrow">
+        <div class="hleft">
+          <h2 class="h2">Recent Catches</h2>
+          <div class="kicker">Live feed</div>
         </div>
-        <div id="view-dex" class="table-wrap" style="display:none">
-          <table class="table">
-            <thead id="theadDex"></thead>
-            <tbody id="tbodyDex"></tbody>
-          </table>
-          <div id="emptyDex" class="empty" style="display:none">No results.</div>
+        <div class="tabrow">
+          <div class="tab active" data-span="season">Season</div>
+          <div class="tab" data-span="all">All-Time</div>
         </div>
-        <div id="view-players" class="table-wrap" style="display:none">
-          <table class="table">
-            <thead id="theadPlayers"></thead>
-            <tbody id="tbodyPlayers"></tbody>
-          </table>
-          <div id="emptyPlayers" class="empty" style="display:none">No results.</div>
-        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead id="thRecent"></thead>
+          <tbody id="tbRecent"></tbody>
+        </table>
+        <div id="emptyRecent" class="small" style="display:none">No results</div>
+      </div>
+      <div class="small">Last Data Sync: <span id="syncB">loading…</span></div>
+    </div>
+  </div>
 
-        <div class="small" style="margin-top:8px">Last Data Sync: <span id="sync">loading…</span></div>
+  <!-- Stats (two columns) -->
+  <div class="wrap" id="view-stats" style="display:none">
+    <div class="grid2">
+      <div class="card">
+        <div class="hrow">
+          <div class="hleft">
+            <h2 class="h2">Leaderboard</h2>
+            <div class="kicker">Totals</div>
+          </div>
+          <div class="tabrow">
+            <div class="tab active" data-span="season">Season</div>
+            <div class="tab" data-span="all">All-Time</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead id="thLead"></thead>
+            <tbody id="tbLead"></tbody>
+          </table>
+          <div id="emptyLead" class="small" style="display:none">No results</div>
+        </div>
+        <div class="small">Last Data Sync: <span id="syncC">loading…</span></div>
+      </div>
+
+      <div class="card">
+        <div class="hrow">
+          <div class="hleft">
+            <h2 class="h2">Players</h2>
+            <div class="kicker">Totals and casts</div>
+          </div>
+          <div class="tabrow">
+            <div class="tab active" data-span="season">Season</div>
+            <div class="tab" data-span="all">All-Time</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead id="thPlayers"></thead>
+            <tbody id="tbPlayers"></tbody>
+          </table>
+          <div id="emptyPlayers" class="small" style="display:none">No results</div>
+        </div>
+        <div class="small">Last Data Sync: <span id="syncD">loading…</span></div>
       </div>
     </div>
   </div>
@@ -112,237 +169,172 @@ a{color:#9ec5ff;text-decoration:none}
   <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
-/* ---------------- Config: Dropbox JSON ---------------- */
+/* ---------- Endpoints ---------- */
 var URLS = {
-  dex: "https://dl.dropboxusercontent.com/scl/fi/nmqf6rewo4pweftrfrjfb/dex.json?rlkey=h9z371ywynt7sqffywvbks2zn&e=1",
-  leaderboard: "https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
-  meta: "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
-  players: "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
-  recent: "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
-  seasonBests: "https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl"
+  seasonBests:"https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl",
+  recent:     "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
+  leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
+  players:    "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
+  meta:       "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4"
 }
 
-/* ---------------- Utilities ---------------- */
+/* ---------- Helpers ---------- */
 var CACHE={}
 function $(s){return document.querySelector(s)}
 function $all(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
-function get(u){ if(CACHE[u]) return Promise.resolve(CACHE[u]); return fetch(u,{cache:"no-store"}).then(function(r){if(!r.ok) throw new Error(r.status); return r.json()}).then(function(j){CACHE[u]=j; return j}) }
-function fmtGold(n){n = Math.round(Number(n)||0); return n.toLocaleString()+"g"}
-function fmtTime(epoch){ if(!epoch) return ""; return new Date(epoch*1000).toLocaleString() }
-function epochFrom(v){ if(typeof v==="number") return v; var t = v ? Date.parse(v) : NaN; return isNaN(t)?null:Math.floor(t/1000) }
+function get(u){ if(CACHE[u]) return Promise.resolve(CACHE[u]); return fetch(u,{cache:"no-store"}).then(function(r){if(!r.ok) throw new Error(r.status);return r.json()}).then(function(j){CACHE[u]=j;return j}) }
+function fmtGold(n){n=Math.round(Number(n)||0);return n.toLocaleString()+"g"}
+function epochFrom(v){ if(typeof v==="number") return v; var t=v?Date.parse(v):NaN; return isNaN(t)?null:Math.floor(t/1000) }
+function fmtStamp(ts){ if(!ts) return ""; var d=new Date(ts*1000); function pad(x){return (x<10?"0":"")+x} return pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())+" "+pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear() }
 
-/* ---------------- Normalizers (tolerant field names) ---------------- */
-function normLeaderboard(arr){
-  arr = Array.isArray(arr)?arr:(arr&&arr.data||arr&&arr.rows||[])
-  arr = arr.map(function(o){
-    return { player: o.player||o.name||o.user||"unknown",
-             gold: Number(o.gold||o.total_gold||o.season_gold||0) }
-  })
-  arr.sort(function(a,b){return b.gold-a.gold})
-  for(var i=0;i<arr.length;i++) arr[i].rank=i+1
-  return arr
+/* ---------- State ---------- */
+var VIEW="bests", SPAN="season", SEASON_START=0
+function setView(v){
+  VIEW=v
+  $("#view-bests").style.display=(v==="bests")?"block":"none"
+  $("#view-recent").style.display=(v==="recent")?"block":"none"
+  $("#view-stats").style.display=(v==="stats")?"block":"none"
+  $all(".pill").forEach(function(p){p.classList.toggle("active",p.getAttribute("data-view")===v)})
 }
-function normPlayers(arr){
-  arr = Array.isArray(arr)?arr:(arr&&arr.data||[])
-  return arr.map(function(o){
-    return { name:o.name||o.player||"unknown",
-             gold:Number(o.gold||o.season_gold||0),
-             casts:Number(o.casts||o.season_casts||0),
-             lifetime_casts:Number(o.lifetime_casts||o.total_casts||0) }
-  })
-}
-function normRecent(arr){
-  arr = Array.isArray(arr)?arr:(arr&&arr.data||[])
-  return arr.map(function(o){
-    return { player:o.player||o.name||"unknown",
-             item:o.item||o.species||"",
-             rarity:o.rarity||"",
-             stars:Number(o.stars||o.star||0),
-             gold:Number(o.gold||0),
-             ts:Number(o.timestamp||o.ts||o.epoch||epochFrom(o.time)||0) }
-  })
-}
-function normDex(arr){
-  arr = Array.isArray(arr)?arr:(arr&&arr.data||arr&&arr.items||[])
+function setSpan(s){ SPAN=s; $all(".tab").forEach(function(t){t.classList.toggle("active",t.getAttribute("data-span")===s)}) }
+function inSpan(ts){ if(SPAN==="all") return true; if(!ts) return true; return ts>=SEASON_START }
+
+/* ---------- Normalizers ---------- */
+function normBests(j){
+  var arr=Array.isArray(j)?j:(j&&j.data||[])
   return arr.map(function(o){
     return { item:o.item||o.species||o.name||"unknown",
              rarity:o.rarity||"",
-             best_gold:Number(o.best_gold||o.gold||0),
-             player:o.player||o.best_player||"",
+             player:o.player||o.best_player||"unknown",
+             gold:Number(o.best_gold||o.gold||0),
              ts:Number(o.timestamp||o.ts||o.epoch||epochFrom(o.time)||0) }
-  })
+  }).sort(function(a,b){return b.gold-a.gold})
+}
+function normRecent(j){
+  var arr=Array.isArray(j)?j:(j&&j.data||[])
+  return arr.map(function(o){return{player:o.player||o.name||"unknown",item:o.item||o.species||"",rarity:o.rarity||"",stars:Number(o.stars||o.star||0),gold:Number(o.gold||0),ts:Number(o.timestamp||o.ts||o.epoch||epochFrom(o.time)||0)}})
+}
+function normLeaderboard(j){
+  var arr=Array.isArray(j)?j:(j&&j.data||j&&j.rows||[])
+  arr=arr.map(function(o){return{player:o.player||o.name||"unknown",gold:Number(o.gold||o.total_gold||o.season_gold||0)}})
+  arr.sort(function(a,b){return b.gold-a.gold}); for(var i=0;i<arr.length;i++) arr[i].rank=i+1; return arr
+}
+function normPlayers(j){
+  var arr=Array.isArray(j)?j:(j&&j.data||[])
+  return arr.map(function(o){return{name:o.name||o.player||"unknown",gold:Number(o.gold||o.season_gold||0),casts:Number(o.casts||o.season_casts||0),lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)}})
 }
 
-/* ---------------- State ---------------- */
-var VIEW="leaderboard", SPAN="season", SEASON_START=0
-function setView(v){ VIEW=v; $all(".pill").forEach(function(p){p.classList.toggle("active", p.getAttribute("data-view")===v)}) }
-function setSpan(s){ SPAN=s; $all(".tab").forEach(function(t){t.classList.toggle("active", t.getAttribute("data-span")===s)}) }
-function inSpan(ts){ if(!ts) return true; if(SPAN==="all") return true; return ts>=SEASON_START }
-
-/* ---------------- Renders ---------------- */
-function renderLeaderboard(list){
-  var el=$("#view-leaderboard"); el.innerHTML=""
-  for(var i=0;i<list.length;i++){
-    var r=list[i]
-    var row=document.createElement("div"); row.className="row"
-    row.innerHTML = "<div class='rank'>"+r.rank+"</div>"
-                   +"<div>"
-                   +"  <div class='title'>"+r.player+"</div>"
-                   +"  <div class='sub'>Season gold</div>"
-                   +"</div>"
-                   +"<div class='gold'>"+fmtGold(r.gold)+"</div>"
+/* ---------- Renderers ---------- */
+function renderBests(list){
+  var q=($("#qGlobal").value||"").toLowerCase()
+  var el=$("#listBests"); el.innerHTML=""
+  var filtered=list.filter(function(r){
+    var okSpan=inSpan(r.ts)
+    if(!okSpan) return false
+    if(!q) return true
+    return (r.item.toLowerCase().indexOf(q)>-1)||(r.player.toLowerCase().indexOf(q)>-1)||(r.rarity.toLowerCase().indexOf(q)>-1)
+  })
+  for(var i=0;i<filtered.length;i++){
+    var r=filtered[i]
+    var row=document.createElement("div"); row.className="item"
+    row.innerHTML =
+      "<div class='rank'>"+(i+1)+"</div>"+
+      "<div class='main'>"+
+      "  <div class='title'>"+r.item+"<span class='badge'>"+(r.rarity||"")+"</span></div>"+
+      "  <div class='sub'>"+r.player+" · "+fmtStamp(r.ts)+"</div>"+
+      "</div>"+
+      "<div class='gold'>"+fmtGold(r.gold)+"</div>"
     el.appendChild(row)
   }
 }
-function renderRecent(rows){
-  var thead="<tr><th>When</th><th>Player</th><th>Catch</th><th class='num'>★</th><th class='num'>Gold</th></tr>"
-  $("#theadRecent").innerHTML=thead
-  if(!rows.length){ $("#emptyRecent").style.display="block"; $("#tbodyRecent").innerHTML=""; return }
-  $("#emptyRecent").style.display="none"
-  var tb=""
-  for(var i=0;i<rows.length;i++){
-    var r=rows[i]; var catchTxt=r.item+(r.rarity?(" ("+r.rarity+")"):"")
-    tb += "<tr><td>"+fmtTime(r.ts)+"</td><td>"+r.player+"</td><td>"+catchTxt+"</td><td class='num'>"+(r.stars||0)+"</td><td class='num'>"+fmtGold(r.gold)+"</td></tr>"
-  }
-  $("#tbodyRecent").innerHTML=tb
-}
-function renderDex(rows){
-  var thead="<tr><th>Species/Item</th><th>Rarity</th><th>Record by</th><th class='num'>Best Gold</th><th>When</th></tr>"
-  $("#theadDex").innerHTML=thead
-  if(!rows.length){ $("#emptyDex").style.display="block"; $("#tbodyDex").innerHTML=""; return }
-  $("#emptyDex").style.display="none"
-  var tb=""
-  for(var i=0;i<rows.length;i++){
-    var r=rows[i]
-    tb += "<tr><td>"+r.item+"</td><td>"+r.rarity+"</td><td>"+(r.player||"")+"</td><td class='num'>"+fmtGold(r.best_gold)+"</td><td>"+(r.ts?fmtTime(r.ts):"")+"</td></tr>"
-  }
-  $("#tbodyDex").innerHTML=tb
-}
-function renderPlayers(rows){
-  var thead="<tr><th>Player</th><th class='num'>Season Gold</th><th class='num'>Season Casts</th><th class='num'>Lifetime Casts</th></tr>"
-  $("#theadPlayers").innerHTML=thead
-  if(!rows.length){ $("#emptyPlayers").style.display="block"; $("#tbodyPlayers").innerHTML=""; return }
-  $("#emptyPlayers").style.display="none"
-  var tb=""
-  for(var i=0;i<rows.length;i++){
-    var r=rows[i]
-    tb += "<tr><td>"+r.name+"</td><td class='num'>"+fmtGold(r.gold)+"</td><td class='num'>"+(r.casts||0)+"</td><td class='num'>"+(r.lifetime_casts||0)+"</td></tr>"
-  }
-  $("#tbodyPlayers").innerHTML=tb
+
+function renderTable(headEl, bodyEl, emptyEl, headers, rowsHtml){
+  var thead="<tr>"; for(var i=0;i<headers.length;i++){ thead+="<th>"+headers[i]+"</th>" } thead+="</tr>"; headEl.innerHTML=thead
+  if(!rowsHtml.length){ emptyEl.style.display="block"; bodyEl.innerHTML=""; return }
+  emptyEl.style.display="none"; bodyEl.innerHTML=rowsHtml.join("")
 }
 
-/* ---------------- Load & Update ---------------- */
-function applySort(rows, key, desc){
-  return rows.sort(function(a,b){
+var sortRecent={key:"ts",desc:true}, sortLead={key:"rank",desc:false}, sortPlayers={key:"gold",desc:true}
+function applySort(arr,key,desc){
+  return arr.sort(function(a,b){
     var va=a[key], vb=b[key]
-    var na = typeof va==="number", nb = typeof vb==="number"
-    if(na && nb) return desc? vb-va : va-vb
+    if(typeof va==="number" && typeof vb==="number") return desc? vb-va : va-vb
     return desc? String(vb).localeCompare(String(va)) : String(va).localeCompare(String(vb))
   })
 }
 
-var sortRecent={key:"ts",desc:true}, sortDex={key:"best_gold",desc:true}, sortPlayers={key:"gold",desc:true}
-function wireSorting(){
-  $("#theadRecent").onclick=function(e){
-    if(e.target.tagName!=="TH") return
-    var idx=e.target.cellIndex
-    var map=["ts","player","item","stars","gold"]
-    sortRecent.key=map[idx]||"ts"; sortRecent.desc=!sortRecent.desc
-    update()
-  }
-  $("#theadDex").onclick=function(e){
-    if(e.target.tagName!=="TH") return
-    var idx=e.target.cellIndex
-    var map=["item","rarity","player","best_gold","ts"]
-    sortDex.key=map[idx]||"best_gold"; sortDex.desc=!sortDex.desc
-    update()
-  }
-  $("#theadPlayers").onclick=function(e){
-    if(e.target.tagName!=="TH") return
-    var idx=e.target.cellIndex
-    var map=["name","gold","casts","lifetime_casts"]
-    sortPlayers.key=map[idx]||"gold"; sortPlayers.desc=!sortPlayers.desc
-    update()
-  }
+/* ---------- Data ---------- */
+var DATA={meta:{}, bests:[], recent:[], lead:[], players:[]}
+function refreshSync(){
+  var t=DATA.meta && (DATA.meta.exported_at_epoch||epochFrom(DATA.meta.exported_at_iso))
+  var s=t?fmtStamp(t):""
+  $("#syncA").textContent=s; $("#syncB").textContent=s; $("#syncC").textContent=s; $("#syncD").textContent=s
 }
 
-var DATA={meta:{}, leaderboard:[], recent:[], dex:[], players:[]}
-function filterSpan(arr, keyTs){
-  if(SPAN==="all") return arr.slice()
-  return arr.filter(function(x){ var t = keyTs?Number(x[keyTs]||0):0; return !t || t>=SEASON_START })
-}
 function update(){
-  var q = ($("#qGlobal").value||"").trim().toLowerCase()
+  var q=($("#qGlobal").value||"").trim()
 
-  if(VIEW==="leaderboard"){
-    $("#vTitle").textContent="Leaderboard"; $("#vSub").textContent=(SPAN==="season"?"Totals since season start":"All-time totals")
-    $("#view-leaderboard").style.display="block"
-    $("#view-recent").style.display="none"; $("#view-dex").style.display="none"; $("#view-players").style.display="none"
-    var rows = DATA.leaderboard.slice()
-    if(q) rows = rows.filter(function(r){return r.player.toLowerCase().indexOf(q)>-1})
-    renderLeaderboard(rows)
-  }
+  if(VIEW==="bests"){ renderBests(DATA.bests) }
 
   if(VIEW==="recent"){
-    $("#vTitle").textContent="Recent Catches"; $("#vSub").textContent=(SPAN==="season"?"Live, season window":"Live, all time")
-    $("#view-leaderboard").style.display="none"; $("#view-dex").style.display="none"; $("#view-players").style.display="none"; $("#view-recent").style.display="block"
-    var rowsR = filterSpan(DATA.recent,"ts")
-    if(q) rowsR = rowsR.filter(function(r){return r.player.toLowerCase().indexOf(q)>-1 || r.item.toLowerCase().indexOf(q)>-1})
-    rowsR = applySort(rowsR, sortRecent.key, sortRecent.desc)
-    renderRecent(rowsR)
+    var rec=DATA.recent.filter(function(r){return inSpan(r.ts)})
+    if(q){ var qq=q.toLowerCase(); rec=rec.filter(function(r){return r.player.toLowerCase().indexOf(qq)>-1 || r.item.toLowerCase().indexOf(qq)>-1}) }
+    rec=applySort(rec,sortRecent.key,sortRecent.desc)
+    var rowsR=[]
+    for(var i=0;i<rec.length;i++){
+      var c=rec[i]; var text=c.item+(c.rarity?(" ("+c.rarity+")"):"")
+      rowsR.push("<tr><td>"+fmtStamp(c.ts)+"</td><td>"+c.player+"</td><td>"+text+"</td><td class='num'>"+(c.stars||0)+"</td><td class='num'>"+fmtGold(c.gold)+"</td></tr>")
+    }
+    renderTable($("#thRecent"),$("#tbRecent"),$("#emptyRecent"),["When","Player","Catch","★","Gold"],rowsR)
   }
 
-  if(VIEW==="dex"){
-    $("#vTitle").textContent="Dex"; $("#vSub").textContent="Best gold by species"
-    $("#view-leaderboard").style.display="none"; $("#view-recent").style.display="none"; $("#view-players").style.display="none"; $("#view-dex").style.display="block"
-    var rowsD = filterSpan(DATA.dex,"ts")
-    if(q) rowsD = rowsD.filter(function(r){return r.item.toLowerCase().indexOf(q)>-1 || (r.player||"").toLowerCase().indexOf(q)>-1})
-    rowsD = applySort(rowsD, sortDex.key, sortDex.desc)
-    renderDex(rowsD)
-  }
+  if(VIEW==="stats"){
+    var lead=DATA.lead.slice()
+    if(q){ var qq2=q.toLowerCase(); lead=lead.filter(function(r){return r.player.toLowerCase().indexOf(qq2)>-1}) }
+    lead=applySort(lead,sortLead.key,sortLead.desc)
+    var rowsL=[]
+    for(var j=0;j<lead.length;j++){ var r=lead[j]; rowsL.push("<tr><td class='num'>"+r.rank+"</td><td>"+r.player+"</td><td class='num'>"+fmtGold(r.gold)+"</td></tr>") }
+    renderTable($("#thLead"),$("#tbLead"),$("#emptyLead"),["#","Player","Gold"],rowsL)
 
-  if(VIEW==="players"){
-    $("#vTitle").textContent="Players"; $("#vSub").textContent="Totals and casts"
-    $("#view-leaderboard").style.display="none"; $("#view-recent").style.display="none"; $("#view-dex").style.display="none"; $("#view-players").style.display="block"
-    var rowsP = DATA.players.slice()
-    if(q) rowsP = rowsP.filter(function(r){return r.name.toLowerCase().indexOf(q)>-1})
-    rowsP = applySort(rowsP, sortPlayers.key, sortPlayers.desc)
-    renderPlayers(rowsP)
+    var players=DATA.players.slice()
+    if(q){ var qq3=q.toLowerCase(); players=players.filter(function(p){return p.name.toLowerCase().indexOf(qq3)>-1}) }
+    players=applySort(players,sortPlayers.key,sortPlayers.desc)
+    var rowsP=[]
+    for(var k=0;k<players.length;k++){ var p=players[k]; rowsP.push("<tr><td>"+p.name+"</td><td class='num'>"+fmtGold(p.gold)+"</td><td class='num'>"+(p.casts||0)+"</td><td class='num'>"+(p.lifetime_casts||0)+"</td></tr>") }
+    renderTable($("#thPlayers"),$("#tbPlayers"),$("#emptyPlayers"),["Player","Season Gold","Season Casts","Lifetime Casts"],rowsP)
   }
 }
 
 function loadAll(){
   return Promise.all([
     get(URLS.meta).then(function(m){
-      DATA.meta=m||{}
-      var epoch = Number(m && (m.season_start_epoch||m.season||m.start_epoch))
-      if(epoch && isFinite(epoch)) SEASON_START = epoch
-      else{
-        // fallback: Aug 1 current year at 00:00 local
-        var d=new Date(); var year=d.getFullYear(); var guess=new Date(year,7,1,0,0,0,0); SEASON_START=Math.floor(guess.getTime()/1000)
-      }
-      $("#sync").textContent = (m && (m.exported_at_iso||"")) || ""
+      DATA.meta=m||{}; refreshSync()
+      var s=Number(m && (m.season_start_epoch||m.season||m.start_epoch))
+      if(s && isFinite(s)) SEASON_START=s
+      else{ var d=new Date(), y=d.getFullYear(), guess=new Date(y,7,1,0,0,0,0); SEASON_START=Math.floor(guess.getTime()/1000) }
     }),
-    get(URLS.leaderboard).then(function(j){ DATA.leaderboard = normLeaderboard(j) }),
+    get(URLS.seasonBests).then(function(j){ DATA.bests = normBests(j) }),
     get(URLS.recent).then(function(j){ DATA.recent = normRecent(j) }),
-    get(URLS.dex).then(function(j){ DATA.dex = normDex(j) }),
+    get(URLS.leaderboard).then(function(j){ DATA.lead = normLeaderboard(j) }),
     get(URLS.players).then(function(j){ DATA.players = normPlayers(j) })
   ])
 }
 
-/* ---------------- Wire UI ---------------- */
-document.addEventListener("DOMContentLoaded", function(){
-  // view pills
+/* ---------- Wire up ---------- */
+document.addEventListener("DOMContentLoaded",function(){
+  // nav
   $all(".pill").forEach(function(p){ p.onclick=function(){ setView(p.getAttribute("data-view")); update() } })
-  // span tabs
+  // tabs
   $all(".tab").forEach(function(t){ t.onclick=function(){ setSpan(t.getAttribute("data-span")); update() } })
-  // global search
-  $("#qGlobal").addEventListener("input", function(){ update() })
+  // search
+  $("#qGlobal").addEventListener("input",function(){ update() })
 
-  wireSorting()
+  // header sorts
+  document.getElementById("thRecent").onclick=function(e){ if(e.target.tagName!=="TH")return; var idx=e.target.cellIndex; var map=["ts","player","item","stars","gold"]; var k=map[idx]||"ts"; if(sortRecent.key===k) sortRecent.desc=!sortRecent.desc; else {sortRecent.key=k; sortRecent.desc=(k!=="player"&&k!=="item")} update() }
+  document.getElementById("thLead").onclick=function(e){ if(e.target.tagName!=="TH")return; var idx=e.target.cellIndex; var map=["rank","player","gold"]; var k=map[idx]||"rank"; if(sortLead.key===k) sortLead.desc=!sortLead.desc; else {sortLead.key=k; sortLead.desc=(k!=="player")} update() }
+  document.getElementById("thPlayers").onclick=function(e){ if(e.target.tagName!=="TH")return; var idx=e.target.cellIndex; var map=["name","gold","casts","lifetime_casts"]; var k=map[idx]||"gold"; if(sortPlayers.key===k) sortPlayers.desc=!sortPlayers.desc; else {sortPlayers.key=k; sortPlayers.desc=(k!=="name")} update() }
+
   loadAll().then(function(){ update() })
-
-  // refresh data every 90s
   setInterval(function(){ CACHE={}; loadAll().then(function(){ update() }) }, 90000)
 })
 </script>
