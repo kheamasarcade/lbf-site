@@ -116,6 +116,44 @@ body{
 .small{color:var(--muted);font-size:12px;margin-top:10px}
 .footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
 </style>
+  <style>
+/* 1) Active tabs/pills: black text on the pink→blue gradient */
+.pill.active,
+.tab.active{
+  color:#0a0f16;            /* near-black like the local build */
+  font-weight:900;          /* punchier */
+  text-shadow:none;         /* crisp text on gradient */
+}
+
+/* 2) Rarity chips: slightly smaller */
+.chip{
+  padding:2px 8px;          /* was 4px 10px */
+  font-size:11px;           /* was 12px */
+  line-height:1.15;
+}
+
+/* 3) Season Bests byline (player · date): a touch larger */
+.sub{
+  font-size:13px;           /* was 12px */
+}
+
+/* 4) Gold: bigger + bolder with a bit more glow */
+.gold{
+  font-size:21px;           /* was 18px */
+  font-weight:900;          /* was 800 */
+  letter-spacing:.2px;
+  text-shadow:
+    0 0 3px rgba(250,204,21,.45),
+    0 0 14px rgba(250,204,21,.38);
+  color:#ffe08a;            /* keep warm gold */
+}
+
+/* Optional: tighten chip variants to match smaller base size */
+.chip.star, .chip.gold{
+  padding:2px 8px;          /* keep consistency */
+  font-size:11px;
+}
+</style>
 </head>
 <body>
   <div class="top">
@@ -411,3 +449,4 @@ document.addEventListener("DOMContentLoaded",function(){
 </script>
 </body>
 </html>
+
