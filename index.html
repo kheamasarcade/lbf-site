@@ -102,20 +102,20 @@ body{
 /* table */
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
-.table th,.table td{padding:12px;border-bottom:1px solid #0e1730}
+.table th,.table td{padding:14px;border-bottom:1px solid #0e1730}
 .table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer;font-weight:900;letter-spacing:.2px}
 .table tbody tr{transition:transform .12s ease,background .12s ease}
 .table tbody tr:hover{transform:translateY(-1px);background:rgba(255,255,255,.03)}
-.table tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
-.table tbody tr + tr{border-top:1px solid #101a36}
-.num{text-align:right;font-family:"JetBrains Mono",monospace}
-.table td{font-size:14px}
-.table td .chip.gold{font-weight:900}
-.table td .chip.star{font-weight:800}
-.table td.num{font-family:"JetBrains Mono",monospace;font-weight:800}
+.table tbody tr:nth-child(odd){background:rgba(255,255,255,.018)}
+.num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:800}
 
 /* chips */
-.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900;border:1px solid transparent;line-height:1.15}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 8px;
+  font-size:11px;font-weight:900;border:1px solid transparent;line-height:1.15;
+  transition:box-shadow .18s ease, transform .18s ease
+}
+.chip:hover{ transform: translateY(-1px); box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 18px rgba(147,197,253,.18) }
 .r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
 .r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
 .r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
@@ -123,9 +123,12 @@ body{
 .r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
 .r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
 
+/* better stat panel glow */
+#view-lp .card{ box-shadow:0 24px 48px rgba(0,0,0,.5) }
+
 .footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
 
-/* click ripple */
+/* ripple */
 .pill .rpl,.tab .rpl{position:absolute;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.45);animation:ripple .6s ease-out forwards;mix-blend-mode:overlay}
 @keyframes ripple{to{transform:translate(-50%,-50%) scale(18);opacity:0}}
 </style>
@@ -223,39 +226,30 @@ const URLS={
 let VERSION = Date.now();
 
 /* -------- utils -------- */
-const $=s=>document.querySelector(s);
-const $all=s=>Array.from(document.querySelectorAll(s));
-async function get(u){ const url=u+(u.includes("?")?"&":"?")+"v="+VERSION; const r=await fetch(url,{cache:"no-store"}); if(!r.ok) throw new Error(u); return r.json(); }
-const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g";
-const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common";
+const $=s=>document.querySelector(s)
+const $all=s=>Array.from(document.querySelectorAll(s))
+async function get(u){
+  const cachebust = (u.includes("?")?"&":"?")+"v="+VERSION;
+  const r=await fetch(u+cachebust,{cache:"no-store"});
+  if(!r.ok) throw new Error(u);
+  return r.json();
+}
+const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g"
+const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common"
 
-/* robust date -> epoch */
+/* robust epoch from many formats (kept for season/all-time filters if needed) */
 function epochFrom(v){
   if (!v) return null;
   if (typeof v === "number") return Math.floor(v);
   const iso = Date.parse(v);
   if (!isNaN(iso)) return Math.floor(iso/1000);
-  // MM/DD/YYYY hh:mm:ss AM/PM
-  let m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/i.exec(v);
+  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/i.exec(v);
   if (m){
-    let M=+m[1], D=+m[2], Y=+m[3], h=+m[4], mn=+m[5], s=+m[6], ap=m[7].toUpperCase();
+    let M=+m[1], D=+m[2], Y=+m[3], h=+m[4], mi=+m[5], s=+m[6], ap=m[7].toUpperCase();
     if (ap==="PM" && h<12) h+=12; if (ap==="AM" && h===12) h=0;
-    return Math.floor(new Date(Y, M-1, D, h, mn, s).getTime()/1000);
-  }
-  // DD/MM/YYYY hh:mm:ss AM/PM
-  m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/i.exec(v);
-  if (m){
-    let D=+m[1], M=+m[2], Y=+m[3], h=+m[4], mn=+m[5], s=+m[6], ap=m[7].toUpperCase();
-    if (ap==="PM" && h<12) h+=12; if (ap==="AM" && h===12) h=0;
-    return Math.floor(new Date(Y, M-1, D, h, mn, s).getTime()/1000);
+    return Math.floor(new Date(Y,M-1,D,h,mi,s).getTime()/1000);
   }
   return null;
-}
-function fmtStamp(ts){
-  if (!ts) return "";
-  const d=new Date(ts*1000);
-  const p=n=> (n<10?"0":"")+n;
-  return p(d.getHours())+":"+p(d.getMinutes())+":"+p(d.getSeconds())+" "+p(d.getDate())+"/"+p(d.getMonth()+1)+"/"+d.getFullYear();
 }
 
 /* -------- state -------- */
@@ -286,27 +280,30 @@ function normBests(j){
     rarity:o.rarity||"",
     player:o.player||o.best_player||"unknown",
     best_gold:Number(o.best_gold||o.gold||0),
-    ts:Number(o.timestamp||epochFrom(o.date)||0),
+    ts:Number(o.timestamp||0),
     date:o.date||""
   })).sort((a,b)=>b.best_gold-a.best_gold);
 }
+
+/* *** KEY CHANGE: take the last 50 entries in file order, newest first, and display the original date string *** */
 function normRecent(j){
   const arr = Array.isArray(j)? j : (j&&j.data)||[];
-  const out = arr.map(o=>{
-    let ts = (typeof o.timestamp === "number") ? o.timestamp : null;
-    if (!ts) ts = epochFrom(o.date) || epochFrom(o.time) || epochFrom(o.ts) || epochFrom(o.epoch);
+  const last50 = arr.slice(-50);           // last 50 in file
+  last50.reverse();                        // newest first
+  return last50.map(o=>{
+    const ts = (typeof o.timestamp==="number" ? o.timestamp : (epochFrom(o.date)||0));
     return {
       player:o.player||o.username||o.name||"unknown",
       item:o.item||o.species||"",
       rarity:o.rarity||"",
-      stars:Number(o.stars||0),
+      stars:Number(o.stars||o.star||0),
       gold:Number(o.gold||0),
-      ts:ts||0
+      ts:ts,               // still kept for Season/All toggle
+      date:o.date||""      // display exactly as saved
     };
   });
-  out.sort((a,b)=>b.ts-a.ts);      // newest first
-  return out.slice(0,50);          // newest 50
 }
+
 function normPlayers(j){
   const arr = Array.isArray(j)? j : (j&&j.data)||[];
   return arr.map(o=>({
@@ -323,17 +320,13 @@ function normLeader(j){
   arr.forEach((r,i)=>r.rank=i+1);
   return arr;
 }
+
 /* merge leaderboard + players by name */
 function buildMerged(lead, players){
   const pmap = new Map(players.map(p=>[p.name.toLowerCase(), p]));
   return lead.map(r=>{
     const p = pmap.get(r.player.toLowerCase()) || {};
-    return {
-      rank: r.rank, player: r.player,
-      gold: r.gold,
-      casts: Number(p.casts||0),
-      lifetime_casts: Number(p.lifetime_casts||0)
-    };
+    return { rank:r.rank, player:r.player, gold:r.gold, casts:Number(p.casts||0), lifetime_casts:Number(p.lifetime_casts||0) };
   });
 }
 
@@ -345,6 +338,7 @@ function refreshSync(){
   const s = d? `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}` : "";
   $("#syncA").textContent=s; $("#syncB").textContent=s; $("#syncC").textContent=s;
 }
+
 function renderBests(){
   const q = ($("#qGlobal").value||"").toLowerCase();
   const el = $("#listBests"); el.innerHTML="";
@@ -355,31 +349,32 @@ function renderBests(){
       <div class="rank">${i+1}</div>
       <div class="main">
         <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
-        <div class="sub">${r.player} · ${r.date || fmtStamp(r.ts)}</div>
+        <div class="sub">${r.player} · ${r.date||""}</div>
       </div>
       <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
     el.appendChild(div);
   });
   if(!rows.length){ el.innerHTML = `<div class="item"><div class="main"><div class="sub">No data</div></div></div>`; }
 }
+
 function renderRecent(){
   const q = ($("#qGlobal").value||"").toLowerCase();
   let rec = DATA.recent.filter(r=>inSpan(r.ts));
   if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
-  rec.sort((a,b)=>b.ts-a.ts); // enforce newest-first
 
   const head=["When","Player","Catch","★","Gold"];
   $("#thRecent").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
   const rows = rec.map(c=>`<tr>
-    <td>${fmtStamp(c.ts)}</td>
+    <td>${c.date||""}</td>
     <td>${c.player}</td>
     <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
-    <td class="num"><span class="chip star">★ ${c.stars||0}</span></td>
-    <td class="num"><span class="chip gold">${fmtGold(c.gold)}</span></td>
+    <td class="num"><span class="chip" style="background:#11182c;border:1px solid #263055;color:#bbcaf0">★ ${c.stars||0}</span></td>
+    <td class="num"><span class="chip" style="background:#2c2410;border:1px solid #5b470c;color:#ffe08a">${fmtGold(c.gold)}</span></td>
   </tr>`);
   $("#tbRecent").innerHTML = rows.join("");
   $("#emptyRecent").style.display = rows.length? "none":"block";
 }
+
 function renderMerged(){
   const q = ($("#qGlobal").value||"").toLowerCase();
   let rows = DATA.merged.slice();
@@ -396,13 +391,14 @@ function renderMerged(){
   $("#tbMerged").innerHTML = html.join("");
   $("#emptyMerged").style.display = html.length? "none":"block";
 }
+
 function update(){
   if(VIEW==="bests") renderBests();
   if(VIEW==="recent") renderRecent();
   if(VIEW==="lp") renderMerged();
 }
 
-/* click ripple */
+/* ripple */
 document.addEventListener("click", e=>{
   const t=e.target.closest(".pill,.tab"); if(!t) return;
   const r=document.createElement("span"); r.className="rpl";
@@ -415,7 +411,7 @@ document.addEventListener("click", e=>{
 (async function init(){
   try{
     const meta = await get(URLS.meta); DATA.meta=meta||{};
-    VERSION = Number(meta?.exported_at_epoch)||VERSION;
+    VERSION = Number(meta?.exported_at_epoch)||VERSION;      // cache-bust with exporter time
     SEASON_START = Number(meta?.season_start_epoch||0) || Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
     refreshSync();
 
@@ -431,6 +427,7 @@ document.addEventListener("click", e=>{
     update();
   }catch(e){ console.error(e) }
 
+  // refresh every 90s
   setInterval(async()=>{
     try{
       const meta = await get(URLS.meta); DATA.meta=meta||{};
