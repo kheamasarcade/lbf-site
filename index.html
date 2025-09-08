@@ -154,6 +154,132 @@ body{
   font-size:11px;
 }
 </style>
+  <style>
+/* ---------- ARCADE FUN LAYER ---------- */
+
+/* neon breathing on the brand */
+.brand { position:relative }
+.brand .pink, .brand .blue {
+  text-shadow:
+    0 0 6px rgba(244,114,182,.45),
+    0 0 18px rgba(244,114,182,.25);
+  animation: glowPink 4s ease-in-out infinite;
+}
+.brand .blue {
+  text-shadow:
+    0 0 6px rgba(96,165,250,.45),
+    0 0 18px rgba(96,165,250,.25);
+  animation: glowBlue 4s ease-in-out infinite;
+}
+@keyframes glowPink {
+  0%,100% { text-shadow:0 0 6px rgba(244,114,182,.35),0 0 14px rgba(244,114,182,.2) }
+  50%     { text-shadow:0 0 10px rgba(244,114,182,.55),0 0 26px rgba(244,114,182,.35) }
+}
+@keyframes glowBlue {
+  0%,100% { text-shadow:0 0 6px rgba(96,165,250,.35),0 0 14px rgba(96,165,250,.2) }
+  50%     { text-shadow:0 0 10px rgba(96,165,250,.55),0 0 26px rgba(96,165,250,.35) }
+}
+
+/* richer active tab/pill look (you wanted black text; we keep that) */
+.pill.active, .tab.active{
+  color:#0a0f16;
+  font-weight:900;
+  text-shadow:none;
+  box-shadow:
+    0 0 12px rgba(244,114,182,.35),
+    0 0 28px rgba(96,165,250,.30),
+    inset 0 0 0 1px rgba(255,255,255,.05);
+  transform: translateZ(0);
+}
+.pill, .tab { transition: transform .18s ease, box-shadow .18s ease }
+.pill:hover, .tab:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,0,0,.25) }
+
+/* search focus glow */
+.search:focus{
+  box-shadow: 0 0 0 2px #203260, 0 0 20px rgba(96,165,250,.25);
+}
+
+/* list + table hover lift */
+.item{ transition: transform .15s ease, box-shadow .15s ease, background .15s ease }
+.item:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.02);
+  box-shadow: 0 10px 22px rgba(0,0,0,.35);
+}
+.table tbody tr{ transition: transform .12s ease, background .12s ease }
+.table tbody tr:hover{ transform: translateY(-1px); background: rgba(255,255,255,.03) }
+
+/* rarity chips: smaller per your note (and crisp) */
+.chip{ padding:2px 8px; font-size:11px; line-height:1.15 }
+.chip.star, .chip.gold{ padding:2px 8px; font-size:11px }
+
+/* shimmer on LEGENDARY */
+.r-legend{
+  position:relative; overflow:hidden; isolation:isolate;
+  background-image:
+    linear-gradient(120deg, rgba(255,255,255,.0) 0%, rgba(255,255,255,.18) 18%, rgba(255,255,255,.0) 35%),
+    linear-gradient(#2a2307,#2a2307);
+  background-size: 220% 100%, 100% 100%;
+  background-repeat:no-repeat;
+  animation: legendShine 3.2s linear infinite;
+}
+@keyframes legendShine{
+  0%{ background-position: -180% 0, 0 0 }
+  100%{ background-position: 180% 0, 0 0 }
+}
+
+/* pulse on STAR chip */
+.chip.star{ position:relative }
+.chip.star::after{
+  content:""; position:absolute; inset:-6px; border-radius:999px;
+  box-shadow: 0 0 16px rgba(147,197,253,.25);
+  animation: starPulse 2.8s ease-in-out infinite;
+}
+@keyframes starPulse{
+  0%,100% { opacity:.35; transform: scale(.98) }
+  50%     { opacity:.75; transform: scale(1.05) }
+}
+
+/* golden shine sweep on gold chip */
+.chip.gold{ position:relative; overflow:hidden; isolation:isolate }
+.chip.gold::after{
+  content:""; position:absolute; top:-50%; left:-30%; width:40%; height:200%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.35) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(20deg); filter: blur(2px); opacity:.0;
+  animation: goldSweep 3.6s ease-in-out infinite;
+}
+@keyframes goldSweep{
+  0%{ transform:translateX(0) rotate(20deg); opacity:0 }
+  35%{ transform:translateX(280%) rotate(20deg); opacity:.55 }
+  55%{ opacity:.0 }
+  100%{ transform:translateX(280%) rotate(20deg); opacity:0 }
+}
+
+/* your requested typography tweaks */
+.sub{ font-size:13px }              /* byline a bit larger */
+.gold{
+  font-size:21px; font-weight:900; letter-spacing:.2px;
+  text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);
+  color:#ffe08a;
+}
+
+/* click ripple host */
+.pill, .tab { position:relative; overflow:hidden }
+.pill .rpl, .tab .rpl{
+  position:absolute; pointer-events:none; border-radius:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:rgba(255,255,255,.45);
+  animation:ripple .6s ease-out forwards; mix-blend-mode:overlay;
+}
+@keyframes ripple{ to{ transform:translate(-50%,-50%) scale(18); opacity:0 } }
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .brand .pink,.brand .blue,
+  .r-legend,.chip.star::after,.chip.gold::after{ animation:none }
+  .item,.table tbody tr,.pill,.tab{ transition:none }
+}
+</style>
 </head>
 <body>
   <div class="top">
@@ -446,7 +572,24 @@ document.addEventListener("DOMContentLoaded",function(){
   loadAll().then(function(){ update() })
   setInterval(function(){ CACHE={}; loadAll().then(function(){ update() }) }, 90000)
 })
+  <script>
+document.addEventListener("click", function(e){
+  var t=e.target.closest(".pill, .tab");
+  if(!t) return;
+  var r=document.createElement("span");
+  r.className="rpl";
+  var rect=t.getBoundingClientRect();
+  var x=e.clientX-rect.left, y=e.clientY-rect.top;
+  r.style.left=x+"px"; r.style.top=y+"px";
+  var size=Math.max(rect.width,rect.height);
+  r.style.width=r.style.height=size+"px";
+  t.appendChild(r);
+  setTimeout(function(){ r.remove() }, 650);
+}, true);
+</script>
+
 </script>
 </body>
 </html>
+
 
