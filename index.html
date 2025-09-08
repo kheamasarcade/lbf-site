@@ -3,83 +3,158 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kheama's Arcade • LBF (Smoke Test)</title>
+<title>Kheama's Arcade • Lurk Bait Fishing</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/400.css">
 <style>
-  body{margin:0;background:#0b0f17;color:#e5e7eb;font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto}
-  .wrap{max-width:900px;margin:24px auto;padding:0 16px}
-  h1{margin:0 0 12px;font-weight:800}
-  .card{background:#0f172a;border:1px solid #111827;border-radius:12px;padding:16px}
-  code{background:#0c1426;padding:2px 6px;border-radius:6px}
-  .ok{color:#86efac}.err{color:#fca5a5}
-  ul{padding-left:18px}
-  .row{margin:6px 0}
+body{margin:0;background:#0b0f17;color:#e5e7eb;font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto}
+.topbar{max-width:1200px;margin:20px auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:800;font-size:24px}
+.pink{color:#f472b6}.blue{color:#60a5fa}
+.nav{display:flex;gap:10px}
+.navlink{color:#9fb4d9;text-decoration:none;padding:6px 10px;border:1px solid #1d2a46;border-radius:999px}
+.navlink.active{color:#fff;background:#1d2a46}
+.wrap{max-width:1200px;margin:12px auto 24px;padding:0 16px}
+.card{background:#111827;border:1px solid #1d2a46;border-radius:12px;padding:16px;margin-bottom:16px}
+.section-title{display:flex;justify-content:space-between;margin-bottom:8px}
+.section-title h2{margin:0}
+.tabs{display:flex;gap:8px;margin:8px 0}
+.tab{padding:6px 10px;border-radius:999px;background:#0b1220;color:#93c5fd;border:1px solid #1d2a46;cursor:pointer}
+.tab.active{background:#1d2a46;color:#e5e7eb}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border-bottom:1px solid #1d2a46}
+th{cursor:pointer;text-align:left;background:#1d2a46}
+td.num,th.num{text-align:right}
+.empty{padding:10px;color:#9ca3af}
+.footer{max-width:1200px;margin:8px auto;padding:0 16px;color:#9ca3af;font-size:12px;text-align:center}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Kheama's Arcade • Lurk Bait Fishing</h1>
+<header class="topbar">
+  <div class="brand"><span class="pink">Kheama's</span> <span class="blue">Arcade</span> · Lurk Bait Fishing</div>
+  <nav class="nav">
+    <a href="#leaderboard" class="navlink active">Leaderboard</a>
+    <a href="#recent" class="navlink">Recent</a>
+    <a href="#dex" class="navlink">Dex</a>
+    <a href="#players" class="navlink">Players</a>
+  </nav>
+</header>
+
+<main class="wrap">
   <div class="card">
-    <div class="row">If this shows <span class="ok">OK</span> lines with counts, hosting and JSON are fine. Then we’ll drop the full UI back in.</div>
-    <div id="log" class="row">Loading…</div>
+    <div class="section-title"><h2 id="view-title">Leaderboard</h2><div id="view-sub">Totals</div></div>
+    <div class="tabs" id="span-tabs">
+      <div class="tab active" data-span="season">Season</div>
+      <div class="tab" data-span="all">All-Time</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="empty" class="empty" style="display:none">No results</div>
+    </div>
+    <div class="footer">Last Data Sync: <span id="sync-time">loading…</span></div>
   </div>
-</div>
+</main>
+
+<footer class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</footer>
+
 <script>
-(function(){
-  var URLS = {
-    dex: "https://dl.dropboxusercontent.com/scl/fi/nmqf6rewo4pweftrfrjfb/dex.json?rlkey=h9z371ywynt7sqffywvbks2zn&e=1",
-    leaderboard: "https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
-    meta: "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
-    players: "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
-    recent: "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
-    seasonBests: "https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl"
-  };
-  var log = document.getElementById("log");
-  function write(html){ log.innerHTML += html; }
-  log.innerHTML = "<div>Fetching Dropbox JSON…</div><ul id='list'></ul>";
-  var list = document.getElementById("list");
+var URLS = {
+  dex: "https://dl.dropboxusercontent.com/scl/fi/nmqf6rewo4pweftrfrjfb/dex.json?rlkey=h9z371ywynt7sqffywvbks2zn&e=1",
+  leaderboard: "https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
+  meta: "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
+  players: "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
+  recent: "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
+  seasonBests: "https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl"
+};
 
-  function add(status, name, extra){
-    var li = document.createElement("li");
-    li.innerHTML = "<strong>" + name + "</strong>: " + status + (extra ? " — " + extra : "");
-    list.appendChild(li);
-  }
+var ROUTE="leaderboard", SORT={key:null,dir:1}, CACHE={};
+function $(s){return document.querySelector(s);}
+function fmtGold(n){return Math.round(n||0).toLocaleString()+"g";}
+function clear(){ $("#thead").innerHTML=""; $("#tbody").innerHTML=""; $("#empty").style.display="none"; }
 
-  function countish(j){
-    if (Array.isArray(j)) return j.length + " rows";
-    if (j && typeof j === "object") {
-      var k = Object.keys(j);
-      return "object: " + k.length + " keys";
-    }
-    return typeof j;
-  }
+function get(url){ if(CACHE[url]) return Promise.resolve(CACHE[url]); return fetch(url).then(r=>r.json()).then(j=>{CACHE[url]=j;return j;}); }
 
-  function fetchJson(name, url){
-    return fetch(url, {cache:"no-store"}).then(function(r){
-      if(!r.ok) throw new Error("HTTP " + r.status);
-      return r.json();
-    }).then(function(j){
-      add("<span class='ok'>OK</span>", name, countish(j));
-      return j;
-    }).catch(function(e){
-      add("<span class='err'>ERROR</span>", name, e.message);
-      throw e;
+function renderTable(cols,rows){
+  var thead="<tr>";
+  for(var i=0;i<cols.length;i++){ var c=cols[i]; thead+="<th>"+c+"</th>"; }
+  thead+="</tr>"; $("#thead").innerHTML=thead;
+  if(!rows.length){ $("#empty").style.display="block"; return; }
+  var tbody=""; for(var r=0;r<rows.length;r++){ tbody+="<tr>"+rows[r]+"</tr>"; }
+  $("#tbody").innerHTML=tbody;
+}
+
+function viewLeaderboard(){
+  $("#view-title").textContent="Leaderboard";
+  get(URLS.leaderboard).then(function(d){
+    var arr=d; if(!Array.isArray(arr)) arr=arr.data||arr.rows||[];
+    var rows=arr.map(function(x,i){
+      var p=x.player||x.name||"unknown";
+      var g=fmtGold(x.gold||x.total_gold||0);
+      return "<td>"+(i+1)+"</td><td>"+p+"</td><td class='num'>"+g+"</td>";
     });
-  }
-
-  // run all
-  Promise.all([
-    fetchJson("leaderboard", URLS.leaderboard),
-    fetchJson("season_bests", URLS.seasonBests),
-    fetchJson("recent", URLS.recent),
-    fetchJson("players", URLS.players),
-    fetchJson("dex", URLS.dex),
-    fetchJson("meta", URLS.meta)
-  ]).then(function(){
-    write("<div class='ok'>All good. Next step: swap in the full UI.</div>");
-  }).catch(function(){
-    write("<div class='err'>At least one file failed. Fix the red item above (share setting or link).</div>");
+    renderTable(["#","Player","Gold"],rows);
   });
-})();
+}
+
+function viewRecent(){
+  $("#view-title").textContent="Recent Catches";
+  get(URLS.recent).then(function(d){
+    var arr=d; if(!Array.isArray(arr)) arr=arr.data||[];
+    var rows=arr.map(function(x,i){
+      var p=x.player||"unknown", it=x.item||x.species||"", g=fmtGold(x.gold||0);
+      return "<td>"+p+"</td><td>"+it+"</td><td class='num'>"+g+"</td>";
+    });
+    renderTable(["Player","Catch","Gold"],rows);
+  });
+}
+
+function viewDex(){
+  $("#view-title").textContent="Dex";
+  get(URLS.dex).then(function(d){
+    var arr=d; if(!Array.isArray(arr)) arr=arr.data||[];
+    var rows=arr.map(function(x){
+      var it=x.item||x.species||"", r=x.rarity||"", p=x.player||"", g=fmtGold(x.best_gold||x.gold||0);
+      return "<td>"+it+"</td><td>"+r+"</td><td>"+p+"</td><td class='num'>"+g+"</td>";
+    });
+    renderTable(["Species","Rarity","Player","Best Gold"],rows);
+  });
+}
+
+function viewPlayers(){
+  $("#view-title").textContent="Players";
+  get(URLS.players).then(function(d){
+    var arr=d; if(!Array.isArray(arr)) arr=arr.data||[];
+    var rows=arr.map(function(x){
+      var n=x.name||"unknown", g=fmtGold(x.gold||0), c=x.casts||0, lc=x.lifetime_casts||0;
+      return "<td>"+n+"</td><td class='num'>"+g+"</td><td>"+c+"</td><td>"+lc+"</td>";
+    });
+    renderTable(["Name","Gold","Season Casts","Lifetime Casts"],rows);
+  });
+}
+
+function route(){
+  clear();
+  if(ROUTE==="leaderboard") viewLeaderboard();
+  if(ROUTE==="recent") viewRecent();
+  if(ROUTE==="dex") viewDex();
+  if(ROUTE==="players") viewPlayers();
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  route();
+  document.querySelectorAll(".navlink").forEach(function(a){
+    a.onclick=function(){
+      document.querySelectorAll(".navlink").forEach(function(b){b.classList.remove("active");});
+      this.classList.add("active");
+      ROUTE=this.getAttribute("href").substring(1);
+      route();
+    };
+  });
+  get(URLS.meta).then(function(m){ $("#sync-time").textContent=m.exported_at_iso||""; });
+});
 </script>
 </body>
 </html>
