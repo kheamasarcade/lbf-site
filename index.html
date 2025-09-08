@@ -5,25 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kheama's Arcade • Lurk Bait Fishing Stats</title>
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700;800;900&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://dl.dropboxusercontent.com">
 
 <style>
 :root{
-  --bg:#0b0f17;
-  --glow1:rgba(96,165,250,.18);
-  --glow2:rgba(244,114,182,.20);
-  --panel:#0f1629; --line:#1a2340;
-  --text:#e9efff; --muted:#9fb0d2;
+  --bg:#0b0f17; --glow1:rgba(96,165,250,.18); --glow2:rgba(244,114,182,.20);
+  --panel:#0f1629; --line:#1a2340; --text:#e9efff; --muted:#9fb0d2;
 
-  /* rarity palette */
-  --junk:#6b7280;         --junk-bg:#1f2430;
-  --common:#cbd5e1;       --common-bg:#1b2234;
-  --uncommon:#34d399;     --uncommon-bg:#0f2a25;
-  --rare:#60a5fa;         --rare-bg:#0f243d;
-  --epic:#a78bfa;         --epic-bg:#1a1740;
-  --legend:#facc15;       --legend-bg:#2a2307;
+  --junk:#6b7280; --junk-bg:#1f2430;
+  --common:#cbd5e1; --common-bg:#1b2234;
+  --uncommon:#34d399; --uncommon-bg:#0f2a25;
+  --rare:#60a5fa; --rare-bg:#0f243d;
+  --epic:#a78bfa; --epic-bg:#1a1740;
+  --legend:#facc15; --legend-bg:#2a2307;
 
   --pill-grad:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);
   --card-grad:linear-gradient(180deg,rgba(15,22,41,.98),rgba(11,16,26,.96));
@@ -63,7 +58,7 @@ body{
 .nav{display:flex;gap:10px}
 .pill{
   border:1px solid var(--line);background:#0b1220;border-radius:999px;
-  padding:9px 14px;color:#b9caea;cursor:pointer;font-weight:800;position:relative;overflow:hidden;
+  padding:9px 14px;color:#b9caea;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
   transition: transform .18s ease, box-shadow .18s ease
 }
 .pill:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.25)}
@@ -72,8 +67,6 @@ body{
 
 /* layout */
 .wrap{max-width:1280px;margin:10px auto 28px;padding:0 16px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media (max-width:1000px){.grid2{grid-template-columns:1fr}}
 .card{
   background:var(--card-grad);border:1px solid var(--line);border-radius:18px;padding:18px;
   box-shadow:0 22px 48px rgba(0,0,0,.45)
@@ -84,14 +77,14 @@ body{
 .kicker{color:var(--muted);font-size:12px}
 .tabrow{display:flex;gap:10px}
 .tab{
-  padding:9px 14px;border-radius:999px;background:#0b1220;color:#93c5fd;
+  padding:9px 14px;border-radius:999px;background:#0b1220;color:#0a0f16;
   border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
   transition: transform .18s ease, box-shadow .18s ease
 }
 .tab:hover{transform:translateY(-1px)}
 .tab.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.28)}
 
-/* flair list (Season Bests) */
+/* flair list */
 .list{border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .item{display:flex;align-items:center;gap:16px;padding:14px 16px;border-top:1px solid #0c1224;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
 .item:first-child{border-top:0}
@@ -106,20 +99,18 @@ body{
   letter-spacing:.2px
 }
 
-/* tables */
+/* table */
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
 .table th,.table td{padding:12px;border-bottom:1px solid #0e1730}
 .table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer;font-weight:900}
 .table tbody tr{transition:transform .12s ease,background .12s ease}
 .table tbody tr:hover{transform:translateY(-1px);background:rgba(255,255,255,.03)}
+.table tbody tr:nth-child(odd){background:rgba(255,255,255,.015)}
 .num{text-align:right;font-family:"JetBrains Mono",monospace}
 
 /* chips */
-.chip{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;
-  padding:2px 8px;font-size:11px;font-weight:900;border:1px solid transparent;line-height:1.15
-}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900;border:1px solid transparent;line-height:1.15}
 .r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
 .r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
 .r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
@@ -127,10 +118,7 @@ body{
 .r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
 .r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
 
-/* footer */
 .footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
-
-/* click ripple */
 .pill .rpl,.tab .rpl{position:absolute;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.45);animation:ripple .6s ease-out forwards;mix-blend-mode:overlay}
 @keyframes ripple{to{transform:translate(-50%,-50%) scale(18);opacity:0}}
 </style>
@@ -152,7 +140,7 @@ body{
     <div class="nav">
       <button class="pill active" data-view="bests">Season Bests</button>
       <button class="pill" data-view="recent">Recent</button>
-      <button class="pill" data-view="stats">Leaderboard & Players</button>
+      <button class="pill" data-view="lp">Leaderboard & Players</button>
     </div>
   </div>
 </div>
@@ -175,7 +163,7 @@ body{
   </div>
 </div>
 
-<!-- Recent (full width) -->
+<!-- Recent -->
 <div class="wrap" id="view-recent" style="display:none">
   <div class="card">
     <div class="hrow">
@@ -196,147 +184,91 @@ body{
   </div>
 </div>
 
-<!-- Leaderboard & Players -->
-<div class="wrap" id="view-stats" style="display:none">
-  <div class="grid2">
-    <div class="card">
-      <div class="hrow">
-        <div class="hleft"><h2 class="h2">Leaderboard</h2><div class="kicker">Totals</div></div>
-        <div class="tabrow"><div class="tab active" data-span="season">Season</div><div class="tab" data-span="all">All-Time</div></div>
-      </div>
-      <div class="table-wrap">
-        <table class="table">
-          <thead id="thLead"></thead>
-          <tbody id="tbLead"></tbody>
-        </table>
-        <div id="emptyLead" class="kicker" style="display:none">No results</div>
-      </div>
-      <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncC">loading…</span></div>
+<!-- Leaderboard + Players (merged) -->
+<div class="wrap" id="view-lp" style="display:none">
+  <div class="card">
+    <div class="hrow">
+      <div class="hleft"><h2 class="h2">Leaderboard & Players</h2><div class="kicker">Rank, Gold, Casts</div></div>
+      <div class="tabrow"><div class="tab active" data-span="season">Season</div><div class="tab" data-span="all">All-Time</div></div>
     </div>
-
-    <div class="card">
-      <div class="hrow">
-        <div class="hleft"><h2 class="h2">Players</h2><div class="kicker">Totals and casts</div></div>
-        <div class="tabrow"><div class="tab active" data-span="season">Season</div><div class="tab" data-span="all">All-Time</div></div>
-      </div>
-      <div class="table-wrap">
-        <table class="table">
-          <thead id="thPlayers"></thead>
-          <tbody id="tbPlayers"></tbody>
-        </table>
-        <div id="emptyPlayers" class="kicker" style="display:none">No results</div>
-      </div>
-      <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncD">loading…</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead id="thMerged"></thead>
+        <tbody id="tbMerged"></tbody>
+      </table>
+      <div id="emptyMerged" class="kicker" style="display:none">No results</div>
     </div>
+    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncC">loading…</span></div>
   </div>
 </div>
 
 <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
-/* ----------------- CONFIG (Dropbox direct links) ----------------- */
-const URLS = {
-  meta:         "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
-  recent:       "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
-  seasonBests:  "https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl",
-  players:      "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
-  leaderboard:  "https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
+/* -------- endpoints -------- */
+const URLS={
+  meta:"https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
+  recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
+  seasonBests:"https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl",
+  players:"https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
+  leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7"
 };
-let VERSION = Date.now();  // cache-buster (replaced by meta epoch)
+let VERSION = Date.now();
 
-/* ----------------- Helpers ----------------- */
-function $(s){return document.querySelector(s)}
-function $all(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
-function fmtGold(n){ n=Math.round(Number(n)||0); return n.toLocaleString()+"g" }
-function epochFromIsoOrNum(v){
-  if(v==null) return 0;
-  if(typeof v==="number") return v;
-  const t = Date.parse(v);
-  return isNaN(t) ? 0 : Math.floor(t/1000);
-}
-function fmtStamp(ts){
-  if(!ts) return "";
-  const d=new Date(ts*1000);
-  const p=x=>String(x).padStart(2,"0");
-  return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}`
-}
-function rClass(r){
-  const x=(r||"").toLowerCase();
-  if(x==="legendary") return "r-legend";
-  if(x==="epic") return "r-epic";
-  if(x==="rare") return "r-rare";
-  if(x==="uncommon") return "r-uncommon";
-  if(x==="junk") return "r-junk";
-  return "r-common";
-}
-async function get(url){
-  const withV = url + (url.includes("?") ? "&" : "?") + "v=" + VERSION;
-  const r = await fetch(withV, {cache:"no-store"});
-  if(!r.ok) throw new Error("Fetch failed: "+url);
-  return r.json();
-}
-function applySort(arr,key,desc){
-  return arr.sort((a,b)=>{
-    const va=a[key], vb=b[key];
-    if(typeof va==="number" && typeof vb==="number") return desc? vb-va : va-vb;
-    return desc? String(vb).localeCompare(String(va)) : String(va).localeCompare(String(vb));
-  });
-}
+/* -------- utils -------- */
+const CACHE={}
+const $=s=>document.querySelector(s)
+const $all=s=>Array.from(document.querySelectorAll(s))
+async function get(u){ const url=u+(u.includes("?")?"&":"?")+"v="+VERSION; const r=await fetch(url,{cache:"no-store"}); if(!r.ok) throw new Error(u); return r.json() }
+const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g"
+const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common"
 
-/* ----------------- State ----------------- */
+/* -------- state -------- */
 let VIEW="bests", SPAN="season", SEASON_START=0;
-const DATA={meta:{}, bests:[], recent:[], lead:[], players:[]};
+const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
 
-/* ----------------- UI wiring ----------------- */
+/* -------- nav/tabs -------- */
 function setView(v){
   VIEW=v;
   $("#view-bests").style.display=(v==="bests")?"block":"none";
   $("#view-recent").style.display=(v==="recent")?"block":"none";
-  $("#view-stats").style.display=(v==="stats")?"block":"none";
+  $("#view-lp").style.display=(v==="lp")?"block":"none";
   $all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));
   update();
 }
-function setSpan(s){
-  SPAN=s;
-  $all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s));
-  update();
-}
-function inSpan(ts){ if(SPAN==="all") return true; return (ts||0) >= (SEASON_START||0); }
-$("#qGlobal").addEventListener("input", update);
+function setSpan(s){ SPAN=s; $all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s)); update(); }
+const inSpan = ts => (SPAN==="all") || !SEASON_START || (Number(ts)||0) >= SEASON_START;
+
 $all(".pill").forEach(p=>p.addEventListener("click",()=>setView(p.dataset.view)));
 $all(".tab").forEach(t=>t.addEventListener("click",()=>setSpan(t.dataset.span)));
+$("#qGlobal").addEventListener("input",()=>update());
 
-/* ----------------- Normalizers ----------------- */
+/* -------- normalizers -------- */
 function normBests(j){
-  const arr = Array.isArray(j) ? j : (j&&j.data)||[];
+  const arr = Array.isArray(j)? j : (j&&j.data)||[];
   return arr.map(o=>({
-    item:  o.item||o.species||o.name||"unknown",
+    item:o.item||o.species||o.name||"unknown",
     rarity:o.rarity||"",
     player:o.player||o.best_player||"unknown",
-    gold:  Number(o.best_gold||o.gold||0),
-    ts:    Number(o.timestamp||o.ts||o.epoch||epochFromIsoOrNum(o.time)||0)
-  })).sort((a,b)=>b.gold-a.gold);
+    best_gold:Number(o.best_gold||o.gold||0),
+    ts:Number(o.timestamp||0),
+    date:o.date||""
+  })).sort((a,b)=>b.best_gold-a.best_gold);
 }
 function normRecent(j){
-  const arr = Array.isArray(j) ? j : (j&&j.data)||[];
+  const arr = Array.isArray(j)? j : (j&&j.data)||[];
   return arr.map(o=>({
     player:o.player||o.username||o.name||"unknown",
-    item:  o.item||o.species||"",
+    item:o.item||o.species||"",
     rarity:o.rarity||"",
-    stars: Number(o.stars||o.star||0),
-    gold:  Number(o.gold||0),
-    ts:    Number(o.timestamp||o.ts||o.epoch||epochFromIsoOrNum(o.time)||0)
-  }));
-}
-function normLeaderboard(j){
-  let arr = Array.isArray(j) ? j : (j&&j.data||j&&j.rows||[]);
-  arr = arr.map(o=>({player:o.player||o.name||"unknown", gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
-  arr.sort((a,b)=>b.gold-a.gold);
-  arr.forEach((r,i)=>r.rank=i+1);
-  return arr;
+    stars:Number(o.stars||0),
+    gold:Number(o.gold||0),
+    ts:Number(o.timestamp||0),
+    date:o.date||""
+  })).sort((a,b)=>Number(b.ts)-Number(a.ts)); // hard newest-first
 }
 function normPlayers(j){
-  const arr = Array.isArray(j) ? j : (j&&j.data)||[];
+  const arr = Array.isArray(j)? j : (j&&j.data)||[];
   return arr.map(o=>({
     name:o.name||o.player||o.username||"unknown",
     gold:Number(o.gold||o.season_gold||0),
@@ -344,159 +276,142 @@ function normPlayers(j){
     lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)
   }));
 }
-
-/* ----------------- Renderers ----------------- */
-function refreshSync(){
-  const t = DATA.meta && (DATA.meta.exported_at_epoch||epochFromIsoOrNum(DATA.meta.exported_at_iso));
-  const s = t?fmtStamp(Number(t)):"";
-  $("#syncA").textContent=s; $("#syncB").textContent=s; $("#syncC").textContent=s; $("#syncD").textContent=s;
+function normLeader(j){
+  let arr = Array.isArray(j)? j : (j&&j.data||j&&j.rows||[]);
+  arr = arr.map(o=>({player:o.player||o.name||"unknown", gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
+  arr.sort((a,b)=>b.gold-a.gold);
+  arr.forEach((r,i)=>r.rank=i+1);
+  return arr;
 }
 
-function renderBests(list){
-  const q=($("#qGlobal").value||"").toLowerCase();
-  const el=$("#listBests"); el.innerHTML="";
-  const filtered=list.filter(r=>inSpan(r.ts) && (!q || r.item.toLowerCase().includes(q) || r.player.toLowerCase().includes(q) || r.rarity.toLowerCase().includes(q)));
-  filtered.forEach((r,i)=>{
-    const row=document.createElement("div"); row.className="item";
-    row.innerHTML = `
-      <div class="rank">${i+1}</div>
-      <div class="main">
-        <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
-        <div class="sub">${r.player} · ${fmtStamp(r.ts)}</div>
-      </div>
-      <div class="gold">${fmtGold(r.gold)}</div>`;
-    el.appendChild(row);
+/* merge leaderboard + players by name */
+function buildMerged(lead, players){
+  const pmap = new Map(players.map(p=>[p.name.toLowerCase(), p]));
+  return lead.map(r=>{
+    const p = pmap.get(r.player.toLowerCase()) || {};
+    return {
+      rank: r.rank, player: r.player,
+      gold: r.gold,
+      casts: Number(p.casts||0),
+      lifetime_casts: Number(p.lifetime_casts||0)
+    };
   });
 }
 
-function renderTable(headEl, bodyEl, emptyEl, headers, rowsHtml){
-  headEl.innerHTML = `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  if(!rowsHtml.length){ emptyEl.style.display="block"; bodyEl.innerHTML=""; return; }
-  emptyEl.style.display="none"; bodyEl.innerHTML=rowsHtml.join("");
+/* -------- renderers -------- */
+function refreshSync(){
+  const t=Number(DATA.meta?.exported_at_epoch||0);
+  const d=t? new Date(t*1000) : null;
+  const p=x=>String(x).padStart(2,"0");
+  const s = d? `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}` : "";
+  $("#syncA").textContent=s; $("#syncB").textContent=s; $("#syncC").textContent=s;
 }
 
-let sortRecent={key:"ts",desc:true}, sortLead={key:"rank",desc:false}, sortPlayers={key:"gold",desc:true};
+function renderBests(){
+  const q = ($("#qGlobal").value||"").toLowerCase();
+  const el = $("#listBests"); el.innerHTML="";
+  const rows = DATA.bests.filter(r=>inSpan(r.ts) && (!q || r.item.toLowerCase().includes(q) || r.player.toLowerCase().includes(q) || r.rarity.toLowerCase().includes(q)));
+  rows.forEach((r,i)=>{
+    const div=document.createElement("div"); div.className="item";
+    div.innerHTML = `
+      <div class="rank">${i+1}</div>
+      <div class="main">
+        <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
+        <div class="sub">${r.player} · ${r.date||""}</div>
+      </div>
+      <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
+    el.appendChild(div);
+  });
+  if(!rows.length){ el.innerHTML = `<div class="item"><div class="main"><div class="sub">No data</div></div></div>`; }
+}
+
+function renderRecent(){
+  const q = ($("#qGlobal").value||"").toLowerCase();
+  let rec = DATA.recent.filter(r=>inSpan(r.ts));
+  if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
+  // enforce newest-first by timestamp every time
+  rec.sort((a,b)=>Number(b.ts)-Number(a.ts));
+
+  const head=["When","Player","Catch","★","Gold"];
+  $("#thRecent").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  const rows = rec.map(c=>`<tr>
+    <td>${c.date||""}</td>
+    <td>${c.player}</td>
+    <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
+    <td class="num"><span class="chip" style="background:#11182c;border:1px solid #263055;color:#bbcaf0">★ ${c.stars||0}</span></td>
+    <td class="num"><span class="chip" style="background:#2c2410;border:1px solid #5b470c;color:#ffe08a">${fmtGold(c.gold)}</span></td>
+  </tr>`);
+  $("#tbRecent").innerHTML = rows.join("");
+  $("#emptyRecent").style.display = rows.length? "none":"block";
+}
+
+function renderMerged(){
+  const q = ($("#qGlobal").value||"").toLowerCase();
+  let rows = DATA.merged.slice();
+  if(q){ rows = rows.filter(r=>r.player.toLowerCase().includes(q)); }
+  const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"];
+  $("#thMerged").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  const html = rows.map(r=>`<tr>
+    <td class="num">${r.rank}</td>
+    <td>${r.player}</td>
+    <td class="num">${fmtGold(r.gold)}</td>
+    <td class="num">${r.casts||0}</td>
+    <td class="num">${r.lifetime_casts||0}</td>
+  </tr>`);
+  $("#tbMerged").innerHTML = html.join("");
+  $("#emptyMerged").style.display = html.length? "none":"block";
+}
+
 function update(){
-  const q = ($("#qGlobal").value||"").trim().toLowerCase();
-
-  if(VIEW==="bests"){
-    renderBests(DATA.bests);
-  }
-
-  if(VIEW==="recent"){
-    let rec = DATA.recent.filter(r=>inSpan(r.ts));
-    if(q){ rec = rec.filter(r => r.player.toLowerCase().includes(q) || r.item.toLowerCase().includes(q)); }
-    // enforce newest-first
-    rec = applySort(rec,"ts",true);
-    const rows = rec.map(c=>{
-      const chip = `<span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span>`;
-      return `<tr>
-        <td>${fmtStamp(c.ts)}</td>
-        <td>${c.player}</td>
-        <td>${c.item} ${chip}</td>
-        <td class="num"><span class="chip" style="background:#11182c;border:1px solid #263055;color:#bbcaf0">★ ${c.stars||0}</span></td>
-        <td class="num"><span class="chip" style="background:#2c2410;border:1px solid #5b470c;color:#ffe08a">${fmtGold(c.gold)}</span></td>
-      </tr>`;
-    });
-    renderTable($("#thRecent"),$("#tbRecent"),$("#emptyRecent"),["When","Player","Catch","★","Gold"],rows);
-  }
-
-  if(VIEW==="stats"){
-    let lead = DATA.lead.slice();
-    if(q){ lead = lead.filter(r=>r.player.toLowerCase().includes(q)); }
-    lead = applySort(lead, sortLead.key, sortLead.desc);
-    const rowsL = lead.map(r=>`<tr><td class="num">${r.rank}</td><td>${r.player}</td><td class="num">${fmtGold(r.gold)}</td></tr>`);
-    renderTable($("#thLead"),$("#tbLead"),$("#emptyLead"),["#","Player","Gold"], rowsL);
-
-    let players = DATA.players.slice();
-    if(q){ players = players.filter(p=>p.name.toLowerCase().includes(q)); }
-    players = applySort(players, sortPlayers.key, sortPlayers.desc);
-    const rowsP = players.map(p=>`<tr><td>${p.name}</td><td class="num">${fmtGold(p.gold)}</td><td class="num">${p.casts||0}</td><td class="num">${p.lifetime_casts||0}</td></tr>`);
-    renderTable($("#thPlayers"),$("#tbPlayers"),$("#emptyPlayers"),["Player","Season Gold","Season Casts","Lifetime Casts"], rowsP);
-  }
+  if(VIEW==="bests") renderBests();
+  if(VIEW==="recent") renderRecent();
+  if(VIEW==="lp") renderMerged();
 }
-
-/* column header sorting */
-$("#thRecent").addEventListener("click", e=>{
-  if(e.target.tagName!=="TH")return;
-  const idx=e.target.cellIndex, map=["ts","player","item","stars","gold"];
-  const key=map[idx]||"ts";
-  if(sortRecent.key===key) sortRecent.desc=!sortRecent.desc; else {sortRecent.key=key; sortRecent.desc=(key!=="player"&&key!=="item");}
-  update();
-});
-$("#thLead").addEventListener("click", e=>{
-  if(e.target.tagName!=="TH")return;
-  const idx=e.target.cellIndex, map=["rank","player","gold"];
-  const key=map[idx]||"rank";
-  if(sortLead.key===key) sortLead.desc=!sortLead.desc; else {sortLead.key=key; sortLead.desc=(key!=="player");}
-  update();
-});
-$("#thPlayers").addEventListener("click", e=>{
-  if(e.target.tagName!=="TH")return;
-  const idx=e.target.cellIndex, map=["name","gold","casts","lifetime_casts"];
-  const key=map[idx]||"gold";
-  if(sortPlayers.key===key) sortPlayers.desc=!sortPlayers.desc; else {sortPlayers.key=key; sortPlayers.desc=(key!=="name");}
-  update();
-});
 
 /* click ripple */
-document.addEventListener("click", function(e){
-  const t=e.target.closest(".pill, .tab"); if(!t) return;
+document.addEventListener("click", e=>{
+  const t=e.target.closest(".pill,.tab"); if(!t) return;
   const r=document.createElement("span"); r.className="rpl";
   const rect=t.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top;
   r.style.left=x+"px"; r.style.top=y+"px"; const size=Math.max(rect.width,rect.height); r.style.width=r.style.height=size+"px";
   t.appendChild(r); setTimeout(()=>r.remove(),650);
 }, true);
 
-/* ----------------- Boot: meta first (for cache-busting), then data ----------------- */
+/* -------- boot -------- */
 (async function init(){
   try{
-    // meta first → sets VERSION and season start
-    const meta = await get(URLS.meta);
-    DATA.meta = meta||{};
-    VERSION = Number(meta?.exported_at_epoch) || VERSION;
-    const guessSeason = Number(meta?.season_start_epoch||0);
-    SEASON_START = isFinite(guessSeason) && guessSeason>0 ? guessSeason : (()=>{
-      const d=new Date(), y=d.getFullYear(), aug1=new Date(y,7,1,0,0,0,0);
-      return Math.floor(aug1.getTime()/1000);
-    })();
+    const meta = await get(URLS.meta); DATA.meta=meta||{};
+    VERSION = Number(meta?.exported_at_epoch)||VERSION;
+    SEASON_START = Number(meta?.season_start_epoch||0) || Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
     refreshSync();
 
-    // fetch the rest with cache-busting
     const [recent,bests,players,leaders] = await Promise.all([
-      get(URLS.recent),
-      get(URLS.seasonBests),
-      get(URLS.players),
-      get(URLS.leaderboard),
+      get(URLS.recent), get(URLS.seasonBests), get(URLS.players), get(URLS.leaderboard)
     ]);
-
-    DATA.recent = normRecent(recent).sort((a,b)=>Number(b.ts)-Number(a.ts)); // hard newest-first
+    DATA.recent = normRecent(recent);
     DATA.bests  = normBests(bests);
     DATA.players= normPlayers(players);
-    DATA.lead   = normLeaderboard(leaders);
+    DATA.lead   = normLeader(leaders);
+    DATA.merged = buildMerged(DATA.lead, DATA.players);
 
     update();
-  }catch(err){
-    console.error(err);
-    ["#syncA","#syncB","#syncC","#syncD"].forEach(s=>{const el=$(s); if(el) el.textContent="error loading data";});
-  }
+  }catch(e){ console.error(e) }
 
-  // refresh every 90s
   setInterval(async()=>{
     try{
-      const meta = await get(URLS.meta);
-      DATA.meta = meta||{};
-      if(meta?.exported_at_epoch){ VERSION = Number(meta.exported_at_epoch); }
+      const meta = await get(URLS.meta); DATA.meta=meta||{};
+      if(meta?.exported_at_epoch) VERSION = Number(meta.exported_at_epoch);
       refreshSync();
       const [recent,bests,players,leaders] = await Promise.all([
         get(URLS.recent), get(URLS.seasonBests), get(URLS.players), get(URLS.leaderboard)
       ]);
-      DATA.recent = normRecent(recent).sort((a,b)=>Number(b.ts)-Number(a.ts));
+      DATA.recent = normRecent(recent);
       DATA.bests  = normBests(bests);
       DATA.players= normPlayers(players);
-      DATA.lead   = normLeaderboard(leaders);
+      DATA.lead   = normLeader(leaders);
+      DATA.merged = buildMerged(DATA.lead, DATA.players);
       update();
-    }catch(e){ console.error(e); }
+    }catch(e){ console.error(e) }
   }, 90000);
 })();
 </script>
