@@ -1,419 +1,210 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kheama's Arcade • Lurk Bait Fishing Stats</title>
+# exporter.py
+# Kheama's Arcade • Lurk Bait Fishing — robust exporter
+# - Reads CatchData.txt, DexData.txt, PlayerData.txt
+# - Parses dates like "3/3/2024 5:05:48 PM" in LOCAL time
+# - Exports:
+#     recent.json        -> last 50 catches (sorted newest first)
+#     season_bests.json  -> best gold per species (all-time, with rarity, player, timestamp)
+#     players.json       -> season + lifetime stats per player
+#     leaderboard.json   -> ranks by SEASON gold
+#     meta.json          -> exported_at + season_start_epoch
+#
+# Run:
+#   (.venv) PS D:\Projects> python D:\Projects\lurkbait_app_v2\exporter.py
 
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700;800;900&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://dl.dropboxusercontent.com">
+import os, json, datetime, time, sys
+from collections import defaultdict
 
-<style>
-:root{
-  --bg:#0b0f17; --glow1:rgba(96,165,250,.18); --glow2:rgba(244,114,182,.20);
-  --panel:#0f1629; --line:#1a2340; --text:#e9efff; --muted:#9fb0d2;
+# ---------- CONFIG ----------
+BASE = os.path.expanduser(r"C:\Users\sdmac\AppData\LocalLow\BLAMCAM Interactive\LurkBait Twitch Fishing")
+CATCH_FILE  = os.path.join(BASE, "CatchData.txt")
+DEX_FILE    = os.path.join(BASE, "DexData.txt")       # not required for bests; we derive from catches
+PLAYER_FILE = os.path.join(BASE, "PlayerData.txt")
 
-  --junk:#6b7280; --junk-bg:#1f2430;
-  --common:#cbd5e1; --common-bg:#1b2234;
-  --uncommon:#34d399; --uncommon-bg:#0f2a25;
-  --rare:#60a5fa; --rare-bg:#0f243d;
-  --epic:#a78bfa; --epic-bg:#1a1740;
-  --legend:#facc15; --legend-bg:#2a2307;
+EXPORT = os.path.expanduser(r"C:\Users\sdmac\SD Mac Tech LLC IUL Dropbox\Mac McAhren\LBFD")
+os.makedirs(EXPORT, exist_ok=True)
 
-  --pill-grad:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);
-  --card-grad:linear-gradient(180deg,rgba(15,22,41,.98),rgba(11,16,26,.96));
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;color:var(--text);
-  background:
-    radial-gradient(1200px 600px at 10% -10%,var(--glow2),transparent 60%),
-    radial-gradient(900px 500px at 110% 10%,var(--glow1),transparent 60%),
-    var(--bg);
-  font:14px/1.55 "Outfit",system-ui,-apple-system,Segoe UI,Roboto;
-  letter-spacing:.2px;
-}
+# Default “season” start = Aug 1 of current year at 00:00:00 local time
+_now_local = datetime.datetime.now()
+_SEASON_GUESS = datetime.datetime(_now_local.year, 8, 1, 0, 0, 0)
+SEASON_START_EPOCH = int(_SEASON_GUESS.timestamp())
 
-/* header */
-.header{
-  max-width:1280px;margin:18px auto 0;padding:0 16px 6px;
-  display:flex;align-items:center;gap:14px;justify-content:space-between
-}
-.brand-wrap{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
-.brand-name{margin:0;font-weight:900;font-size:34px;letter-spacing:.4px}
-.brand-name .pink{color:#f472b6;text-shadow:0 0 6px rgba(244,114,182,.45),0 0 18px rgba(244,114,182,.25);animation:glowPink 4s ease-in-out infinite}
-.brand-name .blue{color:#60a5fa;text-shadow:0 0 6px rgba(96,165,250,.45),0 0 18px rgba(96,165,250,.25);animation:glowBlue 4s ease-in-out infinite}
-.subttl{color:var(--muted);font-size:14px;margin-top:2px}
-@keyframes glowPink{0%,100%{text-shadow:0 0 6px rgba(244,114,182,.35),0 0 14px rgba(244,114,182,.2)}50%{text-shadow:0 0 10px rgba(244,114,182,.55),0 0 26px rgba(244,114,182,.35)}}
-@keyframes glowBlue{0%,100%{text-shadow:0 0 6px rgba(96,165,250,.35),0 0 14px rgba(96,165,250,.2)}50%{text-shadow:0 0 10px rgba(96,165,250,.55),0 0 26px rgba(96,165,250,.35)}}
+# ---------- IO HELPERS ----------
+def _read_json_any(path):
+    """Read JSON tolerant to BOM and empty files. Returns [] or {} on failure."""
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        print(f"[read] {path} (missing/empty) -> []")
+        return []
+    # Try utf-8-sig first to strip potential BOM
+    for enc in ("utf-8-sig", "utf-8"):
+        try:
+            with open(path, "r", encoding=enc) as f:
+                data = json.load(f)
+                kind = "list" if isinstance(data, list) else "dict" if isinstance(data, dict) else type(data).__name__
+                size = len(data) if hasattr(data, "__len__") else "?"
+                print(f"[read] {path} ({enc}) -> type={kind} size={size}")
+                return data
+        except Exception as e:
+            last_err = e
+            continue
+    print(f"[read] {path} failed: {last_err}")
+    return []
 
-.controls{display:flex;align-items:center;gap:12px}
-.search{
-  min-width:300px;background:#0b1220;border:1px solid var(--line);
-  border-radius:999px;padding:11px 14px;color:#dbe7ff;outline:none
-}
-.search:focus{box-shadow:0 0 0 2px #203260,0 0 20px rgba(96,165,250,.25)}
-.nav{display:flex;gap:10px}
-.pill{
-  border:1px solid var(--line);background:#0b1220;border-radius:999px;
-  padding:9px 14px;color:#b9caea;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
-  transition: transform .18s ease, box-shadow .18s ease
-}
-.pill:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.25)}
-.pill.active{color:#0a0f16;border-color:#2a3a66;background:var(--pill-grad);
-  box-shadow:0 0 12px rgba(244,114,182,.35),0 0 28px rgba(96,165,250,.30),inset 0 0 0 1px rgba(255,255,255,.05)}
+def _write_json(path, obj):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2)
+    rows = "dict" if isinstance(obj, dict) else len(obj)
+    print(f"[write] {os.path.basename(path):14} -> {path} rows: {rows}")
 
-/* layout */
-.wrap{max-width:1280px;margin:10px auto 28px;padding:0 16px}
-.card{
-  background:var(--card-grad);border:1px solid var(--line);border-radius:18px;padding:18px;
-  box-shadow:0 22px 48px rgba(0,0,0,.45)
-}
-.hrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.hleft{display:flex;align-items:baseline;gap:12px}
-.h2{margin:0;font-size:24px;font-weight:900;letter-spacing:.2px}
-.kicker{color:var(--muted);font-size:12px}
-.tabrow{display:flex;gap:10px}
-.tab{
-  padding:9px 14px;border-radius:999px;background:#0b1220;color:#0a0f16;
-  border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
-  transition: transform .18s ease, box-shadow .18s ease
-}
-.tab:hover{transform:translateY(-1px)}
-.tab.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.28)}
+# ---------- PARSING ----------
+DATE_FMT = "%m/%d/%Y %I:%M:%S %p"  # e.g., 3/3/2024 5:05:48 PM (no leading zeros required)
 
-/* flair list */
-.list{border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.item{display:flex;align-items:center;gap:16px;padding:14px 16px;border-top:1px solid #0c1224;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
-.item:first-child{border-top:0}
-.item:hover{transform:translateY(-2px);background:rgba(255,255,255,.02);box-shadow:0 10px 22px rgba(0,0,0,.35)}
-.rank{width:36px;height:36px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff;font-weight:900}
-.main{flex:1 1 auto;min-width:0}
-.title{font-weight:900;font-size:18px;letter-spacing:.2px}
-.sub{color:#a8b3c9;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gold{
-  margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:900;
-  font-size:21px;color:#ffe08a;text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);
-  letter-spacing:.2px
-}
+def to_epoch_local(date_str):
+    """
+    Convert 'M/D/YYYY h:mm:ss AM/PM' to epoch seconds, interpreting the string as LOCAL time.
+    This makes your browser display match what the game wrote.
+    """
+    if not date_str:
+        return 0
+    try:
+        # strptime returns naive dt; .timestamp() treats it as local time
+        dt = datetime.datetime.strptime(date_str, DATE_FMT)
+        return int(dt.timestamp())
+    except Exception:
+        # last chance: ISO or anything Date.parse() might accept
+        try:
+            # handle already-epoch numbers in string
+            if date_str.isdigit():
+                return int(date_str)
+        except Exception:
+            pass
+    return 0
 
-/* table */
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
-.table{width:100%;border-collapse:separate;border-spacing:0}
-.table th,.table td{padding:12px;border-bottom:1px solid #0e1730}
-.table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer;font-weight:900}
-.table tbody tr{transition:transform .12s ease,background .12s ease}
-.table tbody tr:hover{transform:translateY(-1px);background:rgba(255,255,255,.03)}
-.table tbody tr:nth-child(odd){background:rgba(255,255,255,.015)}
-.num{text-align:right;font-family:"JetBrains Mono",monospace}
+def load_catches():
+    raw = _read_json_any(CATCH_FILE)
+    # Expecting a list of dicts with keys: username, name, value, rating, rarity, date
+    catches = []
+    if isinstance(raw, list):
+        for d in raw:
+            if not isinstance(d, dict):
+                continue
+            player = d.get("username") or d.get("player") or d.get("name_user") or "unknown"
+            item   = d.get("name") or d.get("item") or d.get("species") or ""
+            gold   = float(d.get("value") or d.get("gold") or 0)
+            stars  = int(d.get("rating") or d.get("stars") or 0)
+            rarity = d.get("rarity") or ""
+            ts     = to_epoch_local(d.get("date") or d.get("time") or d.get("timestamp"))
+            catches.append({
+                "player": player,
+                "item": item,
+                "rarity": rarity,
+                "stars": stars,
+                "gold": gold,
+                "timestamp": ts
+            })
+    print(f"[catches] loaded: {len(catches)}")
+    return catches
 
-/* chips */
-.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900;border:1px solid transparent;line-height:1.15}
-.r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
-.r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
-.r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
-.r-rare{color:var(--rare);background:var(--rare-bg);border-color:#1e3f66}
-.r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
-.r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
+def build_recent(catches, limit=50):
+    # newest first
+    rows = sorted(catches, key=lambda c: c.get("timestamp", 0), reverse=True)
+    return rows[:limit]
 
-.footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
-.pill .rpl,.tab .rpl{position:absolute;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.45);animation:ripple .6s ease-out forwards;mix-blend-mode:overlay}
-@keyframes ripple{to{transform:translate(-50%,-50%) scale(18);opacity:0}}
-</style>
-</head>
-<body>
+def build_season_bests_from_catches(catches):
+    """
+    Best gold per species (all-time), including rarity, player, and the timestamp of the best record.
+    """
+    best_by_item = {}
+    for c in catches:
+        key = (c.get("item") or "").strip()
+        if not key:
+            continue
+        g = float(c.get("gold") or 0)
+        cur = best_by_item.get(key)
+        # If higher gold, or same gold but newer timestamp, replace
+        if cur is None or g > cur["best_gold"] or (g == cur["best_gold"] and c.get("timestamp", 0) > cur.get("timestamp", 0)):
+            best_by_item[key] = {
+                "item": key,
+                "rarity": c.get("rarity") or "",
+                "player": c.get("player") or "",
+                "best_gold": g,
+                "timestamp": int(c.get("timestamp") or 0)
+            }
+    # list sorted by best_gold desc
+    out = list(best_by_item.values())
+    out.sort(key=lambda r: r["best_gold"], reverse=True)
+    return out
 
-<!-- HEADER -->
-<div class="header">
-  <div class="brand-wrap">
-    <img class="logo" src="https://www.dropbox.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1" alt="Kheama's Arcade">
-    <div>
-      <div class="brand-name"><span class="pink">Kheama's</span> <span class="blue">Arcade</span></div>
-      <div class="subttl">Lurk Bait Fishing Stats</div>
-    </div>
-  </div>
+def build_players_and_leaderboard(catches, season_start_epoch):
+    """
+    Aggregate from catches so it's always correct.
+    - players.json: season + lifetime stats
+    - leaderboard.json: ranks by SEASON gold
+    """
+    life_gold = defaultdict(float)
+    life_cast = defaultdict(int)
+    seas_gold = defaultdict(float)
+    seas_cast = defaultdict(int)
 
-  <div class="controls">
-    <input id="qGlobal" class="search" placeholder="Search players or species…">
-    <div class="nav">
-      <button class="pill active" data-view="bests">Season Bests</button>
-      <button class="pill" data-view="recent">Recent</button>
-      <button class="pill" data-view="lp">Leaderboard & Players</button>
-    </div>
-  </div>
-</div>
+    for c in catches:
+        p = c.get("player") or "unknown"
+        g = float(c.get("gold") or 0)
+        life_gold[p] += g
+        life_cast[p] += 1
+        if int(c.get("timestamp") or 0) >= int(season_start_epoch):
+            seas_gold[p] += g
+            seas_cast[p] += 1
 
-<!-- Season Bests -->
-<div class="wrap" id="view-bests" style="display:block">
-  <div class="card">
-    <div class="hrow">
-      <div class="hleft">
-        <h2 class="h2">Season Bests</h2>
-        <div class="kicker">Top catches by gold</div>
-      </div>
-      <div class="tabrow">
-        <div class="tab active" data-span="season">Season</div>
-        <div class="tab" data-span="all">All-Time</div>
-      </div>
-    </div>
-    <div id="listBests" class="list"></div>
-    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncA">loading…</span></div>
-  </div>
-</div>
+    players = []
+    for p in life_gold.keys() | seas_gold.keys():
+        players.append({
+            "name": p,
+            "gold": round(seas_gold[p], 2),          # season gold (this is what your site shows in Players table)
+            "casts": seas_cast[p],                   # season casts
+            "lifetime_casts": life_cast[p],          # total casts
+            "total_gold": round(life_gold[p], 2)     # optional, handy if you want all-time later
+        })
 
-<!-- Recent -->
-<div class="wrap" id="view-recent" style="display:none">
-  <div class="card">
-    <div class="hrow">
-      <div class="hleft"><h2 class="h2">Recent Catches</h2><div class="kicker">Live feed</div></div>
-      <div class="tabrow">
-        <div class="tab active" data-span="season">Season</div>
-        <div class="tab" data-span="all">All-Time</div>
-      </div>
-    </div>
-    <div class="table-wrap">
-      <table class="table">
-        <thead id="thRecent"></thead>
-        <tbody id="tbRecent"></tbody>
-      </table>
-      <div id="emptyRecent" class="kicker" style="display:none">No results</div>
-    </div>
-    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncB">loading…</span></div>
-  </div>
-</div>
+    # leaderboard based on SEASON gold
+    leaderboard = [{"player": r["name"], "gold": r["gold"]} for r in players]
+    leaderboard.sort(key=lambda r: r["gold"], reverse=True)
+    for i, r in enumerate(leaderboard, start=1):
+        r["rank"] = i
 
-<!-- Leaderboard + Players (merged) -->
-<div class="wrap" id="view-lp" style="display:none">
-  <div class="card">
-    <div class="hrow">
-      <div class="hleft"><h2 class="h2">Leaderboard & Players</h2><div class="kicker">Rank, Gold, Casts</div></div>
-      <div class="tabrow"><div class="tab active" data-span="season">Season</div><div class="tab" data-span="all">All-Time</div></div>
-    </div>
-    <div class="table-wrap">
-      <table class="table">
-        <thead id="thMerged"></thead>
-        <tbody id="tbMerged"></tbody>
-      </table>
-      <div id="emptyMerged" class="kicker" style="display:none">No results</div>
-    </div>
-    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncC">loading…</span></div>
-  </div>
-</div>
+    return players, leaderboard
 
-<div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
+# ---------- MAIN ----------
+def main():
+    catches = load_catches()
 
-<script>
-/* -------- endpoints -------- */
-const URLS={
-  meta:"https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
-  recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
-  seasonBests:"https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl",
-  players:"https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
-  leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7"
-};
-let VERSION = Date.now();
+    # Build outputs
+    recent        = build_recent(catches, limit=50)
+    season_bests  = build_season_bests_from_catches(catches)
+    players, leaderboard = build_players_and_leaderboard(catches, SEASON_START_EPOCH)
 
-/* -------- utils -------- */
-const CACHE={}
-const $=s=>document.querySelector(s)
-const $all=s=>Array.from(document.querySelectorAll(s))
-async function get(u){ const url=u+(u.includes("?")?"&":"?")+"v="+VERSION; const r=await fetch(url,{cache:"no-store"}); if(!r.ok) throw new Error(u); return r.json() }
-const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g"
-const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common"
+    # Meta
+    now_epoch = int(time.time())
+    now_iso   = datetime.datetime.utcnow().isoformat() + "Z"
+    meta = {
+        "exported_at_epoch": now_epoch,
+        "exported_at_iso": now_iso,
+        "season_start_epoch": SEASON_START_EPOCH
+    }
 
-/* -------- state -------- */
-let VIEW="bests", SPAN="season", SEASON_START=0;
-const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
+    # Write
+    _write_json(os.path.join(EXPORT, "recent.json"),        recent)
+    _write_json(os.path.join(EXPORT, "season_bests.json"),  season_bests)
+    _write_json(os.path.join(EXPORT, "players.json"),       players)
+    _write_json(os.path.join(EXPORT, "leaderboard.json"),   leaderboard)
+    _write_json(os.path.join(EXPORT, "meta.json"),          meta)
 
-/* -------- nav/tabs -------- */
-function setView(v){
-  VIEW=v;
-  $("#view-bests").style.display=(v==="bests")?"block":"none";
-  $("#view-recent").style.display=(v==="recent")?"block":"none";
-  $("#view-lp").style.display=(v==="lp")?"block":"none";
-  $all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));
-  update();
-}
-function setSpan(s){ SPAN=s; $all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s)); update(); }
-const inSpan = ts => (SPAN==="all") || !SEASON_START || (Number(ts)||0) >= SEASON_START;
+    print("")
+    print(f"Exported counts -> recent:{len(recent)} bests:{len(season_bests)} players:{len(players)} leaderboard:{len(leaderboard)}")
+    print(f"Exported to: {EXPORT}")
 
-$all(".pill").forEach(p=>p.addEventListener("click",()=>setView(p.dataset.view)));
-$all(".tab").forEach(t=>t.addEventListener("click",()=>setSpan(t.dataset.span)));
-$("#qGlobal").addEventListener("input",()=>update());
-
-/* -------- normalizers -------- */
-function normBests(j){
-  const arr = Array.isArray(j)? j : (j&&j.data)||[];
-  return arr.map(o=>({
-    item:o.item||o.species||o.name||"unknown",
-    rarity:o.rarity||"",
-    player:o.player||o.best_player||"unknown",
-    best_gold:Number(o.best_gold||o.gold||0),
-    ts:Number(o.timestamp||0),
-    date:o.date||""
-  })).sort((a,b)=>b.best_gold-a.best_gold);
-}
-function normRecent(j){
-  const arr = Array.isArray(j)? j : (j&&j.data)||[];
-  return arr.map(o=>({
-    player:o.player||o.username||o.name||"unknown",
-    item:o.item||o.species||"",
-    rarity:o.rarity||"",
-    stars:Number(o.stars||0),
-    gold:Number(o.gold||0),
-    ts:Number(o.timestamp||0),
-    date:o.date||""
-  })).sort((a,b)=>Number(b.ts)-Number(a.ts)); // hard newest-first
-}
-function normPlayers(j){
-  const arr = Array.isArray(j)? j : (j&&j.data)||[];
-  return arr.map(o=>({
-    name:o.name||o.player||o.username||"unknown",
-    gold:Number(o.gold||o.season_gold||0),
-    casts:Number(o.casts||o.season_casts||0),
-    lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)
-  }));
-}
-function normLeader(j){
-  let arr = Array.isArray(j)? j : (j&&j.data||j&&j.rows||[]);
-  arr = arr.map(o=>({player:o.player||o.name||"unknown", gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
-  arr.sort((a,b)=>b.gold-a.gold);
-  arr.forEach((r,i)=>r.rank=i+1);
-  return arr;
-}
-
-/* merge leaderboard + players by name */
-function buildMerged(lead, players){
-  const pmap = new Map(players.map(p=>[p.name.toLowerCase(), p]));
-  return lead.map(r=>{
-    const p = pmap.get(r.player.toLowerCase()) || {};
-    return {
-      rank: r.rank, player: r.player,
-      gold: r.gold,
-      casts: Number(p.casts||0),
-      lifetime_casts: Number(p.lifetime_casts||0)
-    };
-  });
-}
-
-/* -------- renderers -------- */
-function refreshSync(){
-  const t=Number(DATA.meta?.exported_at_epoch||0);
-  const d=t? new Date(t*1000) : null;
-  const p=x=>String(x).padStart(2,"0");
-  const s = d? `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}` : "";
-  $("#syncA").textContent=s; $("#syncB").textContent=s; $("#syncC").textContent=s;
-}
-
-function renderBests(){
-  const q = ($("#qGlobal").value||"").toLowerCase();
-  const el = $("#listBests"); el.innerHTML="";
-  const rows = DATA.bests.filter(r=>inSpan(r.ts) && (!q || r.item.toLowerCase().includes(q) || r.player.toLowerCase().includes(q) || r.rarity.toLowerCase().includes(q)));
-  rows.forEach((r,i)=>{
-    const div=document.createElement("div"); div.className="item";
-    div.innerHTML = `
-      <div class="rank">${i+1}</div>
-      <div class="main">
-        <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
-        <div class="sub">${r.player} · ${r.date||""}</div>
-      </div>
-      <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
-    el.appendChild(div);
-  });
-  if(!rows.length){ el.innerHTML = `<div class="item"><div class="main"><div class="sub">No data</div></div></div>`; }
-}
-
-function renderRecent(){
-  const q = ($("#qGlobal").value||"").toLowerCase();
-  let rec = DATA.recent.filter(r=>inSpan(r.ts));
-  if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
-  // enforce newest-first by timestamp every time
-  rec.sort((a,b)=>Number(b.ts)-Number(a.ts));
-
-  const head=["When","Player","Catch","★","Gold"];
-  $("#thRecent").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const rows = rec.map(c=>`<tr>
-    <td>${c.date||""}</td>
-    <td>${c.player}</td>
-    <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
-    <td class="num"><span class="chip" style="background:#11182c;border:1px solid #263055;color:#bbcaf0">★ ${c.stars||0}</span></td>
-    <td class="num"><span class="chip" style="background:#2c2410;border:1px solid #5b470c;color:#ffe08a">${fmtGold(c.gold)}</span></td>
-  </tr>`);
-  $("#tbRecent").innerHTML = rows.join("");
-  $("#emptyRecent").style.display = rows.length? "none":"block";
-}
-
-function renderMerged(){
-  const q = ($("#qGlobal").value||"").toLowerCase();
-  let rows = DATA.merged.slice();
-  if(q){ rows = rows.filter(r=>r.player.toLowerCase().includes(q)); }
-  const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"];
-  $("#thMerged").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const html = rows.map(r=>`<tr>
-    <td class="num">${r.rank}</td>
-    <td>${r.player}</td>
-    <td class="num">${fmtGold(r.gold)}</td>
-    <td class="num">${r.casts||0}</td>
-    <td class="num">${r.lifetime_casts||0}</td>
-  </tr>`);
-  $("#tbMerged").innerHTML = html.join("");
-  $("#emptyMerged").style.display = html.length? "none":"block";
-}
-
-function update(){
-  if(VIEW==="bests") renderBests();
-  if(VIEW==="recent") renderRecent();
-  if(VIEW==="lp") renderMerged();
-}
-
-/* click ripple */
-document.addEventListener("click", e=>{
-  const t=e.target.closest(".pill,.tab"); if(!t) return;
-  const r=document.createElement("span"); r.className="rpl";
-  const rect=t.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top;
-  r.style.left=x+"px"; r.style.top=y+"px"; const size=Math.max(rect.width,rect.height); r.style.width=r.style.height=size+"px";
-  t.appendChild(r); setTimeout(()=>r.remove(),650);
-}, true);
-
-/* -------- boot -------- */
-(async function init(){
-  try{
-    const meta = await get(URLS.meta); DATA.meta=meta||{};
-    VERSION = Number(meta?.exported_at_epoch)||VERSION;
-    SEASON_START = Number(meta?.season_start_epoch||0) || Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
-    refreshSync();
-
-    const [recent,bests,players,leaders] = await Promise.all([
-      get(URLS.recent), get(URLS.seasonBests), get(URLS.players), get(URLS.leaderboard)
-    ]);
-    DATA.recent = normRecent(recent);
-    DATA.bests  = normBests(bests);
-    DATA.players= normPlayers(players);
-    DATA.lead   = normLeader(leaders);
-    DATA.merged = buildMerged(DATA.lead, DATA.players);
-
-    update();
-  }catch(e){ console.error(e) }
-
-  setInterval(async()=>{
-    try{
-      const meta = await get(URLS.meta); DATA.meta=meta||{};
-      if(meta?.exported_at_epoch) VERSION = Number(meta.exported_at_epoch);
-      refreshSync();
-      const [recent,bests,players,leaders] = await Promise.all([
-        get(URLS.recent), get(URLS.seasonBests), get(URLS.players), get(URLS.leaderboard)
-      ]);
-      DATA.recent = normRecent(recent);
-      DATA.bests  = normBests(bests);
-      DATA.players= normPlayers(players);
-      DATA.lead   = normLeader(leaders);
-      DATA.merged = buildMerged(DATA.lead, DATA.players);
-      update();
-    }catch(e){ console.error(e) }
-  }, 90000);
-})();
-</script>
-</body>
-</html>
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print("FATAL:", e)
+        sys.exit(1)
