@@ -4,66 +4,117 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kheama's Arcade • Lurk Bait Fishing</title>
+
+<!-- Arcade fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://dl.dropboxusercontent.com">
+
 <style>
 :root{
-  --bg:#0b0f17;--glow1:rgba(96,165,250,.18);--glow2:rgba(244,114,182,.18);
-  --panel:#0f1629;--panel2:#0f172a;--line:#1a2340;
-  --text:#e5e7eb;--muted:#9ca3af;--accent1:#f472b6;--accent2:#60a5fa;
-  --chip:#172136;--chipline:#233154;--chiptext:#cfe1ff
+  --bg:#0b0f17;
+  --glow1:rgba(96,165,250,.18);
+  --glow2:rgba(244,114,182,.20);
+  --panel:#0f1629; --line:#1a2340;
+  --text:#e9efff; --muted:#9fb0d2;
+
+  /* rarity palette */
+  --junk:#6b7280;         --junk-bg:#1f2430;
+  --common:#cbd5e1;       --common-bg:#1b2234;
+  --uncommon:#34d399;     --uncommon-bg:#0f2a25;
+  --rare:#60a5fa;         --rare-bg:#0f243d;
+  --epic:#a78bfa;         --epic-bg:#1a1740;
+  --legend:#facc15;       --legend-bg:#2a2307;
+
+  --pill-grad:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);
+  --card-grad:linear-gradient(180deg,rgba(15,22,41,.98),rgba(11,16,26,.96));
 }
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;color:var(--text);
   background:
     radial-gradient(1200px 600px at 10% -10%,var(--glow2),transparent 60%),
     radial-gradient(900px 500px at 110% 10%,var(--glow1),transparent 60%),
     var(--bg);
-  font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter
+  font:14px/1.55 "Outfit",system-ui,-apple-system,Segoe UI,Roboto;
+  letter-spacing:.2px;
 }
-a{color:#9ec5ff;text-decoration:none}
+
+/* header */
 .top{
   max-width:1280px;margin:18px auto 0;padding:0 16px;
   display:flex;align-items:center;gap:12px
 }
-.brand{font-weight:900;font-size:32px;letter-spacing:.3px;margin-right:auto}
-.pink{color:var(--accent1)} .blue{color:var(--accent2)}
-.search{min-width:280px;background:#0b1220;border:1px solid var(--line);border-radius:999px;padding:10px 14px;color:#dbe7ff}
-.nav{display:flex;gap:8px}
-.pill{border:1px solid var(--line);background:#0b1220;border-radius:999px;padding:8px 14px;color:#b9caea;cursor:pointer}
-.pill.active{color:#fff;border-color:#2a3a66;background:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);box-shadow:0 0 20px rgba(96,165,250,.35)}
-.wrap{max-width:1280px;margin:12px auto 24px;padding:0 16px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.brand{font-weight:900;font-size:34px;letter-spacing:.4px;margin-right:auto}
+.pink{color:#f472b6} .blue{color:#60a5fa}
+.search{
+  min-width:300px;background:#0b1220;border:1px solid var(--line);
+  border-radius:999px;padding:11px 14px;color:#dbe7ff;outline:none
+}
+.nav{display:flex;gap:10px}
+.pill{
+  border:1px solid var(--line);background:#0b1220;border-radius:999px;
+  padding:9px 14px;color:#b9caea;cursor:pointer;font-weight:700
+}
+.pill.active{color:#fff;border-color:#2a3a66;background:var(--pill-grad);
+  box-shadow:0 0 24px rgba(96,165,250,.36)}
+
+/* layout */
+.wrap{max-width:1280px;margin:14px auto 28px;padding:0 16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media (max-width:1000px){.grid2{grid-template-columns:1fr}}
 .card{
-  background:linear-gradient(180deg,rgba(15,22,41,.92),rgba(15,23,42,.92));
-  border:1px solid var(--line);border-radius:16px;padding:16px;
-  box-shadow:0 16px 36px rgba(0,0,0,.35)
+  background:var(--card-grad);border:1px solid var(--line);border-radius:18px;padding:18px;
+  box-shadow:0 22px 48px rgba(0,0,0,.45)
 }
-.hrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.hleft{display:flex;align-items:baseline;gap:10px}
-.h2{margin:0;font-size:22px}
+.hrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.hleft{display:flex;align-items:baseline;gap:12px}
+.h2{margin:0;font-size:24px;font-weight:900;letter-spacing:.2px}
 .kicker{color:var(--muted);font-size:12px}
-.tabrow{display:flex;gap:8px}
-.tab{padding:8px 12px;border-radius:999px;background:#0b1220;color:#93c5fd;border:1px solid var(--line);cursor:pointer}
-.tab.active{background:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);color:#fff;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.25)}
-/* list rows (Season Bests / flair) */
-.list{border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.item{display:flex;align-items:center;gap:12px;padding:12px;border-top:1px solid #0c1224}
+.tabrow{display:flex;gap:10px}
+.tab{
+  padding:9px 14px;border-radius:999px;background:#0b1220;color:#93c5fd;
+  border:1px solid var(--line);cursor:pointer;font-weight:800
+}
+.tab.active{background:var(--pill-grad);color:#fff;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.28)}
+
+/* Season Bests flair list */
+.list{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.item{display:flex;align-items:center;gap:16px;padding:14px 16px;border-top:1px solid #0c1224}
 .item:first-child{border-top:0}
-.rank{width:34px;height:34px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff;font-weight:600}
+.rank{width:36px;height:36px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff;font-weight:900}
 .main{flex:1 1 auto;min-width:0}
-.title{font-weight:800;font-size:16px}
+.title{font-weight:900;font-size:18px;letter-spacing:.2px}
 .sub{color:#a8b3c9;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.badge{display:inline-block;background:var(--chip);border:1px solid var(--chipline);color:var(--chiptext);border-radius:999px;padding:2px 8px;font-size:12px;margin-left:8px}
-.gold{margin-left:auto;font-weight:900}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.gold{
+  margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:800;
+  font-size:18px;color:#ffe08a;text-shadow:0 0 10px rgba(250,204,21,.35)
+}
+
+/* table look */
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
-.table th,.table td{padding:10px;border-bottom:1px solid #0e1730}
-.table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer}
-.num{text-align:right}
-.small{color:#9ca3af;font-size:12px;margin-top:8px}
-.footer{max-width:1280px;margin:6px auto 24px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
+.table th,.table td{padding:12px;border-bottom:1px solid #0e1730}
+.table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer;font-weight:800}
+.num{text-align:right;font-family:"JetBrains Mono",monospace}
+
+/* chips */
+.chip{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;
+  padding:4px 10px;font-size:12px;font-weight:800;border:1px solid transparent
+}
+.r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
+.r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
+.r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
+.r-rare{color:var(--rare);background:var(--rare-bg);border-color:#1e3f66}
+.r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
+.r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
+.chip.star{background:#11182c;border-color:#263055;color:#bbcaf0}
+.chip.gold{background:#2c2410;border-color:#5b470c;color:#ffe08a}
+
+/* meta text */
+.small{color:var(--muted);font-size:12px;margin-top:10px}
+.footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
 </style>
 </head>
 <body>
@@ -77,7 +128,7 @@ a{color:#9ec5ff;text-decoration:none}
     </div>
   </div>
 
-  <!-- Season Bests (flair view) -->
+  <!-- Season Bests (flair) -->
   <div class="wrap" id="view-bests" style="display:block">
     <div class="card">
       <div class="hrow">
@@ -95,14 +146,11 @@ a{color:#9ec5ff;text-decoration:none}
     </div>
   </div>
 
-  <!-- Recent (full width) -->
+  <!-- Recent full width -->
   <div class="wrap" id="view-recent" style="display:none">
     <div class="card">
       <div class="hrow">
-        <div class="hleft">
-          <h2 class="h2">Recent Catches</h2>
-          <div class="kicker">Live feed</div>
-        </div>
+        <div class="hleft"><h2 class="h2">Recent Catches</h2><div class="kicker">Live feed</div></div>
         <div class="tabrow">
           <div class="tab active" data-span="season">Season</div>
           <div class="tab" data-span="all">All-Time</div>
@@ -119,19 +167,13 @@ a{color:#9ec5ff;text-decoration:none}
     </div>
   </div>
 
-  <!-- Stats (two columns) -->
+  <!-- Stats two column -->
   <div class="wrap" id="view-stats" style="display:none">
     <div class="grid2">
       <div class="card">
         <div class="hrow">
-          <div class="hleft">
-            <h2 class="h2">Leaderboard</h2>
-            <div class="kicker">Totals</div>
-          </div>
-          <div class="tabrow">
-            <div class="tab active" data-span="season">Season</div>
-            <div class="tab" data-span="all">All-Time</div>
-          </div>
+          <div class="hleft"><h2 class="h2">Leaderboard</h2><div class="kicker">Totals</div></div>
+          <div class="tabrow"><div class="tab active" data-span="season">Season</div><div class="tab" data-span="all">All-Time</div></div>
         </div>
         <div class="table-wrap">
           <table class="table">
@@ -145,14 +187,8 @@ a{color:#9ec5ff;text-decoration:none}
 
       <div class="card">
         <div class="hrow">
-          <div class="hleft">
-            <h2 class="h2">Players</h2>
-            <div class="kicker">Totals and casts</div>
-          </div>
-          <div class="tabrow">
-            <div class="tab active" data-span="season">Season</div>
-            <div class="tab" data-span="all">All-Time</div>
-          </div>
+          <div class="hleft"><h2 class="h2">Players</h2><div class="kicker">Totals and casts</div></div>
+          <div class="tabrow"><div class="tab active" data-span="season">Season</div><div class="tab" data-span="all">All-Time</div></div>
         </div>
         <div class="table-wrap">
           <table class="table">
@@ -169,25 +205,36 @@ a{color:#9ec5ff;text-decoration:none}
   <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
-/* ---------- Endpoints ---------- */
-var URLS = {
+/* -------- endpoints -------- */
+var URLS={
   seasonBests:"https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl",
-  recent:     "https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
+  recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
   leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
-  players:    "https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
-  meta:       "https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4"
+  players:"https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
+  meta:"https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4"
 }
 
-/* ---------- Helpers ---------- */
+/* -------- utils -------- */
 var CACHE={}
 function $(s){return document.querySelector(s)}
 function $all(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
-function get(u){ if(CACHE[u]) return Promise.resolve(CACHE[u]); return fetch(u,{cache:"no-store"}).then(function(r){if(!r.ok) throw new Error(r.status);return r.json()}).then(function(j){CACHE[u]=j;return j}) }
-function fmtGold(n){n=Math.round(Number(n)||0);return n.toLocaleString()+"g"}
+function get(u){ if(CACHE[u]) return Promise.resolve(CACHE[u]); return fetch(u,{cache:"no-store"}).then(function(r){if(!r.ok) throw new Error(r.status); return r.json()}).then(function(j){CACHE[u]=j; return j}) }
 function epochFrom(v){ if(typeof v==="number") return v; var t=v?Date.parse(v):NaN; return isNaN(t)?null:Math.floor(t/1000) }
-function fmtStamp(ts){ if(!ts) return ""; var d=new Date(ts*1000); function pad(x){return (x<10?"0":"")+x} return pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())+" "+pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear() }
+function fmtStamp(ts){ if(!ts) return ""; var d=new Date(ts*1000); function p(x){return (x<10?"0":"")+x} return p(d.getHours())+":"+p(d.getMinutes())+":"+p(d.getSeconds())+" "+p(d.getDate())+"/"+p(d.getMonth()+1)+"/"+d.getFullYear() }
+function fmtGold(n){ n=Math.round(Number(n)||0); return n.toLocaleString()+"g" }
 
-/* ---------- State ---------- */
+/* rarity class */
+function rClass(r){
+  var x=(r||"").toLowerCase()
+  if(x==="legendary") return "r-legend"
+  if(x==="epic") return "r-epic"
+  if(x==="rare") return "r-rare"
+  if(x==="uncommon") return "r-uncommon"
+  if(x==="junk") return "r-junk"
+  return "r-common"
+}
+
+/* -------- state -------- */
 var VIEW="bests", SPAN="season", SEASON_START=0
 function setView(v){
   VIEW=v
@@ -199,7 +246,7 @@ function setView(v){
 function setSpan(s){ SPAN=s; $all(".tab").forEach(function(t){t.classList.toggle("active",t.getAttribute("data-span")===s)}) }
 function inSpan(ts){ if(SPAN==="all") return true; if(!ts) return true; return ts>=SEASON_START }
 
-/* ---------- Normalizers ---------- */
+/* -------- normalizers -------- */
 function normBests(j){
   var arr=Array.isArray(j)?j:(j&&j.data||[])
   return arr.map(function(o){
@@ -212,7 +259,14 @@ function normBests(j){
 }
 function normRecent(j){
   var arr=Array.isArray(j)?j:(j&&j.data||[])
-  return arr.map(function(o){return{player:o.player||o.name||"unknown",item:o.item||o.species||"",rarity:o.rarity||"",stars:Number(o.stars||o.star||0),gold:Number(o.gold||0),ts:Number(o.timestamp||o.ts||o.epoch||epochFrom(o.time)||0)}})
+  return arr.map(function(o){
+    return { player:o.player||o.name||"unknown",
+             item:o.item||o.species||"",
+             rarity:o.rarity||"",
+             stars:Number(o.stars||o.star||0),
+             gold:Number(o.gold||0),
+             ts:Number(o.timestamp||o.ts||o.epoch||epochFrom(o.time)||0) }
+  })
 }
 function normLeaderboard(j){
   var arr=Array.isArray(j)?j:(j&&j.data||j&&j.rows||[])
@@ -224,7 +278,7 @@ function normPlayers(j){
   return arr.map(function(o){return{name:o.name||o.player||"unknown",gold:Number(o.gold||o.season_gold||0),casts:Number(o.casts||o.season_casts||0),lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)}})
 }
 
-/* ---------- Renderers ---------- */
+/* -------- renderers -------- */
 function renderBests(list){
   var q=($("#qGlobal").value||"").toLowerCase()
   var el=$("#listBests"); el.innerHTML=""
@@ -240,7 +294,7 @@ function renderBests(list){
     row.innerHTML =
       "<div class='rank'>"+(i+1)+"</div>"+
       "<div class='main'>"+
-      "  <div class='title'>"+r.item+"<span class='badge'>"+(r.rarity||"")+"</span></div>"+
+      "  <div class='title'>"+r.item+" <span class='chip "+rClass(r.rarity)+"'>"+(r.rarity||"")+"</span></div>"+
       "  <div class='sub'>"+r.player+" · "+fmtStamp(r.ts)+"</div>"+
       "</div>"+
       "<div class='gold'>"+fmtGold(r.gold)+"</div>"
@@ -254,6 +308,7 @@ function renderTable(headEl, bodyEl, emptyEl, headers, rowsHtml){
   emptyEl.style.display="none"; bodyEl.innerHTML=rowsHtml.join("")
 }
 
+/* sorting */
 var sortRecent={key:"ts",desc:true}, sortLead={key:"rank",desc:false}, sortPlayers={key:"gold",desc:true}
 function applySort(arr,key,desc){
   return arr.sort(function(a,b){
@@ -263,7 +318,7 @@ function applySort(arr,key,desc){
   })
 }
 
-/* ---------- Data ---------- */
+/* -------- data -------- */
 var DATA={meta:{}, bests:[], recent:[], lead:[], players:[]}
 function refreshSync(){
   var t=DATA.meta && (DATA.meta.exported_at_epoch||epochFrom(DATA.meta.exported_at_iso))
@@ -280,12 +335,13 @@ function update(){
     var rec=DATA.recent.filter(function(r){return inSpan(r.ts)})
     if(q){ var qq=q.toLowerCase(); rec=rec.filter(function(r){return r.player.toLowerCase().indexOf(qq)>-1 || r.item.toLowerCase().indexOf(qq)>-1}) }
     rec=applySort(rec,sortRecent.key,sortRecent.desc)
-    var rowsR=[]
+    var rows=[]
     for(var i=0;i<rec.length;i++){
-      var c=rec[i]; var text=c.item+(c.rarity?(" ("+c.rarity+")"):"")
-      rowsR.push("<tr><td>"+fmtStamp(c.ts)+"</td><td>"+c.player+"</td><td>"+text+"</td><td class='num'>"+(c.stars||0)+"</td><td class='num'>"+fmtGold(c.gold)+"</td></tr>")
+      var c=rec[i]
+      var chip="<span class='chip "+rClass(c.rarity)+"'>"+(c.rarity||"")+"</span>"
+      rows.push("<tr><td>"+fmtStamp(c.ts)+"</td><td>"+c.player+"</td><td>"+c.item+" "+chip+"</td><td class='num'><span class='chip star'>★ "+(c.stars||0)+"</span></td><td class='num'><span class='chip gold'>"+fmtGold(c.gold)+"</span></td></tr>")
     }
-    renderTable($("#thRecent"),$("#tbRecent"),$("#emptyRecent"),["When","Player","Catch","★","Gold"],rowsR)
+    renderTable($("#thRecent"),$("#tbRecent"),$("#emptyRecent"),["When","Player","Catch","★","Gold"],rows)
   }
 
   if(VIEW==="stats"){
@@ -320,7 +376,7 @@ function loadAll(){
   ])
 }
 
-/* ---------- Wire up ---------- */
+/* -------- wire up -------- */
 document.addEventListener("DOMContentLoaded",function(){
   // nav
   $all(".pill").forEach(function(p){ p.onclick=function(){ setView(p.getAttribute("data-view")); update() } })
@@ -329,10 +385,25 @@ document.addEventListener("DOMContentLoaded",function(){
   // search
   $("#qGlobal").addEventListener("input",function(){ update() })
 
-  // header sorts
-  document.getElementById("thRecent").onclick=function(e){ if(e.target.tagName!=="TH")return; var idx=e.target.cellIndex; var map=["ts","player","item","stars","gold"]; var k=map[idx]||"ts"; if(sortRecent.key===k) sortRecent.desc=!sortRecent.desc; else {sortRecent.key=k; sortRecent.desc=(k!=="player"&&k!=="item")} update() }
-  document.getElementById("thLead").onclick=function(e){ if(e.target.tagName!=="TH")return; var idx=e.target.cellIndex; var map=["rank","player","gold"]; var k=map[idx]||"rank"; if(sortLead.key===k) sortLead.desc=!sortLead.desc; else {sortLead.key=k; sortLead.desc=(k!=="player")} update() }
-  document.getElementById("thPlayers").onclick=function(e){ if(e.target.tagName!=="TH")return; var idx=e.target.cellIndex; var map=["name","gold","casts","lifetime_casts"]; var k=map[idx]||"gold"; if(sortPlayers.key===k) sortPlayers.desc=!sortPlayers.desc; else {sortPlayers.key=k; sortPlayers.desc=(k!=="name")} update() }
+  // column sorting
+  document.getElementById("thRecent").onclick=function(e){
+    if(e.target.tagName!=="TH")return
+    var idx=e.target.cellIndex; var map=["ts","player","item","stars","gold"]; var k=map[idx]||"ts"
+    if(sortRecent.key===k) sortRecent.desc=!sortRecent.desc; else {sortRecent.key=k; sortRecent.desc=(k!=="player"&&k!=="item")}
+    update()
+  }
+  document.getElementById("thLead").onclick=function(e){
+    if(e.target.tagName!=="TH")return
+    var idx=e.target.cellIndex; var map=["rank","player","gold"]; var k=map[idx]||"rank"
+    if(sortLead.key===k) sortLead.desc=!sortLead.desc; else {sortLead.key=k; sortLead.desc=(k!=="player")}
+    update()
+  }
+  document.getElementById("thPlayers").onclick=function(e){
+    if(e.target.tagName!=="TH")return
+    var idx=e.target.cellIndex; var map=["name","gold","casts","lifetime_casts"]; var k=map[idx]||"gold"
+    if(sortPlayers.key===k) sortPlayers.desc=!sortPlayers.desc; else {sortPlayers.key=k; sortPlayers.desc=(k!=="name")}
+    update()
+  }
 
   loadAll().then(function(){ update() })
   setInterval(function(){ CACHE={}; loadAll().then(function(){ update() }) }, 90000)
