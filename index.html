@@ -107,7 +107,6 @@ body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,rgba(96,165,25
 <footer class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</footer>
 
 <script>
-/* ---- Your raw Dropbox links ---- */
 const URLS = {
   dex: "https://dl.dropboxusercontent.com/scl/fi/nmqf6rewo4pweftrfrjfb/dex.json?rlkey=h9z371ywynt7sqffywvbks2zn&e=1",
   leaderboard: "https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
@@ -117,9 +116,8 @@ const URLS = {
   seasonBests: "https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl"
 };
 
-/* ---- State / helpers ---- */
 let ROUTE="leaderboard"; let SORT={key:null,dir:1}; let CACHE={};
-const $=s=>document.querySelector(s); const $$=s=>Array.from(document.querySelectorAll(s));
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const fmtGold=n=>`${Math.round(n||0).toLocaleString()}g`;
 const epoch=v=>typeof v==="number"?v:(v?Date.parse(v)/1000:null);
 const inRange=(ts,a,b)=>(!a||ts>=a)&&(!b||ts<=b);
@@ -127,68 +125,24 @@ const has=(s,q)=>!q||(s||"").toLowerCase().includes(q.toLowerCase());
 function showErr(m){const e=$("#err");e.textContent=m;e.style.display="block";}
 function showStatus(m){const e=$("#status");e.textContent=m;e.style.display="block";}
 function clearMsgs(){ $("#err").style.display="none"; $("#status").style.display="none"; }
-
 async function get(u){ if(CACHE[u]) return CACHE[u]; const r=await fetch(u,{cache:"no-store"}); if(!r.ok) throw new Error(u+" -> "+r.status); const j=await r.json(); CACHE[u]=j; return j; }
 
-/* ---- Normalizers (accept multiple field names) ---- */
-function normLeaderboard(arr){
-  return (arr||[]).map(o=>{
-    const player=o.player??o.name??o.user??"unknown";
-    const gold=Number(o.gold??o.total_gold??o.season_gold??0);
-    const rank=o.rank??null;
-    return {player,gold,rank};
-  }).sort((a,b)=> (b.gold-a.gold)).map((o,i)=>({...o,rank:o.rank??(i+1)}));
-}
-function normPlayers(arr){
-  return (arr||[]).map(o=>{
-    const name=o.name??o.player??"unknown";
-    const gold=Number(o.gold??o.season_gold??0);
-    const casts=Number(o.casts??o.season_casts??0);
-    const lifetime_casts=Number(o.lifetime_casts??o.total_casts??0);
-    return {name,gold,casts,lifetime_casts};
-  });
-}
-function normDex(arr){
-  const a = Array.isArray(arr)?arr:(arr?.items||arr?.data||[]);
-  return (a||[]).map(o=>{
-    const item=o.item??o.species??o.name??"unknown";
-    const rarity=o.rarity??"";
-    const best_gold=Number(o.best_gold??o.gold??0);
-    const player=o.player??o.best_player??"";
-    return {item,rarity,best_gold,player};
-  });
-}
-function normRecent(arr){
-  return (arr||[]).map(o=>{
-    const player=o.player??o.name??"unknown";
-    const item=o.item??o.species??"";
-    const rarity=o.rarity??"";
-    const gold=Number(o.gold??0);
-    const stars=Number(o.stars??o.star??0);
-    const timestamp=Number(o.timestamp??o.ts??o.epoch??epoch(o.time)||0);
-    return {player,item,rarity,gold,stars,timestamp};
-  });
-}
+function normLeaderboard(arr){ return (arr||[]).map(o=>({ player:o.player??o.name??o.user??"unknown", gold:Number(o.gold??o.total_gold??o.season_gold??0), rank:o.rank??null })).sort((a,b)=>b.gold-a.gold).map((o,i)=>({...o,rank:o.rank??(i+1)})); }
+function normPlayers(arr){ return (arr||[]).map(o=>({ name:o.name??o.player??"unknown", gold:Number(o.gold??o.season_gold??0), casts:Number(o.casts??o.season_casts??0), lifetime_casts:Number(o.lifetime_casts??o.total_casts??0) })); }
+function normDex(arr){ const a=Array.isArray(arr)?arr:(arr?.items||arr?.data||[]); return (a||[]).map(o=>({ item:o.item??o.species??o.name??"unknown", rarity:o.rarity??"", best_gold:Number(o.best_gold??o.gold??0), player:o.player??o.best_player??"" })); }
+function normRecent(arr){ return (arr||[]).map(o=>({ player:o.player??o.name??"unknown", item:o.item??o.species??"", rarity:o.rarity??"", gold:Number(o.gold??0), stars:Number(o.stars??o.star??0), timestamp:Number(o.timestamp??o.ts??o.epoch??epoch(o.time)||0) })); }
 
-/* ---- UI builders ---- */
 function renderTable(cols, rows){
   $("#player-detail").style.display="none";
   $("#table").style.display="";
   $("#empty").style.display = rows.length?"none":"";
   clearMsgs();
-
   $("#thead").innerHTML = `<tr>${cols.map(c=>`<th data-key="${c.key}" class="${c.align||""}" style="${c.width?`width:${c.width}`:""}">${c.label}${SORT.key===c.key?(SORT.dir===1?" ▲":" ▼"):""}</th>`).join("")}</tr>`;
   $("#tbody").innerHTML = rows.map(r=>`<tr>${cols.map(c=>`<td class="${c.align||""}">${r[c.key]??""}</td>`).join("")}</tr>`).join("");
-
-  $$("#thead th").forEach(th=>{
-    th.onclick=()=>{ const key=th.dataset.key; if(SORT.key===key) SORT.dir*=-1; else {SORT.key=key; SORT.dir=(key==="rank"||key==="gold"||key==="stars")?-1:1;} routeTo(ROUTE); };
-  });
+  $$("#thead th").forEach(th=>{ th.onclick=()=>{ const key=th.dataset.key; if(SORT.key===key) SORT.dir*=-1; else {SORT.key=key; SORT.dir=(key==="rank"||key==="gold"||key==="stars")?-1:1;} routeTo(ROUTE); }; });
 }
 
-/* ---- Views ---- */
-async function syncLabel(){
-  try{ const meta=await get(URLS.meta); const t=meta.exported_at_iso||(meta.exported_at_epoch?new Date(meta.exported_at_epoch*1000).toLocaleString():"—"); $("#sync-time").textContent=t; }catch{ $("#sync-time").textContent="—"; }
-}
+async function syncLabel(){ try{ const meta=await get(URLS.meta); const t=meta.exported_at_iso||(meta.exported_at_epoch?new Date(meta.exported_at_epoch*1000).toLocaleString():"—"); $("#sync-time").textContent=t; }catch{ $("#sync-time").textContent="—"; } }
 
 async function viewLeaderboard(){
   $("#view-title").textContent="Leaderboard"; $("#view-sub").textContent="Totals"; $(".filters").style.display="none";
@@ -251,10 +205,16 @@ async function viewPlayerDetail(name){
   }catch(e){ showErr("Could not build player view."); }
 }
 
-/* ---- Router & wiring ---- */
 function parseHash(){ return (location.hash||"#leaderboard").slice(1); }
 async function routeTo(hash){ location.hash=hash; ROUTE=hash; $$(".navlink").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==='#'+ROUTE.split("/")[0])); await syncLabel(); if(ROUTE==="leaderboard") return viewLeaderboard(); if(ROUTE==="recent") return viewRecent(); if(ROUTE==="dex") return viewDex(); if(ROUTE==="players") return viewPlayers(); if(ROUTE.startsWith("player/")) return viewPlayerDetail(decodeURIComponent(ROUTE.split("/")[1])); return viewLeaderboard(); }
-function wire(){ $("#span-tabs").addEventListener("click",e=>{const b=e.target.closest(".tab"); if(!b) return; $$("#span-tabs .tab").forEach(x=>x.classList.toggle("active",x===b)); routeTo(ROUTE); }); const inputs=["#q","#rarity","#dateFrom","#dateTo","#minGold","#minStars"].map(s=>$(s)); inputs.forEach(el=>el.addEventListener("input",()=>{if(["recent","dex","players"].includes(ROUTE)) routeTo(ROUTE);})); $("#clearFilters").addEventListener("click",()=>{inputs.forEach(el=>el.value=""); routeTo(ROUTE);}); }
+
+function wire(){
+  $("#span-tabs").addEventListener("click",e=>{const b=e.target.closest(".tab"); if(!b) return; $$("#span-tabs .tab").forEach(x=>x.classList.toggle("active",x===b)); routeTo(ROUTE); });
+  const inputs=["#q","#rarity","#dateFrom","#dateTo","#minGold","#minStars"].map(s=>$(s));
+  inputs.forEach(el=>el.addEventListener("input",()=>{ if(["recent","dex","players"].includes(ROUTE)) routeTo(ROUTE); }));
+  $("#clearFilters").addEventListener("click",()=>{ inputs.forEach(el=>el.value=""); routeTo(ROUTE); });
+}
+
 window.addEventListener("DOMContentLoaded",async()=>{ wire(); await routeTo(parseHash()); window.addEventListener("hashchange",()=>routeTo(parseHash())); setInterval(()=>{CACHE={}; routeTo(ROUTE);}, 90*1000); });
 </script>
 </body>
