@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kheama's Arcade • Lurk Bait Fishing Stats</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700;800;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap" rel="stylesheet" />
 <link rel="preconnect" href="https://dl.dropboxusercontent.com" />
 
 <style>
 :root{
   --bg:#0b0f17; --glow1:rgba(96,165,250,.18); --glow2:rgba(244,114,182,.20);
   --panel:#0f1629; --line:#1a2340; --text:#e9efff; --muted:#9fb0d2;
+  --pill-grad:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);
+  --card-grad:linear-gradient(180deg,rgba(15,22,41,.98),rgba(11,16,26,.96));
 
   --junk:#6b7280; --junk-bg:#1f2430;
   --common:#cbd5e1; --common-bg:#1b2234;
@@ -19,9 +21,6 @@
   --rare:#60a5fa; --rare-bg:#0f243d;
   --epic:#a78bfa; --epic-bg:#1a1740;
   --legend:#facc15; --legend-bg:#2a2307;
-
-  --pill-grad:linear-gradient(90deg,#f472b6 0%,#60a5fa 100%);
-  --card-grad:linear-gradient(180deg,rgba(15,22,41,.98),rgba(11,16,26,.96));
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -31,104 +30,101 @@ body{
     radial-gradient(1200px 600px at 10% -10%,var(--glow2),transparent 60%),
     radial-gradient(900px 500px at 110% 10%,var(--glow1),transparent 60%),
     var(--bg);
-  font:15px/1.6 "Outfit",system-ui,-apple-system,Segoe UI,Roboto;
+  font:16px/1.6 "Outfit",system-ui,-apple-system,Segoe UI,Roboto;
   letter-spacing:.2px;
 }
 
 /* header */
-.header{
-  max-width:1280px;margin:18px auto 0;padding:0 16px 6px;
-  display:flex;align-items:center;gap:14px;justify-content:space-between
-}
+.header{max-width:1280px;margin:18px auto 0;padding:0 16px 6px;display:flex;align-items:center;gap:14px;justify-content:space-between}
 .brand-wrap{display:flex;align-items:center;gap:12px}
 .logo{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
-.brand-name{margin:0;font-weight:900;font-size:34px;letter-spacing:.4px}
-.brand-name .pink{color:#f472b6;text-shadow:0 0 6px rgba(244,114,182,.45),0 0 18px rgba(244,114,182,.25);animation:glowPink 4s ease-in-out infinite}
-.brand-name .blue{color:#60a5fa;text-shadow:0 0 6px rgba(96,165,250,.45),0 0 18px rgba(96,165,250,.25);animation:glowBlue 4s ease-in-out infinite}
-.subttl{color:var(--muted);font-size:17px;margin-top:2px;font-weight:700}
-.sync-top{color:#8ea3c7;font-size:13px;margin-top:4px}
-@keyframes glowPink{0%,100%{text-shadow:0 0 6px rgba(244,114,182,.35),0 0 14px rgba(244,114,182,.2)}50%{text-shadow:0 0 10px rgba(244,114,182,.55),0 0 26px rgba(244,114,182,.35)}}
-@keyframes glowBlue{0%,100%{text-shadow:0 0 6px rgba(96,165,250,.35),0 0 14px rgba(96,165,250,.2)}50%{text-shadow:0 0 10px rgba(96,165,250,.55),0 0 26px rgba(96,165,250,.35)}}
+.brand-name{margin:0;font-weight:900;font-size:36px;letter-spacing:.4px}
+.brand-name .pink{color:#f472b6;text-shadow:0 0 6px rgba(244,114,182,.45),0 0 18px rgba(244,114,182,.25)}
+.brand-name .blue{color:#60a5fa;text-shadow:0 0 6px rgba(96,165,250,.45),0 0 18px rgba(96,165,250,.25)}
+.subttl{color:var(--muted);font-size:18px;margin-top:2px;font-weight:800}
+.sync-top{color:#8ea3c7;font-size:14px;margin-top:4px}
 
 /* controls / pills */
 .controls{display:flex;align-items:center;gap:12px}
-.search{
-  min-width:300px;background:#0b1220;border:1px solid var(--line);
-  border-radius:999px;padding:12px 16px;color:#dbe7ff;outline:none
-}
-.search:focus{box-shadow:0 0 0 2px #203260,0 0 20px rgba(96,165,250,.25)}
+.search{min-width:320px;background:#0b1220;border:1px solid var(--line);border-radius:999px;padding:12px 16px;color:#dbe7ff;outline:none}
+.search:focus{box-shadow:0 0 0 2px #203260,0 0 24px rgba(96,165,250,.25)}
 .nav{display:flex;gap:10px}
 .pill{
   border:1px solid var(--line);background:#0b1220;border-radius:999px;
-  padding:10px 16px;color:#b9caea;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
+  padding:11px 18px;color:#c8d9fb;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.05), inset 0 -3px 0 rgba(0,0,0,.25);
+  /* EMBOSSED */
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.45), 0 8px 18px rgba(0,0,0,.28);
 }
-.pill:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.25), inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.33)}
-.pill.active{color:#0a0f16;border-color:#2a3a66;background:var(--pill-grad);
-  box-shadow:0 0 12px rgba(244,114,182,.35),0 0 28px rgba(96,165,250,.30),inset 0 2px 0 rgba(255,255,255,.12), inset 0 -4px 0 rgba(0,0,0,.35)}
+.pill:hover{transform:translateY(-1px);box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -5px 0 rgba(0,0,0,.55), 0 14px 26px rgba(0,0,0,.35)}
+.pill.active{color:#0a0f16;border-color:#2a3a66;background:var(--pill-grad);box-shadow:inset 0 2px 0 rgba(255,255,255,.16), inset 0 -6px 0 rgba(0,0,0,.45), 0 0 22px rgba(244,114,182,.30),0 0 22px rgba(96,165,250,.28)}
 
 /* layout */
 .wrap{max-width:1280px;margin:10px auto 28px;padding:0 16px}
-.card{
-  background:var(--card-grad);border:1px solid var(--line);border-radius:18px;padding:18px;
-  box-shadow:0 22px 48px rgba(0,0,0,.45)
-}
+.card{background:var(--card-grad);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 22px 48px rgba(0,0,0,.45)}
 .hrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .hleft{display:flex;align-items:baseline;gap:12px}
-.h2{margin:0;font-size:24px;font-weight:900;letter-spacing:.2px}
+.h2{margin:0;font-size:26px;font-weight:900;letter-spacing:.2px}
 .kicker{color:var(--muted);font-size:12px}
 .tabrow{display:flex;gap:10px}
 .tab{
-  padding:9px 14px;border-radius:999px;background:#0b1220;color:#b9caea;
-  border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
-  transition: transform .18s ease, box-shadow .18s ease
+  padding:9px 14px;border-radius:999px;background:#0b1220;color:#c8d9fb;border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
+  transition: transform .18s ease, box-shadow .18s ease;
+  /* EMBOSSED */
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.45);
 }
-.tab:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.25)}
-.tab.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.28)}
+.tab:hover{transform:translateY(-1px);box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -5px 0 rgba(0,0,0,.55), 0 10px 22px rgba(0,0,0,.3)}
+.tab.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66;box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -6px 0 rgba(0,0,0,.45), 0 0 18px rgba(244,114,182,.25)}
 
-/* list rows for Season Bests */
+/* list rows (Season Bests) */
 .list{border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.item{display:flex;align-items:center;gap:16px;padding:14px 16px;border-top:1px solid #0c1224;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.item{display:flex;align-items:center;gap:16px;padding:16px;border-top:1px solid #0c1224;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
 .item:first-child{border-top:0}
 .item:hover{transform:translateY(-2px);background:rgba(255,255,255,.02);box-shadow:0 10px 22px rgba(0,0,0,.35)}
-.rank{width:36px;height:36px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff;font-weight:900}
+.rank{width:38px;height:38px;display:grid;place-items:center;border-radius:999px;background:#0c1426;border:1px solid var(--line);color:#bcd2ff;font-weight:900}
 .main{flex:1 1 auto;min-width:0}
 .title{font-weight:900;font-size:18px;letter-spacing:.2px}
 .sub{color:#a8b3c9;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gold{
-  margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:900;
-  font-size:22px;color:#ffe08a;text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);
-  letter-spacing:.2px
-}
+.gold{margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:900;font-size:22px;color:#ffe08a;text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);letter-spacing:.2px}
 
-/* tables for Recent / Leaderboard */
+/* tables (Recent & Leaderboard) */
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
-.table th,.table td{padding:14px;border-bottom:1px solid #0e1730}
+.table th,.table td{padding:16px;border-bottom:1px solid #0e1730;font-size:16px}
 .table thead th{position:sticky;top:0;background:#0f162a;cursor:pointer;font-weight:900;letter-spacing:.2px}
 .table tbody tr{transition:transform .12s ease,background .12s ease}
 .table tbody tr:hover{transform:translateY(-1px);background:rgba(255,255,255,.03)}
 .table tbody tr:nth-child(odd){background:rgba(255,255,255,.018)}
 .num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:800}
 
-/* rarity badges */
+/* rarity chips — sparkle (not embossed) */
 .chip{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;
-  font-size:12px;font-weight:900;border:1px solid transparent;line-height:1.15;
-  position:relative;overflow:hidden;
-  transition:box-shadow .18s ease, transform .18s ease, background .18s ease
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;
+  font-size:13px;font-weight:900;border:1px solid transparent;line-height:1.15;position:relative;overflow:hidden;
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
 }
-/* sparkle / shine on hover */
-.chip::after{
-  content:""; position:absolute; top:-120%; left:-40%;
-  width:140%; height:340%;
-  background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.25) 35%, rgba(255,255,255,.35) 50%, rgba(255,255,255,.25) 65%, transparent 100%);
-  transform:rotate(25deg) translateX(-120%);
-  opacity:0; pointer-events:none;
+.chip:hover{ transform: translateY(-1px) scale(1.03); filter: brightness(1.04) }
+.chip::after{ /* sweeping shine */
+  content:""; position:absolute; top:-120%; left:-40%; width:140%; height:340%;
+  background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.35) 55%, transparent 100%);
+  transform:rotate(25deg) translateX(-120%); opacity:0; pointer-events:none;
 }
-@keyframes shine{0%{transform:rotate(25deg) translateX(-120%);opacity:0} 35%{opacity:.8} 100%{transform:rotate(25deg) translateX(120%);opacity:0}}
-.chip:hover{ transform: translateY(-1px) scale(1.03); box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 20px rgba(147,197,253,.24) }
+.chip:hover::after{ animation:shine .9s ease }
+@keyframes shine{0%{transform:rotate(25deg) translateX(-120%);opacity:0} 30%{opacity:.9} 100%{transform:rotate(25deg) translateX(120%);opacity:0}}
+/* tiny star sparkles on hover */
+.chip::before{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:0;
+  background:
+    radial-gradient(3px 3px at 20% 30%, rgba(255,255,255,.8), transparent 60%),
+    radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(1.8px 1.8px at 45% 75%, rgba(255,255,255,.7), transparent 60%);
+}
+.chip:hover::before{ animation:twinkle 1.4s ease-in-out infinite; opacity:1 }
+@keyframes twinkle{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.35)}
+}
+/* rarity palettes */
 .r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
 .r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
 .r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
@@ -140,12 +136,10 @@ body{
 .chip-star{background:#11182c;border:1px solid #263055;color:#bbcaf0}
 .chip-gold{background:#2c2410;border:1px solid #5b470c;color:#ffe08a;font-weight:900}
 
-/* extra glow on LP panel */
-#view-lp .card{ box-shadow:0 24px 48px rgba(0,0,0,.5) }
-
+/* footer */
 .footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
 
-/* ripple */
+/* ripple click effect */
 .pill .rpl,.tab .rpl{position:absolute;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.45);animation:ripple .6s ease-out forwards;mix-blend-mode:overlay}
 @keyframes ripple{to{transform:translate(-50%,-50%) scale(18);opacity:0}}
 </style>
@@ -155,15 +149,12 @@ body{
 <!-- HEADER -->
 <div class="header">
   <div class="brand-wrap">
-    <!-- If Dropbox fails, fallback to KA.png in repo root -->
-    <img class="logo"
-         src="https://dl.dropboxusercontent.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1"
-         alt="Kheama's Arcade"
-         onerror="this.onerror=null;this.src='KA.png'">
+    <!-- Dropbox first, fallback to local KA.png -->
+    <img class="logo" src="https://dl.dropboxusercontent.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1" alt="Kheama's Arcade" onerror="this.onerror=null;this.src='KA.png'">
     <div>
       <div class="brand-name"><span class="pink">Kheama's</span> <span class="blue">Arcade</span></div>
       <div class="subttl">Lurk Bait Fishing Stats</div>
-      <div class="sync-top">Last Data Sync: <span id="syncTop">loading…</span></div>
+      <div class="sync-top">Last Data Sync: <span id="syncTop">--/--/---- --:--</span></div>
     </div>
   </div>
 
@@ -234,7 +225,7 @@ body{
 <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
-/* -------- endpoints (swap to yours if different) -------- */
+/* -------- endpoints -------- */
 const URLS={
   meta:"https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
   recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
@@ -244,38 +235,37 @@ const URLS={
 };
 let VERSION = Date.now();
 
-/* -------- utils -------- */
+/* -------- helpers -------- */
 const $=s=>document.querySelector(s);
 const $all=s=>Array.from(document.querySelectorAll(s));
 async function get(u){
-  const cachebust = (u.includes("?")?"&":"?")+"v="+VERSION;
+  const cachebust=(u.includes("?")?"&":"?")+"v="+VERSION;
   const r=await fetch(u+cachebust,{cache:"no-store"});
   if(!r.ok) throw new Error(u);
   return r.json();
 }
-const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g";
+const fmtGold=n=>(Math.round(Number(n)||0)).toLocaleString()+"g";
 const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common";
 
-/* robust epoch from many formats (fallback only; we display original date string) */
 function epochFrom(v){
-  if (!v) return null;
-  if (typeof v === "number") return Math.floor(v);
-  const iso = Date.parse(v);
-  if (!isNaN(iso)) return Math.floor(iso/1000);
-  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/i.exec(v);
-  if (m){
-    let M=+m[1], D=+m[2], Y=+m[3], h=+m[4], mi=+m[5], s=+m[6], ap=m[7].toUpperCase();
-    if (ap==="PM" && h<12) h+=12; if (ap==="AM" && h===12) h=0;
+  if (!v) return 0;
+  if (typeof v==="number") return Math.floor(v);
+  const t=Date.parse(v);
+  if (!Number.isNaN(t)) return Math.floor(t/1000);
+  const m=/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4}) (\\d{1,2}):(\\d{2})(?::(\\d{2}))?\\s*(AM|PM)?$/i.exec(v);
+  if(m){
+    let M=+m[1],D=+m[2],Y=+m[3],h=+m[4],mi=+m[5],s=+(m[6]||0),ap=(m[7]||"").toUpperCase();
+    if(ap==="PM"&&h<12)h+=12; if(ap==="AM"&&h===12)h=0;
     return Math.floor(new Date(Y,M-1,D,h,mi,s).getTime()/1000);
   }
-  return null;
+  return 0;
 }
 
 /* -------- state -------- */
 let VIEW="bests", SPAN="season", SEASON_START=0;
 const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
 
-/* -------- nav/tabs -------- */
+/* -------- nav -------- */
 function setView(v){
   VIEW=v;
   document.getElementById("view-bests").style.display=(v==="bests")?"block":"none";
@@ -285,15 +275,15 @@ function setView(v){
   update();
 }
 function setSpan(s){ SPAN=s; $all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s)); update(); }
-const inSpan = ts => (SPAN==="all") || !SEASON_START || (Number(ts)||0) >= SEASON_START;
+const inSpan=ts=>(SPAN==="all")||!SEASON_START||(Number(ts)||0)>=SEASON_START;
 
-$all(".pill").forEach(p=>p.addEventListener("click",()=>setView(p.dataset.view)));
-$all(".tab").forEach(t=>t.addEventListener("click",()=>setSpan(t.dataset.span)));
-document.getElementById("qGlobal").addEventListener("input",()=>update());
+$all(".pill").forEach(p=>p.addEventListener("click",e=>{setView(p.dataset.view); ripple(e)}));
+$all(".tab").forEach(t=>t.addEventListener("click",e=>{setSpan(t.dataset.span); ripple(e)}));
+document.getElementById("qGlobal").addEventListener("input",update);
 
 /* -------- normalizers -------- */
 function normBests(j){
-  const arr = Array.isArray(j)? j : (j&&j.data)||[];
+  const arr=Array.isArray(j)?j:(j&&j.data)||[];
   return arr.map(o=>({
     item:o.item||o.species||o.name||"unknown",
     rarity:o.rarity||"",
@@ -304,27 +294,33 @@ function normBests(j){
   })).sort((a,b)=>b.best_gold-a.best_gold);
 }
 
-/* Take the last 50 entries in file order, newest first, and display the original date string */
+/* last 50 in file order — newest first. Display original date; if missing, format from timestamp */
+function displayDate(o){
+  if(o.date && typeof o.date==="string" && o.date.trim()) return o.date;
+  const t=Number(o.timestamp||0)||0;
+  if(!t) return "";
+  const d=new Date(t*1000);
+  const p=n=>String(n).padStart(2,"0");
+  return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 function normRecent(j){
-  const arr = Array.isArray(j)? j : (j&&j.data)||[];
-  const last50 = arr.slice(-50);
-  last50.reverse();
+  const arr=Array.isArray(j)?j:(j&&j.data)||[];
+  const last50=arr.slice(-50).reverse();
   return last50.map(o=>{
-    const ts = (typeof o.timestamp==="number" ? o.timestamp : (epochFrom(o.date)||0));
+    const ts = typeof o.timestamp==="number" ? o.timestamp : epochFrom(o.date);
     return {
       player:o.player||o.username||o.name||"unknown",
-      item:o.item||o.species||"",
+      item:o.item||o.species||o.name||"",
       rarity:o.rarity||"",
-      stars:Number(o.stars||o.star||0),
-      gold:Number(o.gold||0),
+      stars:Number(o.stars||o.rating||0),
+      gold:Number(o.gold||o.value||0),
       ts:ts,
-      date:o.date||""
+      date: displayDate({date:o.date,timestamp:ts})
     };
   });
 }
-
 function normPlayers(j){
-  const arr = Array.isArray(j)? j : (j&&j.data)||[];
+  const arr=Array.isArray(j)?j:(j&&j.data)||[];
   return arr.map(o=>({
     name:o.name||o.player||o.username||"unknown",
     gold:Number(o.gold||o.season_gold||0),
@@ -333,38 +329,35 @@ function normPlayers(j){
   }));
 }
 function normLeader(j){
-  let arr = Array.isArray(j)? j : (j&&j.data||j&&j.rows||[]);
-  arr = arr.map(o=>({player:o.player||o.name||"unknown", gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
+  let arr=Array.isArray(j)?j:((j&&j.data)||(j&&j.rows)||[]);
+  arr=arr.map(o=>({player:o.player||o.name||"unknown",gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
   arr.sort((a,b)=>b.gold-a.gold);
   arr.forEach((r,i)=>r.rank=i+1);
   return arr;
 }
-
-/* merge leaderboard + players by name */
-function buildMerged(lead, players){
-  const pmap = new Map(players.map(p=>[p.name.toLowerCase(), p]));
+function buildMerged(lead,players){
+  const pmap=new Map(players.map(p=>[p.name.toLowerCase(),p]));
   return lead.map(r=>{
-    const p = pmap.get(r.player.toLowerCase()) || {};
-    return { rank:r.rank, player:r.player, gold:r.gold, casts:Number(p.casts||0), lifetime_casts:Number(p.lifetime_casts||0) };
+    const p=pmap.get(r.player.toLowerCase())||{};
+    return {rank:r.rank,player:r.player,gold:r.gold,casts:Number(p.casts||0),lifetime_casts:Number(p.lifetime_casts||0)};
   });
 }
 
-/* -------- renderers -------- */
+/* -------- render -------- */
 function refreshSync(){
   const t=Number(DATA.meta?.exported_at_epoch||0);
-  const d=t? new Date(t*1000) : null;
-  const p=x=>String(x).padStart(2,"0");
-  const s = d? `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}` : "";
+  const d=t?new Date(t*1000):null;
+  const p=n=>String(n).padStart(2,"0");
+  const s=d?`${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`:"";
   document.getElementById("syncTop").textContent=s;
 }
-
 function renderBests(){
-  const q = (document.getElementById("qGlobal").value||"").toLowerCase();
-  const el = document.getElementById("listBests"); el.innerHTML="";
-  const rows = DATA.bests.filter(r=>inSpan(r.ts) && (!q || r.item.toLowerCase().includes(q) || r.player.toLowerCase().includes(q) || r.rarity.toLowerCase().includes(q)));
+  const q=(document.getElementById("qGlobal").value||"").toLowerCase();
+  const el=document.getElementById("listBests"); el.innerHTML="";
+  const rows=DATA.bests.filter(r=>inSpan(r.ts)&&(!q||r.item.toLowerCase().includes(q)||r.player.toLowerCase().includes(q)||r.rarity.toLowerCase().includes(q)));
   rows.forEach((r,i)=>{
     const div=document.createElement("div"); div.className="item";
-    div.innerHTML = `
+    div.innerHTML=`
       <div class="rank">${i+1}</div>
       <div class="main">
         <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
@@ -373,95 +366,83 @@ function renderBests(){
       <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
     el.appendChild(div);
   });
-  if(!rows.length){ el.innerHTML = `<div class="item"><div class="main"><div class="sub">No data</div></div></div>`; }
+  if(!rows.length){ el.innerHTML='<div class="item"><div class="main"><div class="sub">No data</div></div></div>'; }
 }
-
 function renderRecent(){
-  const q = (document.getElementById("qGlobal").value||"").toLowerCase();
-  let rec = DATA.recent.filter(r=>inSpan(r.ts));
+  const q=(document.getElementById("qGlobal").value||"").toLowerCase();
+  let rec=DATA.recent.filter(r=>inSpan(r.ts));
   if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
-
   const head=["When","Player","Catch","★","Gold"];
-  document.getElementById("thRecent").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const rows = rec.map(c=>`<tr>
+  document.getElementById("thRecent").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  const rows=rec.map(c=>`<tr>
     <td>${c.date||""}</td>
     <td>${c.player}</td>
     <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
     <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
     <td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td>
   </tr>`);
-  document.getElementById("tbRecent").innerHTML = rows.join("");
-  document.getElementById("emptyRecent").style.display = rows.length? "none":"block";
+  document.getElementById("tbRecent").innerHTML=rows.join("");
+  document.getElementById("emptyRecent").style.display=rows.length?"none":"block";
 }
-
 function renderMerged(){
-  const q = (document.getElementById("qGlobal").value||"").toLowerCase();
-  let rows = DATA.merged.slice();
-  if(q){ rows = rows.filter(r=>r.player.toLowerCase().includes(q)); }
+  const q=(document.getElementById("qGlobal").value||"").toLowerCase();
+  let rows=DATA.merged.slice();
+  if(q){ rows=rows.filter(r=>r.player.toLowerCase().includes(q)); }
   const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"];
-  document.getElementById("thMerged").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const html = rows.map(r=>`<tr>
+  document.getElementById("thMerged").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  const html=rows.map(r=>`<tr>
     <td class="num">${r.rank}</td>
     <td>${r.player}</td>
-    <td class="num">${fmtGold(r.gold)}</td>
+    <td class="num"><span class="chip chip-gold">${fmtGold(r.gold)}</span></td>
     <td class="num">${r.casts||0}</td>
     <td class="num">${r.lifetime_casts||0}</td>
   </tr>`);
-  document.getElementById("tbMerged").innerHTML = html.join("");
-  document.getElementById("emptyMerged").style.display = html.length? "none":"block";
+  document.getElementById("tbMerged").innerHTML=html.join("");
+  document.getElementById("emptyMerged").style.display=html.length?"none":"block";
 }
-
 function update(){
   if(VIEW==="bests") renderBests();
   if(VIEW==="recent") renderRecent();
   if(VIEW==="lp") renderMerged();
 }
 
-/* ripple */
-document.addEventListener("click", e=>{
+/* ripple helper */
+function ripple(e){
   const t=e.target.closest(".pill,.tab"); if(!t) return;
   const r=document.createElement("span"); r.className="rpl";
   const rect=t.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top;
   r.style.left=x+"px"; r.style.top=y+"px"; const size=Math.max(rect.width,rect.height); r.style.width=r.style.height=size+"px";
   t.appendChild(r); setTimeout(()=>r.remove(),650);
-}, true);
+}
 
-/* -------- boot -------- */
+/* -------- init -------- */
 (async function init(){
   try{
-    const meta = await get(URLS.meta); DATA.meta=meta||{};
-    VERSION = Number(meta?.exported_at_epoch)||VERSION;      // cache-bust with exporter time
-    SEASON_START = Number(meta?.season_start_epoch||0) || Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
+    const meta=await get(URLS.meta); DATA.meta=meta||{};
+    VERSION=Number(meta?.exported_at_epoch)||VERSION;
+    SEASON_START=Number(meta?.season_start_epoch||0)||Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
     refreshSync();
-
-    const [recent,bests,players,leaders] = await Promise.all([
-      get(URLS.recent), get(URLS.seasonBests), get(URLS.players), get(URLS.leaderboard)
-    ]);
-    DATA.recent = normRecent(recent);
-    DATA.bests  = normBests(bests);
-    DATA.players= normPlayers(players);
-    DATA.lead   = normLeader(leaders);
-    DATA.merged = buildMerged(DATA.lead, DATA.players);
-
+    const [recent,bests,players,leaders]=await Promise.all([get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)]);
+    DATA.recent=normRecent(recent);
+    DATA.bests=normBests(bests);
+    DATA.players=normPlayers(players);
+    DATA.lead=normLeader(leaders);
+    DATA.merged=buildMerged(DATA.lead,DATA.players);
     update();
-  }catch(e){ console.error(e) }
-
-  // refresh every 90s
+  }catch(e){ console.error(e); }
   setInterval(async()=>{
     try{
-      const meta = await get(URLS.meta); DATA.meta=meta||{};
-      if(meta?.exported_at_epoch) VERSION = Number(meta.exported_at_epoch);
+      const meta=await get(URLS.meta); DATA.meta=meta||{};
+      if(meta?.exported_at_epoch) VERSION=Number(meta.exported_at_epoch);
       refreshSync();
-      const [recent,bests,players,leaders] = await Promise.all([
-        get(URLS.recent), get(URLS.seasonBests), get(URLS.players), get(URLS.leaderboard)
-      ]);
-      DATA.recent = normRecent(recent);
-      DATA.bests  = normBests(bests);
-      DATA.players= normPlayers(players);
-      DATA.lead   = normLeader(leaders);
-      DATA.merged = buildMerged(DATA.lead, DATA.players);
+      const [recent,bests,players,leaders]=await Promise.all([get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)]);
+      DATA.recent=normRecent(recent);
+      DATA.bests=normBests(bests);
+      DATA.players=normPlayers(players);
+      DATA.lead=normLeader(leaders);
+      DATA.merged=buildMerged(DATA.lead,DATA.players);
       update();
-    }catch(e){ console.error(e) }
+    }catch(e){ console.error(e); }
   }, 90000);
 })();
 </script>
