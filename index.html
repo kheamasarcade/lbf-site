@@ -53,7 +53,6 @@ body{
   border:1px solid var(--line);background:#0b1220;border-radius:999px;
   padding:11px 18px;color:#c8d9fb;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-  /* EMBOSSED */
   box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.45), 0 8px 18px rgba(0,0,0,.28);
 }
 .pill:hover{transform:translateY(-1px);box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -5px 0 rgba(0,0,0,.55), 0 14px 26px rgba(0,0,0,.35)}
@@ -70,7 +69,6 @@ body{
 .tab{
   padding:9px 14px;border-radius:999px;background:#0b1220;color:#c8d9fb;border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
   transition: transform .18s ease, box-shadow .18s ease;
-  /* EMBOSSED */
   box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.45);
 }
 .tab:hover{transform:translateY(-1px);box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -5px 0 rgba(0,0,0,.55), 0 10px 22px rgba(0,0,0,.3)}
@@ -98,48 +96,25 @@ body{
 .num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:800}
 
 /* Leaderboard & Players — bigger player names and gold */
-#view-lp .table td:nth-child(2){
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#e9efff;
-}
+#view-lp .table td:nth-child(2){font-size:18px;font-weight:900;letter-spacing:.2px;color:#e9efff}
 #view-lp .chip-gold{font-size:18px;padding:6px 14px}
 #view-lp .num{font-size:16px}
 
 /* rarity chips — sparkle (not embossed) */
-.chip{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;
-  font-size:13px;font-weight:900;border:1px solid transparent;line-height:1.15;position:relative;overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
-}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:900;border:1px solid transparent;line-height:1.15;position:relative;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease, filter .18s ease}
 .chip:hover{ transform: translateY(-1px) scale(1.03); filter: brightness(1.04) }
-.chip::after{ /* sweeping shine */
-  content:""; position:absolute; top:-120%; left:-40%; width:140%; height:340%;
-  background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.35) 55%, transparent 100%);
-  transform:rotate(25deg) translateX(-120%); opacity:0; pointer-events:none;
-}
+.chip::after{content:"";position:absolute;top:-120%;left:-40%;width:140%;height:340%;background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.35) 55%, transparent 100%);transform:rotate(25deg) translateX(-120%);opacity:0;pointer-events:none}
 .chip:hover::after{ animation:shine .9s ease }
-@keyframes shine{0%{transform:rotate(25deg) translateX(-120%);opacity:0} 30%{opacity:.9} 100%{transform:rotate(25deg) translateX(120%);opacity:0}}
-/* tiny star sparkles on hover */
-.chip::before{
-  content:""; position:absolute; inset:0; pointer-events:none; opacity:0;
-  background:
-    radial-gradient(3px 3px at 20% 30%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1.8px 1.8px at 45% 75%, rgba(255,255,255,.7), transparent 60%);
-}
+@keyframes shine{0%{transform:rotate(25deg) translateX(-120%);opacity:0}30%{opacity:.9}100%{transform:rotate(25deg) translateX(120%);opacity:0}}
+.chip::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(3px 3px at 20% 30%, rgba(255,255,255,.8), transparent 60%),radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,.7), transparent 60%),radial-gradient(1.8px 1.8px at 45% 75%, rgba(255,255,255,.7), transparent 60%)}
 .chip:hover::before{ animation:twinkle 1.4s ease-in-out infinite; opacity:1 }
-@keyframes twinkle{ 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.35)} }
-/* rarity palettes */
-.r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
-.r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
-.r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
-.r-rare{color:var(--rare);background:var(--rare-bg);border-color:#1e3f66}
-.r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
-.r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
-
-/* special chips */
+@keyframes twinkle{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+.r-junk{color:#6b7280;background:#1f2430;border-color:#2e3544}
+.r-common{color:#cbd5e1;background:#1b2234;border-color:#2b3950}
+.r-uncommon{color:#34d399;background:#0f2a25;border-color:#1a5b4b}
+.r-rare{color:#60a5fa;background:#0f243d;border-color:#1e3f66}
+.r-epic{color:#a78bfa;background:#1a1740;border-color:#2e2a63}
+.r-legend{color:#ffe08a;background:#2a2307;border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
 .chip-star{background:#11182c;border:1px solid #263055;color:#bbcaf0}
 .chip-gold{background:#2c2410;border:1px solid #5b470c;color:#ffe08a;font-weight:900}
 
@@ -153,10 +128,8 @@ body{
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="brand-wrap">
-    <!-- Dropbox first, fallback to local KA.png -->
     <img class="logo" src="https://dl.dropboxusercontent.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1" alt="Kheama's Arcade" onerror="this.onerror=null;this.src='KA.png'">
     <div>
       <div class="brand-name"><span class="pink">Kheama's</span> <span class="blue">Arcade</span></div>
@@ -175,7 +148,6 @@ body{
   </div>
 </div>
 
-<!-- Season Bests -->
 <div class="wrap" id="view-bests" style="display:block">
   <div class="card">
     <div class="hrow">
@@ -192,7 +164,6 @@ body{
   </div>
 </div>
 
-<!-- Recent -->
 <div class="wrap" id="view-recent" style="display:none">
   <div class="card">
     <div class="hrow">
@@ -212,7 +183,6 @@ body{
   </div>
 </div>
 
-<!-- Leaderboard + Players (merged) -->
 <div class="wrap" id="view-lp" style="display:none">
   <div class="card">
     <div class="hrow">
@@ -232,7 +202,6 @@ body{
 <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
-/* -------- endpoints -------- */
 const URLS={
   meta:"https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
   recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
@@ -241,111 +210,78 @@ const URLS={
   leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7"
 };
 
-/* -------- helpers -------- */
 const $=s=>document.querySelector(s);
 const $all=s=>Array.from(document.querySelectorAll(s));
 
-/* Force fresh files (avoid CDN cache while testing) */
 async function get(u){
   const cachebust=(u.includes("?")?"&":"?")+"v="+Date.now();
   const r=await fetch(u+cachebust,{cache:"no-store"});
   if(!r.ok) throw new Error(u);
   return r.json();
 }
+
 const fmtGold=n=>(Math.round(Number(n)||0)).toLocaleString()+"g";
 const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common";
 
-/* Robust local parser for legacy strings; used only if timestamp missing */
+/* ---- PST long form ---- */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function ordinal(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+function toPST(date){const utcMs=date.getTime()+date.getTimezoneOffset()*60000;return new Date(utcMs-8*60*60000);}
+function longPSTFromEpoch(epoch){if(!epoch)return"";const d=toPST(new Date(epoch*1000));let h=d.getHours(),am=h<12,hh=(h%12)||12;const mm=String(d.getMinutes()).padStart(2,"0");return `${MONTHS[d.getMonth()]} ${ordinal(d.getDate())} ${d.getFullYear()} ${hh}:${mm}${am?"AM":"PM"} PST/GMT -8`;}
+
+/* ---- robust epoch for legacy strings, using export time as reference ---- */
+let META_NOW_SEC = Math.floor(Date.now()/1000);
 function epochFrom(v){
-  if (!v) return 0;
-  if (typeof v==="number") return Math.floor(v);
-  const t=Date.parse(v);
-  if (!Number.isNaN(t)) return Math.floor(t/1000);
-  const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i.exec(v);
+  if(!v) return 0;
+  if(typeof v==="number") return Math.floor(v);
+  const now = META_NOW_SEC*1000;
+  const horizon = now + 36*60*60*1000;
+
+  let t = Date.parse(v);
+  if(!Number.isNaN(t) && t<=horizon) return Math.floor(t/1000);
+
+  const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?$/i.exec(v);
   if(m){
-    let M=+m[1],D=+m[2],Y=+m[3],h=+m[4],mi=+m[5],s=+(m[6]||0),ap=(m[7]||"").toUpperCase();
-    if(ap==="PM"&&h<12)h+=12; if(ap==="AM"&&h===12)h=0;
-    return Math.floor(new Date(Y,M-1,D,h,mi,s).getTime()/1000);
+    const M=+m[1],D=+m[2],Y=+m[3],h=+(m[4]||0),mi=+(m[5]||0),s=+(m[6]||0),ap=(m[7]||"").toUpperCase();
+    const toTs=(MM,DD)=>{let hh=h; if(ap==="PM"&&hh<12)hh+=12; if(ap==="AM"&&hh===12)hh=0; return new Date(Y,MM-1,DD,hh,mi,s).getTime();};
+    const cand=[(1<=M&&M<=12&&1<=D&&D<=31)?toTs(M,D):NaN,(1<=D&&D<=12&&1<=M&&M<=31)?toTs(D,M):NaN].filter(x=>!Number.isNaN(x)&&x<=horizon);
+    if(cand.length){ const chosen=cand.sort((a,b)=>Math.abs(a-now)-Math.abs(b-now))[0]; return Math.floor(chosen/1000); }
   }
   return 0;
 }
 
-/* ---- Long-form PST helpers ---- */
-const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-function ordinal(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
-function toPST(date){ // force PST/GMT -8 display
-  const utcMs = date.getTime() + date.getTimezoneOffset()*60000;
-  return new Date(utcMs - 8*60*60000);
-}
-function longPSTFromEpoch(epoch){
-  if(!epoch) return "";
-  const d = toPST(new Date(epoch*1000));
-  let h=d.getHours(), am=h<12, hh=(h%12)||12;
-  const mm=String(d.getMinutes()).padStart(2,"0");
-  return `${MONTHS[d.getMonth()]} ${ordinal(d.getDate())} ${d.getFullYear()} ${hh}:${mm}${am?"AM":"PM"} PST/GMT -8`;
-}
-
-/* -------- state -------- */
+/* ---- state & filters ---- */
 let VIEW="bests", SPAN="season", SEASON_START=0;
-const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
-
-/* -------- nav -------- */
-function setView(v){
-  VIEW=v;
-  $("#view-bests").style.display=(v==="bests")?"block":"none";
-  $("#view-recent").style.display=(v==="recent")?"block":"none";
-  $("#view-lp").style.display=(v==="lp")?"block":"none";
-  $all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));
-  update();
-}
-function setSpan(s){ SPAN=s; $all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s)); update(); }
+const DATA={meta:{},bests:[],recent:[],players:[],lead:[],merged:[]};
 const inSpan=ts=>(SPAN==="all")||!SEASON_START||(Number(ts)||0)>=SEASON_START;
 
-$all(".pill").forEach(p=>p.addEventListener("click",e=>{setView(p.dataset.view); ripple(e)}));
-$all(".tab").forEach(t=>t.addEventListener("click",e=>{setSpan(t.dataset.span); ripple(e)}));
+/* ---- nav ---- */
+function setView(v){VIEW=v;$("#view-bests").style.display=(v==="bests")?"block":"none";$("#view-recent").style.display=(v==="recent")?"block":"none";$("#view-lp").style.display=(v==="lp")?"block":"none";$all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));update();}
+function setSpan(s){SPAN=s;$all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s));update();}
+$all(".pill").forEach(p=>p.addEventListener("click",e=>{setView(p.dataset.view);ripple(e)}));
+$all(".tab").forEach(t=>t.addEventListener("click",e=>{setSpan(t.dataset.span);ripple(e)}));
 $("#qGlobal").addEventListener("input",update);
 
-/* -------- normalizers -------- */
+/* ---- normalizers ---- */
 function normBests(j){
   const arr=Array.isArray(j)?j:(j&&j.data)||[];
   return arr.map(o=>{
     const ts=Number(o.timestamp||epochFrom(o.date)||0);
-    return {
-      item:o.item||o.species||o.name||"unknown",
-      rarity:o.rarity||"",
-      player:o.player||o.best_player||"unknown",
-      best_gold:Number(o.best_gold||o.gold||0),
-      ts:ts,
-      date_disp: longPSTFromEpoch(ts)
-    };
+    return {item:o.item||o.species||o.name||"unknown",rarity:o.rarity||"",player:o.player||o.best_player||"unknown",best_gold:Number(o.best_gold||o.gold||0),ts, date_disp: longPSTFromEpoch(ts)};
   }).sort((a,b)=>b.best_gold-a.best_gold);
 }
-
-/* last 50 in file order — newest first. Display long PST */
 function normRecent(j){
   const arr=Array.isArray(j)?j:(j&&j.data)||[];
-  const last50=arr.slice(-50).reverse();
-  return last50.map(o=>{
-    const ts = typeof o.timestamp==="number" ? o.timestamp : epochFrom(o.date);
-    return {
-      player:o.player||o.username||o.name||"unknown",
-      item:o.item||o.species||o.name||"",
-      rarity:o.rarity||"",
-      stars:Number(o.stars||o.rating||0),
-      gold:Number(o.gold||o.value||0),
-      ts:ts,
-      date_disp: longPSTFromEpoch(ts) || (o.date||"")
-    };
+  const mapped = arr.map(o=>{
+    const ts=typeof o.timestamp==="number"?o.timestamp:epochFrom(o.date);
+    return {player:o.player||o.username||o.name||"unknown",item:o.item||o.species||o.name||"",rarity:o.rarity||"",stars:Number(o.stars||o.rating||0),gold:Number(o.gold||o.value||0),ts, date_disp: longPSTFromEpoch(ts)};
   });
+  // ✅ true newest 50 by timestamp
+  return mapped.sort((a,b)=>b.ts-a.ts).slice(0,50);
 }
 function normPlayers(j){
   const arr=Array.isArray(j)?j:(j&&j.data)||[];
-  return arr.map(o=>({
-    name:o.name||o.player||o.username||"unknown",
-    gold:Number(o.gold||o.season_gold||0),
-    casts:Number(o.casts||o.season_casts||0),
-    lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)
-  }));
+  return arr.map(o=>({name:o.name||o.player||o.username||"unknown",gold:Number(o.gold||o.season_gold||0),casts:Number(o.casts||o.season_casts||0),lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)}));
 }
 function normLeader(j){
   let arr=Array.isArray(j)?j:((j&&j.data)||(j&&j.rows)||[]);
@@ -356,113 +292,32 @@ function normLeader(j){
 }
 function buildMerged(lead,players){
   const pmap=new Map(players.map(p=>[p.name.toLowerCase(),p]));
-  return lead.map(r=>{
-    const p=pmap.get(r.player.toLowerCase())||{};
-    return {rank:r.rank,player:r.player,gold:r.gold,casts:Number(p.casts||0),lifetime_casts:Number(p.lifetime_casts||0)};
-  });
+  return lead.map(r=>{const p=pmap.get(r.player.toLowerCase())||{};return {rank:r.rank,player:r.player,gold:r.gold,casts:Number(p.casts||0),lifetime_casts:Number(p.lifetime_casts||0)};});
 }
 
-/* -------- render -------- */
-function refreshSync(){
-  const t=Number(DATA.meta?.exported_at_epoch||0);
-  $("#syncTop").textContent = longPSTFromEpoch(t);
-}
+/* ---- render ---- */
+function refreshSync(){const t=Number(DATA.meta?.exported_at_epoch||0);$("#syncTop").textContent=longPSTFromEpoch(t);}
 function renderBests(){
-  const q=($("#qGlobal").value||"").toLowerCase();
-  const el=$("#listBests"); el.innerHTML="";
+  const q=($("#qGlobal").value||"").toLowerCase(); const el=$("#listBests"); el.innerHTML="";
   const rows=DATA.bests.filter(r=>inSpan(r.ts)&&(!q||r.item.toLowerCase().includes(q)||r.player.toLowerCase().includes(q)||r.rarity.toLowerCase().includes(q)));
-  rows.forEach((r,i)=>{
-    const div=document.createElement("div"); div.className="item";
-    div.innerHTML=`
-      <div class="rank">${i+1}</div>
-      <div class="main">
-        <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
-        <div class="sub">${r.player} · ${r.date_disp||""}</div>
-      </div>
-      <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
-    el.appendChild(div);
-  });
-  if(!rows.length){ el.innerHTML='<div class="item"><div class="main"><div class="sub">No data</div></div></div>'; }
+  rows.forEach((r,i)=>{const div=document.createElement("div");div.className="item";div.innerHTML=`<div class="rank">${i+1}</div><div class="main"><div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div><div class="sub">${r.player} · ${r.date_disp||""}</div></div><div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;el.appendChild(div);});
+  if(!rows.length){el.innerHTML='<div class="item"><div class="main"><div class="sub">No data</div></div></div>';}
 }
 function renderRecent(){
-  const q=($("#qGlobal").value||"").toLowerCase();
-  let rec=DATA.recent.filter(r=>inSpan(r.ts));
-  if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
-  const head=["When","Player","Catch","★","Gold"];
-  $("#thRecent").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const rows=rec.map(c=>`<tr>
-    <td>${c.date_disp||""}</td>
-    <td>${c.player}</td>
-    <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
-    <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
-    <td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td>
-  </tr>`);
-  $("#tbRecent").innerHTML=rows.join("");
-  $("#emptyRecent").style.display=rows.length?"none":"block";
+  const q=($("#qGlobal").value||"").toLowerCase(); let rec=DATA.recent.filter(r=>inSpan(r.ts)); if(q){rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q));}
+  const head=["When","Player","Catch","★","Gold"]; $("#thRecent").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  const rows=rec.map(c=>`<tr><td>${c.date_disp||""}</td><td>${c.player}</td><td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td><td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td><td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td></tr>`);
+  $("#tbRecent").innerHTML=rows.join(""); $("#emptyRecent").style.display=rows.length?"none":"block";
 }
 function renderMerged(){
-  const q=($("#qGlobal").value||"").toLowerCase();
-  let rows=DATA.merged.slice();
-  if(q){ rows=rows.filter(r=>r.player.toLowerCase().includes(q)); }
-  const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"];
-  $("#thMerged").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const html=rows.map(r=>`<tr>
-    <td class="num">${r.rank}</td>
-    <td>${r.player}</td>
-    <td class="num"><span class="chip chip-gold">${fmtGold(r.gold)}</span></td>
-    <td class="num">${r.casts||0}</td>
-    <td class="num">${r.lifetime_casts||0}</td>
-  </tr>`);
-  $("#tbMerged").innerHTML=html.join("");
-  $("#emptyMerged").style.display=html.length?"none":"block";
+  const q=($("#qGlobal").value||"").toLowerCase(); let rows=DATA.merged.slice(); if(q){rows=rows.filter(r=>r.player.toLowerCase().includes(q));}
+  const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"]; $("#thMerged").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  const html=rows.map(r=>`<tr><td class="num">${r.rank}</td><td>${r.player}</td><td class="num"><span class="chip chip-gold">${fmtGold(r.gold)}</span></td><td class="num">${r.casts||0}</td><td class="num">${r.lifetime_casts||0}</td></tr>`);
+  $("#tbMerged").innerHTML=html.join(""); $("#emptyMerged").style.display=html.length?"none":"block";
 }
-function update(){
-  if(VIEW==="bests") renderBests();
-  if(VIEW==="recent") renderRecent();
-  if(VIEW==="lp") renderMerged();
-}
+function update(){if(VIEW==="bests")renderBests(); if(VIEW==="recent")renderRecent(); if(VIEW==="lp")renderMerged();}
+function ripple(e){const t=e.target.closest(".pill,.tab"); if(!t) return; const r=document.createElement("span"); r.className="rpl"; const rect=t.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top; r.style.left=x+"px"; r.style.top=y+"px"; const size=Math.max(rect.width,rect.height); r.style.width=r.style.height=size+"px"; t.appendChild(r); setTimeout(()=>r.remove(),650);}
 
-/* ripple helper */
-function ripple(e){
-  const t=e.target.closest(".pill,.tab"); if(!t) return;
-  const r=document.createElement("span"); r.className="rpl";
-  const rect=t.getBoundingClientRect(); const x=e.clientX-rect.left, y=e.clientY-rect.top;
-  r.style.left=x+"px"; r.style.top=y+"px"; const size=Math.max(rect.width,rect.height); r.style.width=r.style.height=size+"px";
-  t.appendChild(r); setTimeout(()=>r.remove(),650);
-}
-
-/* -------- init -------- */
+/* ---- init ---- */
 (async function init(){
-  try{
-    const meta=await get(URLS.meta); DATA.meta=meta||{};
-    SEASON_START=Number(meta?.season_start_epoch||0)||Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
-    refreshSync();
-
-    const [recent,bests,players,leaders]=await Promise.all([
-      get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)
-    ]);
-    DATA.recent=normRecent(recent);
-    DATA.bests=normBests(bests);
-    DATA.players=normPlayers(players);
-    DATA.lead=normLeader(leaders);
-    DATA.merged=buildMerged(DATA.lead,DATA.players);
-    update();
-  }catch(e){ console.error(e); }
-  setInterval(async()=>{
-    try{
-      const meta=await get(URLS.meta); DATA.meta=meta||{}; refreshSync();
-      const [recent,bests,players,leaders]=await Promise.all([
-        get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)
-      ]);
-      DATA.recent=normRecent(recent);
-      DATA.bests=normBests(bests);
-      DATA.players=normPlayers(players);
-      DATA.lead=normLeader(leaders);
-      DATA.merged=buildMerged(DATA.lead,DATA.players);
-      update();
-    }catch(e){ console.error(e); }
-  }, 90000);
-})();
-</script>
-</body>
-</html>
+ 
