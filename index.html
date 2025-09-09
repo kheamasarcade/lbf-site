@@ -247,12 +247,13 @@ async function get(u){
 const fmtGold=n=>(Math.round(Number(n)||0)).toLocaleString()+"g";
 const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common";
 
+/* ✅ FIXED: proper regex (no double backslashes) */
 function epochFrom(v){
   if (!v) return 0;
   if (typeof v==="number") return Math.floor(v);
   const t=Date.parse(v);
   if (!Number.isNaN(t)) return Math.floor(t/1000);
-  const m=/^(\\d{1,2})\\/(\\d{1,2})\\/(\\d{4}) (\\d{1,2}):(\\d{2})(?::(\\d{2}))?\\s*(AM|PM)?$/i.exec(v);
+  const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4}) (\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?$/i.exec(v);
   if(m){
     let M=+m[1],D=+m[2],Y=+m[3],h=+m[4],mi=+m[5],s=+(m[6]||0),ap=(m[7]||"").toUpperCase();
     if(ap==="PM"&&h<12)h+=12; if(ap==="AM"&&h===12)h=0;
