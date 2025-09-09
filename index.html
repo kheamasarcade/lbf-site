@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kheama's Arcade • Lurk Bait Fishing Stats</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700;800;900&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://dl.dropboxusercontent.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700;800;900&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://dl.dropboxusercontent.com" />
 
 <style>
 :root{
@@ -31,7 +31,7 @@ body{
     radial-gradient(1200px 600px at 10% -10%,var(--glow2),transparent 60%),
     radial-gradient(900px 500px at 110% 10%,var(--glow1),transparent 60%),
     var(--bg);
-  font:14px/1.55 "Outfit",system-ui,-apple-system,Segoe UI,Roboto;
+  font:15px/1.6 "Outfit",system-ui,-apple-system,Segoe UI,Roboto;
   letter-spacing:.2px;
 }
 
@@ -45,25 +45,28 @@ body{
 .brand-name{margin:0;font-weight:900;font-size:34px;letter-spacing:.4px}
 .brand-name .pink{color:#f472b6;text-shadow:0 0 6px rgba(244,114,182,.45),0 0 18px rgba(244,114,182,.25);animation:glowPink 4s ease-in-out infinite}
 .brand-name .blue{color:#60a5fa;text-shadow:0 0 6px rgba(96,165,250,.45),0 0 18px rgba(96,165,250,.25);animation:glowBlue 4s ease-in-out infinite}
-.subttl{color:var(--muted);font-size:14px;margin-top:2px}
+.subttl{color:var(--muted);font-size:17px;margin-top:2px;font-weight:700}
+.sync-top{color:#8ea3c7;font-size:13px;margin-top:4px}
 @keyframes glowPink{0%,100%{text-shadow:0 0 6px rgba(244,114,182,.35),0 0 14px rgba(244,114,182,.2)}50%{text-shadow:0 0 10px rgba(244,114,182,.55),0 0 26px rgba(244,114,182,.35)}}
 @keyframes glowBlue{0%,100%{text-shadow:0 0 6px rgba(96,165,250,.35),0 0 14px rgba(96,165,250,.2)}50%{text-shadow:0 0 10px rgba(96,165,250,.55),0 0 26px rgba(96,165,250,.35)}}
 
+/* controls / pills */
 .controls{display:flex;align-items:center;gap:12px}
 .search{
   min-width:300px;background:#0b1220;border:1px solid var(--line);
-  border-radius:999px;padding:11px 14px;color:#dbe7ff;outline:none
+  border-radius:999px;padding:12px 16px;color:#dbe7ff;outline:none
 }
 .search:focus{box-shadow:0 0 0 2px #203260,0 0 20px rgba(96,165,250,.25)}
 .nav{display:flex;gap:10px}
 .pill{
   border:1px solid var(--line);background:#0b1220;border-radius:999px;
-  padding:9px 14px;color:#b9caea;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
-  transition: transform .18s ease, box-shadow .18s ease
+  padding:10px 16px;color:#b9caea;cursor:pointer;font-weight:900;position:relative;overflow:hidden;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.05), inset 0 -3px 0 rgba(0,0,0,.25);
 }
-.pill:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.pill:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.25), inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.33)}
 .pill.active{color:#0a0f16;border-color:#2a3a66;background:var(--pill-grad);
-  box-shadow:0 0 12px rgba(244,114,182,.35),0 0 28px rgba(96,165,250,.30),inset 0 0 0 1px rgba(255,255,255,.05)}
+  box-shadow:0 0 12px rgba(244,114,182,.35),0 0 28px rgba(96,165,250,.30),inset 0 2px 0 rgba(255,255,255,.12), inset 0 -4px 0 rgba(0,0,0,.35)}
 
 /* layout */
 .wrap{max-width:1280px;margin:10px auto 28px;padding:0 16px}
@@ -77,14 +80,14 @@ body{
 .kicker{color:var(--muted);font-size:12px}
 .tabrow{display:flex;gap:10px}
 .tab{
-  padding:9px 14px;border-radius:999px;background:#0b1220;color:#0a0f16;
+  padding:9px 14px;border-radius:999px;background:#0b1220;color:#b9caea;
   border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
   transition: transform .18s ease, box-shadow .18s ease
 }
-.tab:hover{transform:translateY(-1px)}
+.tab:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.25)}
 .tab.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66;box-shadow:0 0 18px rgba(244,114,182,.28)}
 
-/* flair list */
+/* list rows for Season Bests */
 .list{border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .item{display:flex;align-items:center;gap:16px;padding:14px 16px;border-top:1px solid #0c1224;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
 .item:first-child{border-top:0}
@@ -95,11 +98,11 @@ body{
 .sub{color:#a8b3c9;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gold{
   margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:900;
-  font-size:21px;color:#ffe08a;text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);
+  font-size:22px;color:#ffe08a;text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);
   letter-spacing:.2px
 }
 
-/* table */
+/* tables for Recent / Leaderboard */
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
 .table th,.table td{padding:14px;border-bottom:1px solid #0e1730}
@@ -109,13 +112,23 @@ body{
 .table tbody tr:nth-child(odd){background:rgba(255,255,255,.018)}
 .num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:800}
 
-/* chips */
+/* rarity badges */
 .chip{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 8px;
-  font-size:11px;font-weight:900;border:1px solid transparent;line-height:1.15;
-  transition:box-shadow .18s ease, transform .18s ease
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;
+  font-size:12px;font-weight:900;border:1px solid transparent;line-height:1.15;
+  position:relative;overflow:hidden;
+  transition:box-shadow .18s ease, transform .18s ease, background .18s ease
 }
-.chip:hover{ transform: translateY(-1px); box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 18px rgba(147,197,253,.18) }
+/* sparkle / shine on hover */
+.chip::after{
+  content:""; position:absolute; top:-120%; left:-40%;
+  width:140%; height:340%;
+  background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.25) 35%, rgba(255,255,255,.35) 50%, rgba(255,255,255,.25) 65%, transparent 100%);
+  transform:rotate(25deg) translateX(-120%);
+  opacity:0; pointer-events:none;
+}
+@keyframes shine{0%{transform:rotate(25deg) translateX(-120%);opacity:0} 35%{opacity:.8} 100%{transform:rotate(25deg) translateX(120%);opacity:0}}
+.chip:hover{ transform: translateY(-1px) scale(1.03); box-shadow:0 0 0 1px rgba(255,255,255,.05), 0 0 20px rgba(147,197,253,.24) }
 .r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
 .r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
 .r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
@@ -123,7 +136,11 @@ body{
 .r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
 .r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
 
-/* better stat panel glow */
+/* special chips */
+.chip-star{background:#11182c;border:1px solid #263055;color:#bbcaf0}
+.chip-gold{background:#2c2410;border:1px solid #5b470c;color:#ffe08a;font-weight:900}
+
+/* extra glow on LP panel */
 #view-lp .card{ box-shadow:0 24px 48px rgba(0,0,0,.5) }
 
 .footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
@@ -138,15 +155,20 @@ body{
 <!-- HEADER -->
 <div class="header">
   <div class="brand-wrap">
-    <img class="logo" src="https://www.dropbox.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1" alt="Kheama's Arcade">
+    <!-- If Dropbox fails, fallback to KA.png in repo root -->
+    <img class="logo"
+         src="https://dl.dropboxusercontent.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1"
+         alt="Kheama's Arcade"
+         onerror="this.onerror=null;this.src='KA.png'">
     <div>
       <div class="brand-name"><span class="pink">Kheama's</span> <span class="blue">Arcade</span></div>
       <div class="subttl">Lurk Bait Fishing Stats</div>
+      <div class="sync-top">Last Data Sync: <span id="syncTop">loading…</span></div>
     </div>
   </div>
 
   <div class="controls">
-    <input id="qGlobal" class="search" placeholder="Search players or species…">
+    <input id="qGlobal" class="search" placeholder="Search players or species…" />
     <div class="nav">
       <button class="pill active" data-view="bests">Season Bests</button>
       <button class="pill" data-view="recent">Recent</button>
@@ -169,7 +191,6 @@ body{
       </div>
     </div>
     <div id="listBests" class="list"></div>
-    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncA">loading…</span></div>
   </div>
 </div>
 
@@ -190,7 +211,6 @@ body{
       </table>
       <div id="emptyRecent" class="kicker" style="display:none">No results</div>
     </div>
-    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncB">loading…</span></div>
   </div>
 </div>
 
@@ -208,14 +228,13 @@ body{
       </table>
       <div id="emptyMerged" class="kicker" style="display:none">No results</div>
     </div>
-    <div class="kicker" style="margin-top:10px">Last Data Sync: <span id="syncC">loading…</span></div>
   </div>
 </div>
 
 <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
-/* -------- endpoints -------- */
+/* -------- endpoints (swap to yours if different) -------- */
 const URLS={
   meta:"https://dl.dropboxusercontent.com/scl/fi/9r52wq4ine1b762k65bwv/meta.json?rlkey=g8myfhiuk1k4uncwq4ijt84i4",
   recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
@@ -226,18 +245,18 @@ const URLS={
 let VERSION = Date.now();
 
 /* -------- utils -------- */
-const $=s=>document.querySelector(s)
-const $all=s=>Array.from(document.querySelectorAll(s))
+const $=s=>document.querySelector(s);
+const $all=s=>Array.from(document.querySelectorAll(s));
 async function get(u){
   const cachebust = (u.includes("?")?"&":"?")+"v="+VERSION;
   const r=await fetch(u+cachebust,{cache:"no-store"});
   if(!r.ok) throw new Error(u);
   return r.json();
 }
-const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g"
-const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common"
+const fmtGold=n=> (Math.round(Number(n)||0)).toLocaleString()+"g";
+const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common";
 
-/* robust epoch from many formats (kept for season/all-time filters if needed) */
+/* robust epoch from many formats (fallback only; we display original date string) */
 function epochFrom(v){
   if (!v) return null;
   if (typeof v === "number") return Math.floor(v);
@@ -259,9 +278,9 @@ const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
 /* -------- nav/tabs -------- */
 function setView(v){
   VIEW=v;
-  $("#view-bests").style.display=(v==="bests")?"block":"none";
-  $("#view-recent").style.display=(v==="recent")?"block":"none";
-  $("#view-lp").style.display=(v==="lp")?"block":"none";
+  document.getElementById("view-bests").style.display=(v==="bests")?"block":"none";
+  document.getElementById("view-recent").style.display=(v==="recent")?"block":"none";
+  document.getElementById("view-lp").style.display=(v==="lp")?"block":"none";
   $all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));
   update();
 }
@@ -270,7 +289,7 @@ const inSpan = ts => (SPAN==="all") || !SEASON_START || (Number(ts)||0) >= SEASO
 
 $all(".pill").forEach(p=>p.addEventListener("click",()=>setView(p.dataset.view)));
 $all(".tab").forEach(t=>t.addEventListener("click",()=>setSpan(t.dataset.span)));
-$("#qGlobal").addEventListener("input",()=>update());
+document.getElementById("qGlobal").addEventListener("input",()=>update());
 
 /* -------- normalizers -------- */
 function normBests(j){
@@ -285,11 +304,11 @@ function normBests(j){
   })).sort((a,b)=>b.best_gold-a.best_gold);
 }
 
-/* *** KEY CHANGE: take the last 50 entries in file order, newest first, and display the original date string *** */
+/* Take the last 50 entries in file order, newest first, and display the original date string */
 function normRecent(j){
   const arr = Array.isArray(j)? j : (j&&j.data)||[];
-  const last50 = arr.slice(-50);           // last 50 in file
-  last50.reverse();                        // newest first
+  const last50 = arr.slice(-50);
+  last50.reverse();
   return last50.map(o=>{
     const ts = (typeof o.timestamp==="number" ? o.timestamp : (epochFrom(o.date)||0));
     return {
@@ -298,8 +317,8 @@ function normRecent(j){
       rarity:o.rarity||"",
       stars:Number(o.stars||o.star||0),
       gold:Number(o.gold||0),
-      ts:ts,               // still kept for Season/All toggle
-      date:o.date||""      // display exactly as saved
+      ts:ts,
+      date:o.date||""
     };
   });
 }
@@ -336,12 +355,12 @@ function refreshSync(){
   const d=t? new Date(t*1000) : null;
   const p=x=>String(x).padStart(2,"0");
   const s = d? `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())} ${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}` : "";
-  $("#syncA").textContent=s; $("#syncB").textContent=s; $("#syncC").textContent=s;
+  document.getElementById("syncTop").textContent=s;
 }
 
 function renderBests(){
-  const q = ($("#qGlobal").value||"").toLowerCase();
-  const el = $("#listBests"); el.innerHTML="";
+  const q = (document.getElementById("qGlobal").value||"").toLowerCase();
+  const el = document.getElementById("listBests"); el.innerHTML="";
   const rows = DATA.bests.filter(r=>inSpan(r.ts) && (!q || r.item.toLowerCase().includes(q) || r.player.toLowerCase().includes(q) || r.rarity.toLowerCase().includes(q)));
   rows.forEach((r,i)=>{
     const div=document.createElement("div"); div.className="item";
@@ -358,29 +377,29 @@ function renderBests(){
 }
 
 function renderRecent(){
-  const q = ($("#qGlobal").value||"").toLowerCase();
+  const q = (document.getElementById("qGlobal").value||"").toLowerCase();
   let rec = DATA.recent.filter(r=>inSpan(r.ts));
   if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
 
   const head=["When","Player","Catch","★","Gold"];
-  $("#thRecent").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  document.getElementById("thRecent").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
   const rows = rec.map(c=>`<tr>
     <td>${c.date||""}</td>
     <td>${c.player}</td>
     <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
-    <td class="num"><span class="chip" style="background:#11182c;border:1px solid #263055;color:#bbcaf0">★ ${c.stars||0}</span></td>
-    <td class="num"><span class="chip" style="background:#2c2410;border:1px solid #5b470c;color:#ffe08a">${fmtGold(c.gold)}</span></td>
+    <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
+    <td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td>
   </tr>`);
-  $("#tbRecent").innerHTML = rows.join("");
-  $("#emptyRecent").style.display = rows.length? "none":"block";
+  document.getElementById("tbRecent").innerHTML = rows.join("");
+  document.getElementById("emptyRecent").style.display = rows.length? "none":"block";
 }
 
 function renderMerged(){
-  const q = ($("#qGlobal").value||"").toLowerCase();
+  const q = (document.getElementById("qGlobal").value||"").toLowerCase();
   let rows = DATA.merged.slice();
   if(q){ rows = rows.filter(r=>r.player.toLowerCase().includes(q)); }
   const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"];
-  $("#thMerged").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  document.getElementById("thMerged").innerHTML = `<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
   const html = rows.map(r=>`<tr>
     <td class="num">${r.rank}</td>
     <td>${r.player}</td>
@@ -388,8 +407,8 @@ function renderMerged(){
     <td class="num">${r.casts||0}</td>
     <td class="num">${r.lifetime_casts||0}</td>
   </tr>`);
-  $("#tbMerged").innerHTML = html.join("");
-  $("#emptyMerged").style.display = html.length? "none":"block";
+  document.getElementById("tbMerged").innerHTML = html.join("");
+  document.getElementById("emptyMerged").style.display = html.length? "none":"block";
 }
 
 function update(){
