@@ -97,6 +97,16 @@ body{
 .table tbody tr:nth-child(odd){background:rgba(255,255,255,.018)}
 .num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:800}
 
+/* Leaderboard & Players — bigger player names and gold */
+#view-lp .table td:nth-child(2){
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#e9efff;
+}
+#view-lp .chip-gold{font-size:18px;padding:6px 14px}
+#view-lp .num{font-size:16px}
+
 /* rarity chips — sparkle (not embossed) */
 .chip{
   display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;
@@ -120,10 +130,7 @@ body{
     radial-gradient(1.8px 1.8px at 45% 75%, rgba(255,255,255,.7), transparent 60%);
 }
 .chip:hover::before{ animation:twinkle 1.4s ease-in-out infinite; opacity:1 }
-@keyframes twinkle{
-  0%,100%{filter:brightness(1)}
-  50%{filter:brightness(1.35)}
-}
+@keyframes twinkle{ 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.35)} }
 /* rarity palettes */
 .r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
 .r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
@@ -154,7 +161,7 @@ body{
     <div>
       <div class="brand-name"><span class="pink">Kheama's</span> <span class="blue">Arcade</span></div>
       <div class="subttl">Lurk Bait Fishing Stats</div>
-      <div class="sync-top">Last Data Sync: <span id="syncTop">--/--/---- --:--</span></div>
+      <div class="sync-top">Last Data Sync: <span id="syncTop">Loading…</span></div>
     </div>
   </div>
 
@@ -233,13 +240,14 @@ const URLS={
   players:"https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
   leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7"
 };
-let VERSION = Date.now();
 
 /* -------- helpers -------- */
 const $=s=>document.querySelector(s);
 const $all=s=>Array.from(document.querySelectorAll(s));
+
+/* Force fresh files (avoid CDN cache while testing) */
 async function get(u){
-  const cachebust=(u.includes("?")?"&":"?")+"v="+VERSION;
+  const cachebust=(u.includes("?")?"&":"?")+"v="+Date.now();
   const r=await fetch(u+cachebust,{cache:"no-store"});
   if(!r.ok) throw new Error(u);
   return r.json();
@@ -247,7 +255,7 @@ async function get(u){
 const fmtGold=n=>(Math.round(Number(n)||0)).toLocaleString()+"g";
 const rClass=r=>({legendary:"r-legend",epic:"r-epic",rare:"r-rare",uncommon:"r-uncommon",junk:"r-junk"})[(r||"").toLowerCase()]||"r-common";
 
-/* ✅ FIXED: proper regex (no double backslashes) */
+/* Robust local parser for legacy strings; used only if timestamp missing */
 function epochFrom(v){
   if (!v) return 0;
   if (typeof v==="number") return Math.floor(v);
@@ -262,6 +270,21 @@ function epochFrom(v){
   return 0;
 }
 
+/* ---- Long-form PST helpers ---- */
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+function ordinal(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+function toPST(date){ // force PST/GMT -8 display
+  const utcMs = date.getTime() + date.getTimezoneOffset()*60000;
+  return new Date(utcMs - 8*60*60000);
+}
+function longPSTFromEpoch(epoch){
+  if(!epoch) return "";
+  const d = toPST(new Date(epoch*1000));
+  let h=d.getHours(), am=h<12, hh=(h%12)||12;
+  const mm=String(d.getMinutes()).padStart(2,"0");
+  return `${MONTHS[d.getMonth()]} ${ordinal(d.getDate())} ${d.getFullYear()} ${hh}:${mm}${am?"AM":"PM"} PST/GMT -8`;
+}
+
 /* -------- state -------- */
 let VIEW="bests", SPAN="season", SEASON_START=0;
 const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
@@ -269,9 +292,9 @@ const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
 /* -------- nav -------- */
 function setView(v){
   VIEW=v;
-  document.getElementById("view-bests").style.display=(v==="bests")?"block":"none";
-  document.getElementById("view-recent").style.display=(v==="recent")?"block":"none";
-  document.getElementById("view-lp").style.display=(v==="lp")?"block":"none";
+  $("#view-bests").style.display=(v==="bests")?"block":"none";
+  $("#view-recent").style.display=(v==="recent")?"block":"none";
+  $("#view-lp").style.display=(v==="lp")?"block":"none";
   $all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));
   update();
 }
@@ -280,30 +303,25 @@ const inSpan=ts=>(SPAN==="all")||!SEASON_START||(Number(ts)||0)>=SEASON_START;
 
 $all(".pill").forEach(p=>p.addEventListener("click",e=>{setView(p.dataset.view); ripple(e)}));
 $all(".tab").forEach(t=>t.addEventListener("click",e=>{setSpan(t.dataset.span); ripple(e)}));
-document.getElementById("qGlobal").addEventListener("input",update);
+$("#qGlobal").addEventListener("input",update);
 
 /* -------- normalizers -------- */
 function normBests(j){
   const arr=Array.isArray(j)?j:(j&&j.data)||[];
-  return arr.map(o=>({
-    item:o.item||o.species||o.name||"unknown",
-    rarity:o.rarity||"",
-    player:o.player||o.best_player||"unknown",
-    best_gold:Number(o.best_gold||o.gold||0),
-    ts:Number(o.timestamp||0),
-    date:o.date||""
-  })).sort((a,b)=>b.best_gold-a.best_gold);
+  return arr.map(o=>{
+    const ts=Number(o.timestamp||epochFrom(o.date)||0);
+    return {
+      item:o.item||o.species||o.name||"unknown",
+      rarity:o.rarity||"",
+      player:o.player||o.best_player||"unknown",
+      best_gold:Number(o.best_gold||o.gold||0),
+      ts:ts,
+      date_disp: longPSTFromEpoch(ts)
+    };
+  }).sort((a,b)=>b.best_gold-a.best_gold);
 }
 
-/* last 50 in file order — newest first. Display original date; if missing, format from timestamp */
-function displayDate(o){
-  if(o.date && typeof o.date==="string" && o.date.trim()) return o.date;
-  const t=Number(o.timestamp||0)||0;
-  if(!t) return "";
-  const d=new Date(t*1000);
-  const p=n=>String(n).padStart(2,"0");
-  return `${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
-}
+/* last 50 in file order — newest first. Display long PST */
 function normRecent(j){
   const arr=Array.isArray(j)?j:(j&&j.data)||[];
   const last50=arr.slice(-50).reverse();
@@ -316,7 +334,7 @@ function normRecent(j){
       stars:Number(o.stars||o.rating||0),
       gold:Number(o.gold||o.value||0),
       ts:ts,
-      date: displayDate({date:o.date,timestamp:ts})
+      date_disp: longPSTFromEpoch(ts) || (o.date||"")
     };
   });
 }
@@ -347,14 +365,11 @@ function buildMerged(lead,players){
 /* -------- render -------- */
 function refreshSync(){
   const t=Number(DATA.meta?.exported_at_epoch||0);
-  const d=t?new Date(t*1000):null;
-  const p=n=>String(n).padStart(2,"0");
-  const s=d?`${p(d.getMonth()+1)}/${p(d.getDate())}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`:"";
-  document.getElementById("syncTop").textContent=s;
+  $("#syncTop").textContent = longPSTFromEpoch(t);
 }
 function renderBests(){
-  const q=(document.getElementById("qGlobal").value||"").toLowerCase();
-  const el=document.getElementById("listBests"); el.innerHTML="";
+  const q=($("#qGlobal").value||"").toLowerCase();
+  const el=$("#listBests"); el.innerHTML="";
   const rows=DATA.bests.filter(r=>inSpan(r.ts)&&(!q||r.item.toLowerCase().includes(q)||r.player.toLowerCase().includes(q)||r.rarity.toLowerCase().includes(q)));
   rows.forEach((r,i)=>{
     const div=document.createElement("div"); div.className="item";
@@ -362,7 +377,7 @@ function renderBests(){
       <div class="rank">${i+1}</div>
       <div class="main">
         <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
-        <div class="sub">${r.player} · ${r.date||""}</div>
+        <div class="sub">${r.player} · ${r.date_disp||""}</div>
       </div>
       <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
     el.appendChild(div);
@@ -370,27 +385,27 @@ function renderBests(){
   if(!rows.length){ el.innerHTML='<div class="item"><div class="main"><div class="sub">No data</div></div></div>'; }
 }
 function renderRecent(){
-  const q=(document.getElementById("qGlobal").value||"").toLowerCase();
+  const q=($("#qGlobal").value||"").toLowerCase();
   let rec=DATA.recent.filter(r=>inSpan(r.ts));
   if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
   const head=["When","Player","Catch","★","Gold"];
-  document.getElementById("thRecent").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  $("#thRecent").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
   const rows=rec.map(c=>`<tr>
-    <td>${c.date||""}</td>
+    <td>${c.date_disp||""}</td>
     <td>${c.player}</td>
     <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
     <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
     <td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td>
   </tr>`);
-  document.getElementById("tbRecent").innerHTML=rows.join("");
-  document.getElementById("emptyRecent").style.display=rows.length?"none":"block";
+  $("#tbRecent").innerHTML=rows.join("");
+  $("#emptyRecent").style.display=rows.length?"none":"block";
 }
 function renderMerged(){
-  const q=(document.getElementById("qGlobal").value||"").toLowerCase();
+  const q=($("#qGlobal").value||"").toLowerCase();
   let rows=DATA.merged.slice();
   if(q){ rows=rows.filter(r=>r.player.toLowerCase().includes(q)); }
   const head=["#","Player","Season Gold","Season Casts","Lifetime Casts"];
-  document.getElementById("thMerged").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+  $("#thMerged").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
   const html=rows.map(r=>`<tr>
     <td class="num">${r.rank}</td>
     <td>${r.player}</td>
@@ -398,8 +413,8 @@ function renderMerged(){
     <td class="num">${r.casts||0}</td>
     <td class="num">${r.lifetime_casts||0}</td>
   </tr>`);
-  document.getElementById("tbMerged").innerHTML=html.join("");
-  document.getElementById("emptyMerged").style.display=html.length?"none":"block";
+  $("#tbMerged").innerHTML=html.join("");
+  $("#emptyMerged").style.display=html.length?"none":"block";
 }
 function update(){
   if(VIEW==="bests") renderBests();
@@ -420,10 +435,12 @@ function ripple(e){
 (async function init(){
   try{
     const meta=await get(URLS.meta); DATA.meta=meta||{};
-    VERSION=Number(meta?.exported_at_epoch)||VERSION;
     SEASON_START=Number(meta?.season_start_epoch||0)||Math.floor(new Date(new Date().getFullYear(),7,1)/1000);
     refreshSync();
-    const [recent,bests,players,leaders]=await Promise.all([get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)]);
+
+    const [recent,bests,players,leaders]=await Promise.all([
+      get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)
+    ]);
     DATA.recent=normRecent(recent);
     DATA.bests=normBests(bests);
     DATA.players=normPlayers(players);
@@ -433,10 +450,10 @@ function ripple(e){
   }catch(e){ console.error(e); }
   setInterval(async()=>{
     try{
-      const meta=await get(URLS.meta); DATA.meta=meta||{};
-      if(meta?.exported_at_epoch) VERSION=Number(meta.exported_at_epoch);
-      refreshSync();
-      const [recent,bests,players,leaders]=await Promise.all([get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)]);
+      const meta=await get(URLS.meta); DATA.meta=meta||{}; refreshSync();
+      const [recent,bests,players,leaders]=await Promise.all([
+        get(URLS.recent),get(URLS.seasonBests),get(URLS.players),get(URLS.leaderboard)
+      ]);
       DATA.recent=normRecent(recent);
       DATA.bests=normBests(bests);
       DATA.players=normPlayers(players);
