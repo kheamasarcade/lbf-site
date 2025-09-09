@@ -323,42 +323,20 @@ function normBests(j){
 
 /* last 50 in file order — newest first. Display long PST */
 function normRecent(j){
-  const arr=Array.isArray(j)?j:(j&&j.data)||[];
-  const last50=arr.slice(-50).reverse();
-  return last50.map(o=>{
-    const ts = typeof o.timestamp==="number" ? o.timestamp : epochFrom(o.date);
+  const arr = Array.isArray(j) ? j : (j && j.data) || [];
+  // Source is already newest→oldest. Take the first 50 (the newest).
+  const first50 = arr.slice(0, 50);
+  return first50.map(o => {
+    const ts = (typeof o.timestamp === "number") ? o.timestamp : epochFrom(o.date);
     return {
-      player:o.player||o.username||o.name||"unknown",
-      item:o.item||o.species||o.name||"",
-      rarity:o.rarity||"",
-      stars:Number(o.stars||o.rating||0),
-      gold:Number(o.gold||o.value||0),
-      ts:ts,
-      date_disp: longPSTFromEpoch(ts) || (o.date||"")
+      player: o.player || o.username || o.name || "unknown",
+      item:   o.item   || o.species  || o.name || "",
+      rarity: o.rarity || "",
+      stars:  Number(o.stars || o.rating || 0),
+      gold:   Number(o.gold  || o.value  || 0),
+      ts,
+      date_disp: longPSTFromEpoch(ts) || (o.date || "")
     };
-  });
-}
-function normPlayers(j){
-  const arr=Array.isArray(j)?j:(j&&j.data)||[];
-  return arr.map(o=>({
-    name:o.name||o.player||o.username||"unknown",
-    gold:Number(o.gold||o.season_gold||0),
-    casts:Number(o.casts||o.season_casts||0),
-    lifetime_casts:Number(o.lifetime_casts||o.total_casts||0)
-  }));
-}
-function normLeader(j){
-  let arr=Array.isArray(j)?j:((j&&j.data)||(j&&j.rows)||[]);
-  arr=arr.map(o=>({player:o.player||o.name||"unknown",gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
-  arr.sort((a,b)=>b.gold-a.gold);
-  arr.forEach((r,i)=>r.rank=i+1);
-  return arr;
-}
-function buildMerged(lead,players){
-  const pmap=new Map(players.map(p=>[p.name.toLowerCase(),p]));
-  return lead.map(r=>{
-    const p=pmap.get(r.player.toLowerCase())||{};
-    return {rank:r.rank,player:r.player,gold:r.gold,casts:Number(p.casts||0),lifetime_casts:Number(p.lifetime_casts||0)};
   });
 }
 
@@ -466,3 +444,4 @@ function ripple(e){
 </script>
 </body>
 </html>
+
