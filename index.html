@@ -114,6 +114,22 @@ body{
   transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
 }
 .chip:hover{ transform: translateY(-1px) scale(1.03); filter: brightness(1.04) }
+  /* Fire chip sparkle when the whole row is hovered */
+.item:hover .chip,
+.table tbody tr:hover .chip{
+  transform: translateY(-1px) scale(1.03);
+  filter: brightness(1.04);
+}
+.item:hover .chip::after,
+.table tbody tr:hover .chip::after{
+  animation: shine .9s ease;
+}
+.item:hover .chip::before,
+.table tbody tr:hover .chip::before{
+  animation: twinkle 1.4s ease-in-out infinite;
+  opacity: 1;
+}
+
 .chip::after{ /* sweeping shine */
   content:""; position:absolute; top:-120%; left:-40%; width:140%; height:340%;
   background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.35) 55%, transparent 100%);
@@ -444,4 +460,5 @@ function ripple(e){
 </script>
 </body>
 </html>
+
 
