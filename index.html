@@ -67,12 +67,7 @@ body{
 .h2{margin:0;font-size:26px;font-weight:900;letter-spacing:.2px}
 .kicker{color:var(--muted);font-size:12px}
 .tabrow{display:flex;gap:10px}
-.tab{
-  padding:9px 14px;border-radius:999px;background:#0b1220;color:#c8d9fb;border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;
-  transition: transform .18s ease, box-shadow .18s ease;
-  /* EMBOSSED */
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.45);
-}
+.tab{ padding:9px 14px;border-radius:999px;background:#0b1220;color:#c8d9fb;border:1px solid var(--line);cursor:pointer;font-weight:900;position:relative;overflow:hidden;transition: transform .18s ease, box-shadow .18s ease; box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -4px 0 rgba(0,0,0,.45);}
 .tab:hover{transform:translateY(-1px);box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -5px 0 rgba(0,0,0,.55), 0 10px 22px rgba(0,0,0,.3)}
 .tab.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66;box-shadow:inset 0 2px 0 rgba(255,255,255,.18), inset 0 -6px 0 rgba(0,0,0,.45), 0 0 18px rgba(244,114,182,.25)}
 
@@ -87,6 +82,10 @@ body{
 .sub{color:#a8b3c9;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gold{margin-left:auto;font-family:"JetBrains Mono",monospace;font-weight:900;font-size:22px;color:#ffe08a;text-shadow:0 0 3px rgba(250,204,21,.45),0 0 14px rgba(250,204,21,.38);letter-spacing:.2px}
 
+/* clickable item names */
+.js-link{cursor:pointer;border-bottom:1px dashed rgba(200,217,251,.35)}
+.js-link:hover{filter:brightness(1.1)}
+
 /* tables (Recent & Leaderboard) */
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
@@ -98,68 +97,49 @@ body{
 .num{text-align:right;font-family:"JetBrains Mono",monospace;font-weight:800}
 
 /* Leaderboard & Players — bigger player names and gold */
-#view-lp .table td:nth-child(2){
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#e9efff;
-}
+#view-lp .table td:nth-child(2){font-size:18px;font-weight:900;letter-spacing:.2px;color:#e9efff}
 #view-lp .chip-gold{font-size:18px;padding:6px 14px}
 #view-lp .num{font-size:16px}
 
-/* rarity chips — sparkle (not embossed) */
-.chip{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;
-  font-size:13px;font-weight:900;border:1px solid transparent;line-height:1.15;position:relative;overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
-}
-.chip:hover{ transform: translateY(-1px) scale(1.03); filter: brightness(1.04) }
-  /* Fire chip sparkle when the whole row is hovered */
-.item:hover .chip,
-.table tbody tr:hover .chip{
-  transform: translateY(-1px) scale(1.03);
-  filter: brightness(1.04);
-}
-.item:hover .chip::after,
-.table tbody tr:hover .chip::after{
-  animation: shine .9s ease;
-}
-.item:hover .chip::before,
-.table tbody tr:hover .chip::before{
-  animation: twinkle 1.4s ease-in-out infinite;
-  opacity: 1;
-}
-
-.chip::after{ /* sweeping shine */
-  content:""; position:absolute; top:-120%; left:-40%; width:140%; height:340%;
-  background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.35) 55%, transparent 100%);
-  transform:rotate(25deg) translateX(-120%); opacity:0; pointer-events:none;
-}
-.chip:hover::after{ animation:shine .9s ease }
+/* rarity chips — sparkle (row hover) */
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:900;border:1px solid transparent;line-height:1.15;position:relative;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease, filter .18s ease}
+.item:hover .chip,.table tbody tr:hover .chip{transform: translateY(-1px) scale(1.03);filter: brightness(1.04)}
+.item:hover .chip::after,.table tbody tr:hover .chip::after{animation: shine .9s ease}
+.item:hover .chip::before,.table tbody tr:hover .chip::before{animation: twinkle 1.4s ease-in-out infinite;opacity: 1}
+.chip::after{content:""; position:absolute; top:-120%; left:-40%; width:140%; height:340%; background:linear-gradient(120deg,transparent 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.35) 55%, transparent 100%); transform:rotate(25deg) translateX(-120%); opacity:0; pointer-events:none}
 @keyframes shine{0%{transform:rotate(25deg) translateX(-120%);opacity:0} 30%{opacity:.9} 100%{transform:rotate(25deg) translateX(120%);opacity:0}}
-/* tiny star sparkles on hover */
-.chip::before{
-  content:""; position:absolute; inset:0; pointer-events:none; opacity:0;
-  background:
-    radial-gradient(3px 3px at 20% 30%, rgba(255,255,255,.8), transparent 60%),
-    radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(1.8px 1.8px at 45% 75%, rgba(255,255,255,.7), transparent 60%);
-}
-.chip:hover::before{ animation:twinkle 1.4s ease-in-out infinite; opacity:1 }
+.chip::before{content:""; position:absolute; inset:0; pointer-events:none; opacity:0; background:
+  radial-gradient(3px 3px at 20% 30%, rgba(255,255,255,.8), transparent 60%),
+  radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,.7), transparent 60%),
+  radial-gradient(1.8px 1.8px at 45% 75%, rgba(255,255,255,.7), transparent 60%)}
 @keyframes twinkle{ 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.35)} }
-/* rarity palettes */
-.r-junk{color:var(--junk);background:var(--junk-bg);border-color:#2e3544}
-.r-common{color:var(--common);background:var(--common-bg);border-color:#2b3950}
-.r-uncommon{color:var(--uncommon);background:var(--uncommon-bg);border-color:#1a5b4b}
-.r-rare{color:var(--rare);background:var(--rare-bg);border-color:#1e3f66}
-.r-epic{color:var(--epic);background:var(--epic-bg);border-color:#2e2a63}
-.r-legend{color:#ffe08a;background:var(--legend-bg);border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
-
-/* special chips */
+.r-junk{color:#6b7280;background:#1f2430;border-color:#2e3544}
+.r-common{color:#cbd5e1;background:#1b2234;border-color:#2b3950}
+.r-uncommon{color:#34d399;background:#0f2a25;border-color:#1a5b4b}
+.r-rare{color:#60a5fa;background:#0f243d;border-color:#1e3f66}
+.r-epic{color:#a78bfa;background:#1a1740;border-color:#2e2a63}
+.r-legend{color:#ffe08a;background:#2a2307;border-color:#5b470c;box-shadow:0 0 14px rgba(250,204,21,.25)}
 .chip-star{background:#11182c;border:1px solid #263055;color:#bbcaf0}
 .chip-gold{background:#2c2410;border:1px solid #5b470c;color:#ffe08a;font-weight:900}
 
-/* footer */
+/* Modal for species detail */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,6,14,.65);backdrop-filter:blur(4px);z-index:999}
+.modal.show{display:flex}
+.modal-card{width:min(980px,94vw);max-height:84vh;overflow:auto;background:var(--card-grad);border:1px solid var(--line);border-radius:18px;box-shadow:0 25px 60px rgba(0,0,0,.6)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #0e1730;position:sticky;top:0;background:#0f162a}
+.modal-ttl{margin:0;font-size:20px;font-weight:900}
+.modal-close{background:#0b1220;border:1px solid var(--line);border-radius:10px;color:#c8d9fb;padding:8px 12px;cursor:pointer}
+.modal-body{padding:12px 18px}
+.modal-sub{color:#a8b3c9;font-size:13px;margin:0 0 8px}
+
+/* Pager */
+.pager{display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-top:10px}
+.pager button{background:#0b1220;border:1px solid var(--line);color:#c8d9fb;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:800}
+.pager .info{color:#a8b3c9;font-size:13px;margin-right:auto}
+.pager .nums{display:flex;gap:6px;flex-wrap:wrap}
+.pager .nums button{min-width:36px}
+.pager .nums button.active{background:var(--pill-grad);color:#0a0f16;border-color:#2a3a66}
+
 .footer{max-width:1280px;margin:8px auto 28px;padding:0 16px;color:#97a3bd;font-size:12px;text-align:center}
 
 /* ripple click effect */
@@ -172,7 +152,6 @@ body{
 <!-- HEADER -->
 <div class="header">
   <div class="brand-wrap">
-    <!-- Dropbox first, fallback to local KA.png -->
     <img class="logo" src="https://dl.dropboxusercontent.com/scl/fi/dwrq039ttz1ohw4qzeivq/KA.png?dl=1" alt="Kheama's Arcade" onerror="this.onerror=null;this.src='KA.png'">
     <div>
       <div class="brand-name"><span class="pink">Kheama's</span> <span class="blue">Arcade</span></div>
@@ -214,8 +193,8 @@ body{
     <div class="hrow">
       <div class="hleft"><h2 class="h2">Recent Catches</h2><div class="kicker">Live feed</div></div>
       <div class="tabrow">
-        <div class="tab active" data-span="season">Season</div>
-        <div class="tab" data-span="all">All-Time</div>
+        <div class="tab active" data-rmode="last50">Last 50</div>
+        <div class="tab" data-rmode="all">All-Time</div>
       </div>
     </div>
     <div class="table-wrap">
@@ -224,6 +203,12 @@ body{
         <tbody id="tbRecent"></tbody>
       </table>
       <div id="emptyRecent" class="kicker" style="display:none">No results</div>
+      <div id="pager" class="pager" style="display:none">
+        <span class="info" id="pagerInfo"></span>
+        <button id="btnPrev">Prev</button>
+        <div class="nums" id="pagerNums"></div>
+        <button id="btnNext">Next</button>
+      </div>
     </div>
   </div>
 </div>
@@ -245,6 +230,27 @@ body{
   </div>
 </div>
 
+<!-- Species Modal -->
+<div id="modalSpecies" class="modal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-hd">
+      <h3 id="modalTitle" class="modal-ttl">Species</h3>
+      <button class="modal-close" id="modalClose">Close</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalSub" class="modal-sub"></p>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>When</th><th>Player</th><th>Catch</th><th>★</th><th>Gold</th></tr>
+          </thead>
+          <tbody id="tbSpecies"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="footer">Data source: Dropbox JSON snapshots exported from Kheama’s Arcade.</div>
 
 <script>
@@ -254,7 +260,9 @@ const URLS={
   recent:"https://dl.dropboxusercontent.com/scl/fi/xsc6dg1sqsuqt0dd60u5y/recent.json?rlkey=15jkp0g6mfjz93e25lsp929pl",
   seasonBests:"https://dl.dropboxusercontent.com/scl/fi/ozchhaapgvoobfismr8wx/season_bests.json?rlkey=5tvggcnnv13q1i46f0vhbfztl",
   players:"https://dl.dropboxusercontent.com/scl/fi/dsjdjr66cjldyxbm14146/players.json?rlkey=kkfhgf47oxr1n5sjcsvrkh7xv",
-  leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7"
+  leaderboard:"https://dl.dropboxusercontent.com/scl/fi/kg5tqpy0ov9m91tow1ocx/leaderboard.json?rlkey=mt10x1671vkrpw38ma5sk34v7",
+  // REPLACE THIS with your actual shared link for catches_compact.json
+  allCatches:"REPLACE_WITH_YOUR_dl.dropboxusercontent.com_LINK_TO_catches_compact.json"
 };
 
 /* -------- helpers -------- */
@@ -289,21 +297,14 @@ function epochFrom(v){
 /* ---- Long-form PST helpers ---- */
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 function ordinal(n){const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
-function toPST(date){ // force PST/GMT -8 display
-  const utcMs = date.getTime() + date.getTimezoneOffset()*60000;
-  return new Date(utcMs - 8*60*60000);
-}
-function longPSTFromEpoch(epoch){
-  if(!epoch) return "";
-  const d = toPST(new Date(epoch*1000));
-  let h=d.getHours(), am=h<12, hh=(h%12)||12;
-  const mm=String(d.getMinutes()).padStart(2,"0");
-  return `${MONTHS[d.getMonth()]} ${ordinal(d.getDate())} ${d.getFullYear()} ${hh}:${mm}${am?"AM":"PM"} PST/GMT -8`;
-}
+function toPST(date){const utcMs = date.getTime() + date.getTimezoneOffset()*60000; return new Date(utcMs - 8*60*60000);}
+function longPSTFromEpoch(epoch){ if(!epoch) return ""; const d = toPST(new Date(epoch*1000)); let h=d.getHours(), am=h<12, hh=(h%12)||12; const mm=String(d.getMinutes()).padStart(2,"0"); return `${MONTHS[d.getMonth()]} ${ordinal(d.getDate())} ${d.getFullYear()} ${hh}:${mm}${am?"AM":"PM"} PST/GMT -8`; }
 
 /* -------- state -------- */
-let VIEW="bests", SPAN="season", SEASON_START=0;
-const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[]};
+let VIEW="bests", SPAN="season";
+let RECENT_MODE="last50", AT_PAGE=1, AT_TOTAL=1, AT_PERPAGE=50, AT_READY=false;
+let SEASON_START=0;
+const DATA={meta:{}, bests:[], recent:[], players:[], lead:[], merged:[], all:[]};
 
 /* -------- nav -------- */
 function setView(v){
@@ -314,46 +315,75 @@ function setView(v){
   $all(".pill").forEach(p=>p.classList.toggle("active",p.dataset.view===v));
   update();
 }
-function setSpan(s){ SPAN=s; $all(".tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s)); update(); }
-const inSpan=ts=>(SPAN==="all")||!SEASON_START||(Number(ts)||0)>=SEASON_START;
-
+function setSpan(s){ SPAN=s; $all("#view-bests .tab, #view-lp .tab").forEach(t=>t.classList.toggle("active",t.dataset.span===s)); update(); }
 $all(".pill").forEach(p=>p.addEventListener("click",e=>{setView(p.dataset.view); ripple(e)}));
-$all(".tab").forEach(t=>t.addEventListener("click",e=>{setSpan(t.dataset.span); ripple(e)}));
+$all("#view-bests .tab, #view-lp .tab").forEach(t=>t.addEventListener("click",e=>{setSpan(t.dataset.span); ripple(e)}));
 $("#qGlobal").addEventListener("input",update);
+
+/* Recent mode tabs */
+$all("#view-recent .tab").forEach(t=>t.addEventListener("click",(e)=>{
+  $all("#view-recent .tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  RECENT_MODE=t.dataset.rmode; 
+  if(RECENT_MODE==="all"){ ensureAll().then(()=>{AT_PAGE=1; renderRecent();}); }
+  else { renderRecent(); }
+}));
 
 /* -------- normalizers -------- */
 function normBests(j){
   const arr=Array.isArray(j)?j:(j&&j.data)||[];
   return arr.map(o=>{
     const ts=Number(o.timestamp||epochFrom(o.date)||0);
-    return {
-      item:o.item||o.species||o.name||"unknown",
-      rarity:o.rarity||"",
-      player:o.player||o.best_player||"unknown",
-      best_gold:Number(o.best_gold||o.gold||0),
-      ts:ts,
-      date_disp: longPSTFromEpoch(ts)
-    };
+    return { item:o.item||o.species||o.name||"unknown", rarity:o.rarity||"", player:o.player||o.best_player||"unknown", best_gold:Number(o.best_gold||o.gold||0), ts, date_disp: longPSTFromEpoch(ts) };
   }).sort((a,b)=>b.best_gold-a.best_gold);
 }
-
-/* last 50 in file order — newest first. Display long PST */
+/* RECENT from source which is already newest→oldest: take first 50 */
 function normRecent(j){
-  const arr = Array.isArray(j) ? j : (j && j.data) || [];
-  // Source is already newest→oldest. Take the first 50 (the newest).
-  const first50 = arr.slice(0, 50);
-  return first50.map(o => {
-    const ts = (typeof o.timestamp === "number") ? o.timestamp : epochFrom(o.date);
-    return {
-      player: o.player || o.username || o.name || "unknown",
-      item:   o.item   || o.species  || o.name || "",
-      rarity: o.rarity || "",
-      stars:  Number(o.stars || o.rating || 0),
-      gold:   Number(o.gold  || o.value  || 0),
-      ts,
-      date_disp: longPSTFromEpoch(ts) || (o.date || "")
-    };
+  const arr=Array.isArray(j)?j:(j&&j.data)||[];
+  const first50=arr.slice(0,50);
+  return first50.map(o=>{
+    const ts = typeof o.timestamp==="number" ? o.timestamp : epochFrom(o.date);
+    return { player:o.player||o.username||o.name||"unknown", item:o.item||o.species||o.name||"", rarity:o.rarity||"", stars:Number(o.stars||o.rating||0), gold:Number(o.gold||o.value||0), ts, date_disp: longPSTFromEpoch(ts) || (o.date||"") };
   });
+}
+function normPlayers(j){
+  const arr=Array.isArray(j)?j:(j&&j.data)||[];
+  return arr.map(o=>({ name:o.name||o.player||o.username||"unknown", gold:Number(o.gold||o.season_gold||0), casts:Number(o.casts||o.season_casts||0), lifetime_casts:Number(o.lifetime_casts||o.total_casts||0) }));
+}
+function normLeader(j){
+  let arr=Array.isArray(j)?j:((j&&j.data)||(j&&j.rows)||[]);
+  arr=arr.map(o=>({player:o.player||o.name||"unknown",gold:Number(o.gold||o.total_gold||o.season_gold||0)}));
+  arr.sort((a,b)=>b.gold-a.gold);
+  arr.forEach((r,i)=>r.rank=i+1);
+  return arr;
+}
+function buildMerged(lead,players){
+  const pmap=new Map(players.map(p=>[p.name.toLowerCase(),p]));
+  return lead.map(r=>{
+    const p=pmap.get(r.player.toLowerCase())||{};
+    return {rank:r.rank,player:r.player,gold:r.gold,casts:Number(p.casts||0),lifetime_casts:Number(p.lifetime_casts||0)};
+  });
+}
+
+/* All-time loader */
+async function ensureAll(){
+  if(AT_READY) return;
+  if(!URLS.allCatches || URLS.allCatches.startsWith("REPLACE_WITH_")){
+    alert("All-Time requires a Dropbox link to catches_compact.json. Please set URLS.allCatches in index.html to your dl.dropboxusercontent.com link.");
+    return;
+  }
+  const list = await get(URLS.allCatches); // array of compact objects, newest→oldest
+  DATA.all = Array.isArray(list)? list : (list&&list.data)||[];
+  AT_PERPAGE = Number(DATA.meta?.page_size||50);
+  AT_TOTAL = Math.max(1, Math.ceil(DATA.all.length / AT_PERPAGE));
+  AT_READY=true;
+}
+
+/* Build a searchable pool for species modal (uses what we have client-side) */
+function buildSpeciesPool(){
+  // Use all-time if loaded, else recent
+  const src = AT_READY && DATA.all.length ? DATA.all : DATA.recent.map(r=>({item:r.item, rarity:r.rarity, player:r.player, stars:r.stars, gold:r.gold, timestamp:r.ts}));
+  return src;
 }
 
 /* -------- render -------- */
@@ -364,13 +394,13 @@ function refreshSync(){
 function renderBests(){
   const q=($("#qGlobal").value||"").toLowerCase();
   const el=$("#listBests"); el.innerHTML="";
-  const rows=DATA.bests.filter(r=>inSpan(r.ts)&&(!q||r.item.toLowerCase().includes(q)||r.player.toLowerCase().includes(q)||r.rarity.toLowerCase().includes(q)));
+  const rows=DATA.bests.filter(r=> (SPAN==="all" || (Number(r.ts)||0) >= (Number(DATA.meta?.season_start_epoch)||0)) && (!q||r.item.toLowerCase().includes(q)||r.player.toLowerCase().includes(q)||r.rarity.toLowerCase().includes(q)));
   rows.forEach((r,i)=>{
     const div=document.createElement("div"); div.className="item";
     div.innerHTML=`
       <div class="rank">${i+1}</div>
       <div class="main">
-        <div class="title">${r.item} <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
+        <div class="title"><span class="js-link js-item" data-item="${r.item}">${r.item}</span> <span class="chip ${rClass(r.rarity)}">${r.rarity||""}</span></div>
         <div class="sub">${r.player} · ${r.date_disp||""}</div>
       </div>
       <div class="gold">${(Math.round(r.best_gold)||0).toLocaleString()}g</div>`;
@@ -380,19 +410,64 @@ function renderBests(){
 }
 function renderRecent(){
   const q=($("#qGlobal").value||"").toLowerCase();
-  let rec=DATA.recent.filter(r=>inSpan(r.ts));
-  if(q){ rec=rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
   const head=["When","Player","Catch","★","Gold"];
   $("#thRecent").innerHTML=`<tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-  const rows=rec.map(c=>`<tr>
-    <td>${c.date_disp||""}</td>
-    <td>${c.player}</td>
-    <td>${c.item} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
-    <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
-    <td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td>
-  </tr>`);
+
+  let rows=[];
+  if(RECENT_MODE==="last50"){
+    let rec = DATA.recent.slice();
+    if(q){ rec = rec.filter(r=>r.player.toLowerCase().includes(q)||r.item.toLowerCase().includes(q)); }
+    rows=rec.map(c=>`<tr>
+      <td>${c.date_disp||""}</td>
+      <td>${c.player}</td>
+      <td><span class="js-link js-item" data-item="${c.item}">${c.item}</span> <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
+      <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
+      <td class="num"><span class="chip chip-gold">${fmtGold(c.gold)}</span></td>
+    </tr>`);
+    $("#pager").style.display="none";
+    $("#pagerInfo").textContent="";
+    $("#pagerNums").innerHTML="";
+  } else {
+    // All-Time (paginated 50 at a time)
+    if(!AT_READY){ $("#tbRecent").innerHTML='<tr><td colspan="5" class="kicker">Loading all-time…</td></tr>'; $("#pager").style.display="none"; return; }
+    let data = DATA.all;
+    if(q){
+      const ql=q.toLowerCase();
+      data = data.filter(r => (r.player||"").toLowerCase().includes(ql) || (r.item||"").toLowerCase().includes(ql));
+    }
+    const total = Math.max(1, Math.ceil(data.length/AT_PERPAGE));
+    AT_TOTAL = total;
+    AT_PAGE = Math.min(AT_PAGE, total);
+    const start = (AT_PAGE-1)*AT_PERPAGE;
+    const slice = data.slice(start, start+AT_PERPAGE);
+    rows = slice.map(o=>`<tr>
+      <td>${longPSTFromEpoch(o.timestamp)}</td>
+      <td>${o.player}</td>
+      <td><span class="js-link js-item" data-item="${o.item}">${o.item}</span> <span class="chip ${rClass(o.rarity)}">${o.rarity||""}</span></td>
+      <td class="num"><span class="chip chip-star">★ ${o.stars||0}</span></td>
+      <td class="num"><span class="chip chip-gold">${fmtGold(o.gold)}</span></td>
+    </tr>`);
+    $("#pager").style.display="flex";
+    $("#pagerInfo").textContent = `${data.length.toLocaleString()} records • Page ${AT_PAGE} of ${AT_TOTAL}`;
+    renderPagerNums();
+  }
+
   $("#tbRecent").innerHTML=rows.join("");
   $("#emptyRecent").style.display=rows.length?"none":"block";
+}
+function renderPagerNums(){
+  const nums = $("#pagerNums"); nums.innerHTML="";
+  // show up to 7 page buttons around current page
+  const span=3;
+  const start=Math.max(1, AT_PAGE-span);
+  const end=Math.min(AT_TOTAL, AT_PAGE+span);
+  for(let i=start;i<=end;i++){
+    const b=document.createElement("button");
+    b.textContent=String(i);
+    if(i===AT_PAGE) b.classList.add("active");
+    b.addEventListener("click",()=>{ AT_PAGE=i; renderRecent(); });
+    nums.appendChild(b);
+  }
 }
 function renderMerged(){
   const q=($("#qGlobal").value||"").toLowerCase();
@@ -416,6 +491,35 @@ function update(){
   if(VIEW==="lp") renderMerged();
 }
 
+/* ---- Species Modal logic ---- */
+function openSpecies(itemName){
+  const src = buildSpeciesPool();
+  const set = (src||[]).filter(r=>(r.item||"").toLowerCase()===String(itemName||"").toLowerCase())
+                        .sort((a,b)=> (b.timestamp||b.ts||0) - (a.timestamp||a.ts||0));
+  $("#modalTitle").textContent = itemName;
+  $("#modalSub").textContent = set.length
+    ? `${set.length} ${RECENT_MODE==='all'?'matches in current view':'recent matches (from latest 50)'}` 
+    : `No matches in current view.`;
+  const rows = set.slice(0,300).map(c=>`<tr>
+    <td>${longPSTFromEpoch(c.timestamp||c.ts)}</td>
+    <td>${c.player}</td>
+    <td>${itemName} <span class="chip ${rClass(c.rarity)}">${c.rarity||""}</span></td>
+    <td class="num"><span class="chip chip-star">★ ${c.stars||0}</span></td>
+    <td class="num"><span class="chip chip-gold">${fmtGold(c.gold||0)}</span></td>
+  </tr>`);
+  $("#tbSpecies").innerHTML = rows.join("") || `<tr><td colspan="5" class="kicker">No results.</td></tr>`;
+  $("#modalSpecies").classList.add("show"); $("#modalSpecies").setAttribute("aria-hidden","false");
+}
+function closeSpecies(){ $("#modalSpecies").classList.remove("show"); $("#modalSpecies").setAttribute("aria-hidden","true"); }
+document.addEventListener("click",(e)=>{
+  const t=e.target;
+  if(t.closest("#modalClose")) closeSpecies();
+  if(t.id==="modalSpecies" && !t.querySelector(".modal-card:hover")) closeSpecies();
+  const itemEl = t.closest(".js-item");
+  if(itemEl){ openSpecies(itemEl.dataset.item||itemEl.textContent.trim()); }
+});
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeSpecies(); });
+
 /* ripple helper */
 function ripple(e){
   const t=e.target.closest(".pill,.tab"); if(!t) return;
@@ -424,6 +528,10 @@ function ripple(e){
   r.style.left=x+"px"; r.style.top=y+"px"; const size=Math.max(rect.width,rect.height); r.style.width=r.style.height=size+"px";
   t.appendChild(r); setTimeout(()=>r.remove(),650);
 }
+
+/* Pager buttons */
+$("#btnPrev").addEventListener("click",()=>{ if(AT_PAGE>1){ AT_PAGE--; renderRecent(); }});
+$("#btnNext").addEventListener("click",()=>{ if(AT_PAGE<AT_TOTAL){ AT_PAGE++; renderRecent(); }});
 
 /* -------- init -------- */
 (async function init(){
@@ -442,6 +550,8 @@ function ripple(e){
     DATA.merged=buildMerged(DATA.lead,DATA.players);
     update();
   }catch(e){ console.error(e); }
+
+  // Periodic refresh
   setInterval(async()=>{
     try{
       const meta=await get(URLS.meta); DATA.meta=meta||{}; refreshSync();
@@ -453,6 +563,7 @@ function ripple(e){
       DATA.players=normPlayers(players);
       DATA.lead=normLeader(leaders);
       DATA.merged=buildMerged(DATA.lead,DATA.players);
+      if(AT_READY){ /* keep all-time as-is until next manual reload */ }
       update();
     }catch(e){ console.error(e); }
   }, 90000);
@@ -460,5 +571,3 @@ function ripple(e){
 </script>
 </body>
 </html>
-
-
